@@ -1,14 +1,12 @@
-
 # Running a first testbench
 
-Let's create our first test bench and explore the basic concept of the test plan.
+Let's create our first test bench and explore the basic concept of the test plan. {{ className: 'lead' }}
 
 ## Create the test script
 
 Create a file called `main.py` in the folder where you installed OpenHTF and copy this code.
 
-```python
-# main.py
+```python {{ title: 'main.py' }}
 from openhtf.plugs.user_input import UserInput
 from openhtf import TestPlan
 
@@ -30,23 +28,52 @@ if __name__ == '__main__':
 
 This simple testbench interacts with the operator by displaying "Power on the device."
 
-## Run your first test
+<Note>
+  You may not know about the @ syntax, called decorators. It modifies functions
+  or methods using other functions. For more details, see the official Python
+  documentation.
+</Note>
+
+## Run in command line
 
 Run it using the created virtual environment:
 
 ```sh
-# Windows Activate
-venv\Scripts\activate 
-
 python main.py
 ```
 
 This test bench does not use the OpenHTF GUI yet, so all interactions are made through the command line. The test prints "Power on the device." and indicates a PASS.
 
 ```sh
-(venv) C:\TofuPilot\doc_exp>python main.py
+(venv) C:\tofupilot > python main.py
 Power on the device.
 -->
 
 ================ test: PCB_Test_Plan  outcome: PASS ================
 ```
+
+## Run in operator UI
+
+OpenHTF provides a web interface for interacting with the test operator. It guides through manual operations and displays logs and results of test phases.
+
+Then, modify `main.py` to use the web interface:
+
+```python
+if __name__ == '__main__':
+    plan.no_trigger()
+    plan.run()
+```
+
+Run the new test bench. The web interface will load automatically in your browser.
+
+![Exploring the web interface](img/web.png)
+
+1. **Operator Input**: Displays prompts and forms.
+2. **Continue Test**: Click "Okay" to proceed.
+3. **Running Status**: Shows elapsed time.
+4. **Current Phase**: Displays the current phase and upcoming phases.
+5. **Logs**: Lists operations and logs.
+
+Run your test another time using the X button. You can come back to the result of the first test using the Logs interface on the side.
+
+![Detailed test results](img/web-past-selected.png)

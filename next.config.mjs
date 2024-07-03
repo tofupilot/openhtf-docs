@@ -1,12 +1,21 @@
-import withMarkdoc from '@markdoc/next.js'
+import nextMDX from '@next/mdx'
 
-import withSearch from './src/markdoc/search.mjs'
+import { recmaPlugins } from './src/mdx/recma.mjs'
+import { rehypePlugins } from './src/mdx/rehype.mjs'
+import { remarkPlugins } from './src/mdx/remark.mjs'
+import withSearch from './src/mdx/search.mjs'
+
+const withMDX = nextMDX({
+  options: {
+    remarkPlugins,
+    rehypePlugins,
+    recmaPlugins,
+  },
+})
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'md', 'ts', 'tsx'],
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
 }
 
-export default withSearch(
-  withMarkdoc({ schemaPath: './src/markdoc' })(nextConfig),
-)
+export default withSearch(withMDX(nextConfig))

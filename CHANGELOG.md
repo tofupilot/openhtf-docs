@@ -3,6 +3,7 @@
 ## 2024-06-21
 
 - Bump Headless UI dependency to v2.1
+- Update to new data-attribute-based transition API
 
 ## 2024-06-18
 
@@ -20,29 +21,31 @@
 
 - Fix `sharp` dependency issues ([#1549](https://github.com/tailwindlabs/tailwindui-issues/issues/1549))
 
+## 2024-01-16
+
+- Replace Twitter with X
+
 ## 2024-01-10
 
 - Update Tailwind CSS, Next.js, Prettier, TypeScript, ESLint, and other dependencies
 - Update Tailwind `darkMode` setting to new `selector` option
+- Fix `not-prose` typography alignment issues
+- Add name to MDX search function
+- Sort classes
 
-## 2023-10-23
+## 2023-10-03
 
-- Bump Markdoc dependencies
-- Remove unnecessary Markdoc configuration in `next.config.mjs` file
+- Add missing `@types/mdx` dependency ([#1512](https://github.com/tailwindlabs/tailwindui-issues/issues/1512))
 
 ## 2023-09-07
 
 - Added TypeScript version of template
 
-## 2023-09-05
-
-- Add scroll position buffer for table of contents ([#1499](https://github.com/tailwindlabs/tailwindui-issues/issues/1499))
-
 ## 2023-08-15
 
 - Bump Next.js dependency
 
-## 2023-08-11
+## 2023-07-31
 
 - Port template to Next.js app router
 
@@ -53,7 +56,7 @@
 ## 2023-07-18
 
 - Add 404 page
-- Sort imports
+- Sort imports and other formatting
 
 ## 2023-05-16
 
@@ -67,10 +70,6 @@
 
 - Bump Next.js dependency
 
-## 2023-04-05
-
-- Fix listbox console error ([#1442](https://github.com/tailwindlabs/tailwindui-issues/issues/1442))
-
 ## 2023-03-29
 
 - Bump Tailwind CSS and Prettier dependencies
@@ -82,62 +81,36 @@
 
 ## 2023-02-15
 
-- Remove `passive` option from `removeEventListener`
+- Fix scroll restoration bug ([#1387](https://github.com/tailwindlabs/tailwindui-issues/issues/1387))
 
 ## 2023-02-02
 
 - Bump Headless UI dependency
-- Sort imports
 
-## 2022-11-04
+## 2023-01-16
 
-- Bump Tailwind CSS and Next.js dependencies
+- Fixes yarn compatibility ([#1403](https://github.com/tailwindlabs/tailwindui-issues/issues/1403))
+- Bump `zustand` dependency
 
-## 2022-09-27
+## 2023-01-07
 
-- Update Headless UI, Next.js, Markdoc, and Autoprefixer dependencies
-- Fix nav sidebar overflow issue ([#1337](https://github.com/tailwindlabs/tailwindui-issues/issues/1337))
+- Enable markdown table support in using `remark-gfm` plugin ([#1398](https://github.com/tailwindlabs/tailwindui-issues/issues/1398))
+- Fix SVG attribute casing ([#1402](https://github.com/tailwindlabs/tailwindui-issues/issues/1402))
 
-## 2022-09-19
+## 2023-01-03
 
-- Fix bug with theme switching ([#1325](https://github.com/tailwindlabs/tailwindui-issues/issues/1325))
+- Fix header disappearing in Safari ([#1392](https://github.com/tailwindlabs/tailwindui-issues/issues/1392))
 
-## 2022-09-09
+## 2022-12-17
 
-- Update Next.js dependency
+- Bump `mdx-annotations` dependency
 
-## 2022-09-07
+## 2022-12-16
 
-- Update Headless UI dependency
+- Fix scroll jumping issue with Dialog in Safari ([#1387](https://github.com/tailwindlabs/tailwindui-issues/issues/1387))
+- Update "API" item in header navigation link to home page
+- Bump Headless UI dependency
 
-## 2022-09-01
-
-- Update Tailwind CSS, Next.js, Headless UI, ESLint, and other dependencies
-
-## 2022-08-16
-
-- Enable experimental Next.js `scrollRestoration` flag
-
-## 2022-07-26
-
-- Fix issue with table customizations ([#1278](https://github.com/tailwindlabs/tailwindui-issues/issues/1278))
-
-## 2022-07-25
-
-- Update Next.js and React dependencies
-
-## 2022-07-11
-
-- Add `.env.example` file ([#1260](https://github.com/tailwindlabs/tailwindui-issues/issues/1260))
-
-## 2022-07-07
-
-- Fix duplicated empty lines in code blocks
-
-## 2022-07-06
-
-- Replace `next/image` with `next/future/image`
-
-## 2022-06-23
+## 2022-12-15
 
 - Initial release

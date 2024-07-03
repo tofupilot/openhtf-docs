@@ -1,0 +1,36 @@
+import { HeroPattern } from '@/components/HeroPattern'
+
+<HeroPattern />
+
+# OpenHTF
+
+Welcome to OpenHTF, the open-source test automation framework for simple hardware testing. This documentation will help you quickly get started and master the necessary concepts to develop efficient hardware testbenches. {{ className: 'lead' }}
+
+## Installation
+
+1. **Install Python**:
+
+   - [Download Python](https://www.python.org/downloads/) and follow the installation instructions for your operating system.
+   - Verify the installation by running `python --version` in your command line.
+
+2. **Set Up Virtual Environment**:
+
+   - Create a virtual environment to manage dependencies:
+
+   ```sh
+   python -m venv venv
+   ```
+
+   - Activate the virtual environment:
+     - **Windows**: `venv\Scripts\activate`
+     - **Linux/Mac**: `source venv/bin/activate`
+
+3. **Install OpenHTF**:
+   - Install using pip:
+   ```sh
+   pip install openhtf
+   ```
+
+## Basic Concepts
+
+A **test plan** is the core component where all **test phases** are defined and executed. **Configurations** control various aspects of the test plan and environment. **Forms** enable interaction with the test operator for manual operations or input. **Plugs** interface with external test equipment and resources. **Criteria** are thresholds compared against **measures** (test results) to determine pass or fail outcomes.

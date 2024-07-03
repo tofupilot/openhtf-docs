@@ -1,76 +1,52 @@
 
-.. _first-testbench-label:
+# Running a first testbench
 
-## Running a First Test Bench
+Let's create our first test bench and explore the basic concept of the test plan.
 
+## Create the test script
 
-Let's create our first testbench and explore the basic concept of the test plan. 
-
-Create a file called `main.py` in the folder in which you installed spintop-openhtf and copy this code.
-
-#### Basic Testbench
+Create a file called `main.py` in the folder where you installed OpenHTF and copy this code.
 
 ```python
 # main.py
 from openhtf.plugs.user_input import UserInput
-from spintop_openhtf import TestPlan
+from openhtf import TestPlan
 
-""" Test Plan """
+# Declare the test plan
+plan = TestPlan('PCB_Test_Plan')
 
-# This defines the name of the testbench.
-plan = TestPlan('hello')
-
-@plan.testcase('Hello-Test')
+# Declare and add a test case to the test plan
+@plan.testcase('Initial_Power_On_Test')
 @plan.plug(prompts=UserInput)
-def hello_world(test, prompts):
-    prompts.prompt('Hello Operator!')
-    test.dut_id = 'hello' # Manually set the DUT Id to same value every test
+def power_on_test(test, prompts):
+    prompts.prompt('Power on the device.')
+    test.dut_id = 'pcb_12345'
 
+# Execute the test plan when the script is launched
 if __name__ == '__main__':
     plan.no_trigger()
     plan.run()
-
 ```
 
-In the code above, a test plan is first declared. 
-```python
-plan = TestPlan('hello')
-```
+This simple testbench interacts with the operator by displaying "Power on the device."
 
-Then, a test case is declared and added to the test plan.
-```python
-@plan.testcase('Hello-Test')
-@plan.plug(prompts=UserInput)
-def hello_world(test, prompts):
-    prompts.prompt('Hello Operator!')
-    test.dut_id = 'hello' # Manually set the DUT Id to same value every test
-```
+## Run your first test
 
-And finally the test plan is executed when the script is launched.
-```python
-if __name__ == '__main__':
-    plan.no_trigger()
-    plan.run_console() 
+Run it using the created virtual environment:
 
-```
-
-This simple test bench will simply interact with the operator by telling him Hello Operator!. Run it using the created virtual environment :
-
-```bat
+```sh
 # Windows Activate
 venv\Scripts\activate 
 
 python main.py
 ```
 
-This test bench does not use the spintop-openhtf GUI therefore all interactions are made through the command line. The test prints Hello Operator! and indicates a PASS.
+This test bench does not use the OpenHTF GUI yet, so all interactions are made through the command line. The test prints "Power on the device." and indicates a PASS.
 
-```bat
-(venv) C:\GIT_TACK\doc_exp>python main.py
-Hello Operator!
+```sh
+(venv) C:\TofuPilot\doc_exp>python main.py
+Power on the device.
 -->
 
-================ test: hello  outcome: PASS ================
+================ test: PCB_Test_Plan  outcome: PASS ================
 ```
-
-:download:`Tutorial source <tutorials/main_first_testbench.py>`

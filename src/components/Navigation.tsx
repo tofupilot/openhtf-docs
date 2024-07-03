@@ -229,43 +229,83 @@ function NavigationGroup({
   )
 }
 
+// export const navigation: Array<NavGroup> = [
+//   {
+//     title: 'Old',
+//     links: [
+//       { title: 'Introduction', href: '/' },
+//       { title: 'Quickstart', href: '/quickstart' },
+//       { title: 'SDKs', href: '/sdks' },
+//       { title: 'Authentication', href: '/authentication' },
+//       { title: 'Pagination', href: '/pagination' },
+//       { title: 'Errors', href: '/errors' },
+//       { title: 'Webhooks', href: '/webhooks' },
+//     ],
+//   },
+//   {
+//     title: 'New',
+//     links: [
+//       { title: 'Getting started', href: '/getting-started' },
+//       { title: 'First testbench tutorial', href: '/first-testbench' },
+//       { title: 'Web application', href: '/web-application' },
+//       { title: 'Form', href: '/form' },
+//       { title: 'test-flow', href: '/test-flow' },
+//       { title: 'doc', href: '/doc' },
+//       { title: 'project-structure', href: '/project-structure' },
+//       { title: 'test-flow', href: '/test-flow' },
+
+//     ],
+//   },
+//   {
+//     title: 'Resources',
+//     links: [
+//       { title: 'Contacts', href: '/contacts' },
+//       { title: 'Conversations', href: '/conversations' },
+//       { title: 'Messages', href: '/messages' },
+//       { title: 'Groups', href: '/groups' },
+//       { title: 'Attachments', href: '/attachments' },
+//     ],
+//   },
+// ]
+
 export const navigation: Array<NavGroup> = [
   {
-    title: 'Old',
+    title: 'Getting Started',
     links: [
-      { title: 'Introduction', href: '/' },
-      { title: 'Quickstart', href: '/quickstart' },
-      { title: 'SDKs', href: '/sdks' },
-      { title: 'Authentication', href: '/authentication' },
-      { title: 'Pagination', href: '/pagination' },
-      { title: 'Errors', href: '/errors' },
-      { title: 'Webhooks', href: '/webhooks' },
+      { title: 'Introduction', href: '/introduction' },
+      { title: 'Create your first testbench', href: '/first-testbench' },
     ],
   },
   {
-    title: 'New',
+    title: 'Testbench Development',
     links: [
-      { title: 'Getting started', href: '/getting-started' },
-      { title: 'First testbench tutorial', href: '/first-testbench' },
-      { title: 'Web application', href: '/web-application' },
-      { title: 'Form', href: '/form' },
-      { title: 'test-flow', href: '/test-flow' },
-      { title: 'doc', href: '/doc' },
-      { title: 'project-structure', href: '/project-structure' },
-      { title: 'test-flow', href: '/test-flow' },
-
-
+      { title: 'Running a Simple Test', href: '/running-simple-test' },
+      {
+        title: 'Enhancing Test Complexity',
+        href: '/enhancing-test-complexity',
+      },
+      { title: 'Integrating Plugs', href: '/integrating-plugs' },
+      { title: 'Using Forms and Feedback', href: '/using-forms-feedback' },
+      { title: 'Defining Test Criteria', href: '/defining-test-criteria' },
+      { title: 'Exploring Test Results', href: '/exploring-test-results' },
     ],
   },
   {
-    title: 'Resources',
+    title: 'Configuration and Management',
     links: [
-      { title: 'Contacts', href: '/contacts' },
-      { title: 'Conversations', href: '/conversations' },
-      { title: 'Messages', href: '/messages' },
-      { title: 'Groups', href: '/groups' },
-      { title: 'Attachments', href: '/attachments' },
+      { title: 'Static Configuration', href: '/static-configuration' },
+      {
+        title: 'Test Station Configuration',
+        href: '/test-station-configuration',
+      },
+      { title: 'Web Interface Tutorial', href: '/web-interface-tutorial' },
+      { title: 'Test Bench Documentation', href: '/test-bench-documentation' },
+      { title: 'Project Structure', href: '/project-structure' },
     ],
+  },
+  {
+    title: 'Reference',
+    links: [{ title: 'Reference', href: '/reference' }],
   },
 ]
 

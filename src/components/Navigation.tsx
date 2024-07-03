@@ -250,6 +250,10 @@ export const navigation: Array<NavGroup> = [
       { title: 'Web application', href: '/web-application' },
       { title: 'Form', href: '/form' },
       { title: 'test-flow', href: '/test-flow' },
+      { title: 'doc', href: '/doc' },
+      { title: 'project-structure', href: '/project-structure' },
+      { title: 'test-flow', href: '/test-flow' },
+
 
     ],
   },

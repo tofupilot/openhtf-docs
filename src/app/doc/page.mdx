@@ -1,0 +1,26 @@
+## Documenting a Test Case
+
+
+Documenting a test case in the code itself is very simple. The documentation can be used to generate procedures and is used in the spintop-openhtf web interface to dispaly information to the operator. 
+
+The documentation process uses the python docstring feature. For more details consult https://www.python.org/dev/peps/pep-0257/. 
+
+The following code snippet illustrates how to document a test case using the docstring feature.
+
+```python
+@plan.testcase('Hello-Test')
+@plan.plug(prompts=UserInput)
+def hello_world(test, prompts):
+    """Displays Hello Operator in operator prompt and waits for Okay"""
+    prompts.prompt('Hello Operator!')
+    test.dut_id = 'hello' 
+```
+
+Add the docstring to the test bench implemented in the the :ref:`first-testbench-label` tutorial and run the test bench. As can be seen in the web interface, the docstring has been added to the test phase description in the current phase dialog and the executed phases dialog.
+
+![Web interface doc string](img/test-case-doc-web-app.png)
+
+The docstring is also available throughout the test plan to be printed by the developper. 
+
+
+:download:`Tutorial source <tutorials/main_doc.py>`

@@ -238,7 +238,7 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: 'Main Concepts',
+    title: 'Guides',
     links: [
       { title: 'Measurements', href: '/measurements' },
       {
@@ -253,10 +253,8 @@ export const navigation: Array<NavGroup> = [
         title: 'Attachments',
         href: '/attachments',
       },
-      { title: 'Integrating Plugs', href: '/integrating-plugs' },
+      { title: 'Configuration', href: '/configuration' },
       { title: 'Using Forms and Feedback', href: '/using-forms-feedback' },
-      { title: 'Defining Test Criteria', href: '/defining-test-criteria' },
-      { title: 'Exploring Test Results', href: '/exploring-test-results' },
     ],
   },
   {

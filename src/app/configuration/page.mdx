@@ -1,0 +1,92 @@
+# Configuration
+
+The configuration module in OpenHTF offers a centralized, flexible, and scalable way to manage settings for your testing environment. It allows you to adapt tests to various hardware setups, environments, and requirements without hardcoding parameters, resulting in more maintainable, reusable, and adaptable test scripts. {{ className: 'lead' }}
+
+You can define configuration options directly in your code or load them from an external configuration file. Using external configuration files can make your tests more flexible and easier to manage.
+
+## Defining configurations in code
+
+To set configurations in your OpenHTF script, use the `conf` module to declare configuration options within your script. Here’s a simple example:
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+from openhtf.util import conf
+
+# Define configuration options
+conf.declare('voltage_limit', default_value=5.0, description='Voltage limit for the test')
+
+@htf.measures(htf.Measurement('voltage'))
+def voltage_measurement(test):
+    voltage_limit = conf.voltage_limit
+    test.logger.info('Voltage limit: %s', voltage_limit)
+    
+    voltage = 4.5  # Example voltage within limit
+    test.measurements.voltage = voltage
+    
+    test.logger.info('Completed voltage measurement phase.')
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    test = htf.Test(voltage_measurement)
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
+
+if __name__ == '__main__':
+    main()
+```
+
+## Using external configuration files
+
+You can also load configurations from external files written in YAML or JSON format like:
+
+```yaml {{ title: 'config.yaml' }}
+voltage_limit: 10.0
+```
+
+Load the configuration file in your script using `conf.load_from_file()`.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+from openhtf.util import conf
+from openhtf.output.callbacks import json_factory
+
+# Define configuration options
+conf.declare('voltage_limit', default_value=5.0, description='Voltage limit for the test')
+
+@htf.measures(htf.Measurement('voltage'))
+def voltage_measurement(test):
+    voltage_limit = conf.voltage_limit
+    test.logger.info('Voltage limit: %s', voltage_limit)
+    
+    voltage = 4.5  # Example voltage within limit
+    test.measurements.voltage = voltage
+    
+    test.logger.info('Completed voltage measurement phase.')
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    test = htf.Test(voltage_measurement)
+    test.add_output_callbacks(json_factory.OutputToJSON('./test_results.json', indent=2))
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
+
+if __name__ == '__main__':
+    main()
+```
+
+When you enable JSON output, the configurations and logged lines will be included in your JSON output file. 
+
+```javascript {{ title: 'test_results.json' }}
+{
+  "dut_id": "DeviceUnderTest123",
+  ...
+  "metadata": {
+    ...
+    "config": {
+      ...
+      "voltage_limit": 5.0,
+    }
+  },
+  ...
+}
+```

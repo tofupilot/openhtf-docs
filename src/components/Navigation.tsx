@@ -235,6 +235,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/introduction' },
       { title: 'Create your first testbench', href: '/first-testbench' },
+      { title: 'Complete testbench example', href: '/complete-testbench' },
     ],
   },
   {
@@ -254,20 +255,8 @@ export const navigation: Array<NavGroup> = [
         href: '/attachments',
       },
       { title: 'Configuration', href: '/configuration' },
-      { title: 'Using Forms and Feedback', href: '/using-forms-feedback' },
-    ],
-  },
-  {
-    title: 'Configuration and Management',
-    links: [
-      { title: 'Static Configuration', href: '/static-configuration' },
-      {
-        title: 'Test Station Configuration',
-        href: '/test-station-configuration',
-      },
-      { title: 'Web Interface Tutorial', href: '/web-interface-tutorial' },
-      { title: 'Test Bench Documentation', href: '/test-bench-documentation' },
-      { title: 'Project Structure', href: '/project-structure' },
+      { title: 'Plugs', href: '/plugs' },
+      { title: 'Good practices', href: '/good-practices' },
     ],
   },
   {
@@ -280,9 +269,8 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props}>
       <ul role="list">
-        <TopLevelNavItem href="/">API</TopLevelNavItem>
-        <TopLevelNavItem href="#">Documentation</TopLevelNavItem>
-        <TopLevelNavItem href="#">Support</TopLevelNavItem>
+        {/* <TopLevelNavItem href="#">Documentation</TopLevelNavItem> */}
+        <TopLevelNavItem href="https://github.com/google/openhtf">GitHub</TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
             key={group.title}

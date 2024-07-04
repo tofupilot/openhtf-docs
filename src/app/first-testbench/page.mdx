@@ -7,31 +7,30 @@ Let's create our first test bench and explore the basic concept of the test plan
 Create a file called `main.py` in the folder where you installed OpenHTF and copy this code.
 
 ```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult, plugs
 from openhtf.plugs.user_input import UserInput
-from openhtf import TestPlan
 
-# Declare the test plan
-plan = TestPlan('PCB_Test_Plan')
-
-# Declare and add a test case to the test plan
-@plan.testcase('Initial_Power_On_Test')
-@plan.plug(prompts=UserInput)
+# Define the test phase
+@plugs.plug(prompts=UserInput)
 def power_on_test(test, prompts):
-    prompts.prompt('Power on the device.')
-    test.dut_id = 'pcb_12345'
+    prompts.prompt('Power on the device and press Return.')
+    test.dut_id = 'PCB12345'
+    return PhaseResult.CONTINUE
 
-# Execute the test plan when the script is launched
+# Create a test instance with the defined phase
+test = Test(power_on_test)
+
 if __name__ == '__main__':
-    plan.no_trigger()
-    plan.run()
+    test.execute()
 ```
 
-This simple testbench interacts with the operator by displaying "Power on the device."
+This simple testbench interacts with the operator by displaying "Power on the device and press Return."
 
 <Note>
-  You may not know about the @ syntax, called decorators. It modifies functions
-  or methods using other functions. For more details, see the official Python
-  documentation.
+  Did you know about the @ syntax in Python, called decorators? They modify
+  functions or methods using other functions. For more details, see the
+  [official Python
+  documentation](https://docs.python.org/3/glossary.html#term-decorator).
 </Note>
 
 ## Run in command line
@@ -42,14 +41,14 @@ Run it using the created virtual environment:
 python main.py
 ```
 
-This test bench does not use the OpenHTF GUI yet, so all interactions are made through the command line. The test prints "Power on the device." and indicates a PASS.
+This test bench does not use the operator UI yet, so all interactions are made through the command line.
 
 ```sh
 (venv) C:\tofupilot > python main.py
-Power on the device.
+Power on the device and press Return.
 -->
 
-================ test: PCB_Test_Plan  outcome: PASS ================
+================ test: openhtf_test  outcome: PASS ================
 ```
 
 ## Run in operator UI

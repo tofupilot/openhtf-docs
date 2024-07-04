@@ -1,0 +1,154 @@
+# Attachments
+
+Hardware testing often involves capturing data such as pictures or measurement files. OpenHTF makes it easy to link these files to the test records using its attachment features.
+
+To add attachments in your OpenHTF script, you can use the `test.attach` method. Below are examples of adding different types of attachments to your script and sample output files.
+
+## Example 1: CSV file
+
+In this example, we generate a CSV file containing measurement data and attach it to the test record.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+import os
+import csv
+from openhtf.output.callbacks import json_factory
+
+@htf.measures(htf.Measurement('voltage'), htf.Measurement('current'))
+def electrical_measurements(test):
+    test.logger.info('Starting electrical measurements phase.')
+    voltage = 12.0  # Volts
+    current = 1.5  # Amperes
+    test.measurements.voltage = voltage
+    test.measurements.current = current
+
+    # Create a CSV file
+    os.makedirs('output_files', exist_ok=True)
+    csv_file_path = 'output_files/measurement_data.csv'
+    with open(csv_file_path, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Voltage', 'Current'])
+        writer.writerow([voltage, current])
+    
+    # Attach the CSV file
+    with open(csv_file_path, 'rb') as f:
+        test.attach('measurement_data_csv', f.read(), mimetype='text/csv')
+    
+    test.logger.info('Completed electrical measurements phase.')
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    test = htf.Test(electrical_measurements)
+    test.add_output_callbacks(
+        json_factory.OutputToJSON('./output_files/test_results.json', indent=2)
+    )
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
+
+if __name__ == '__main__':
+    main()
+```
+
+In this example, we created an output directory to store the test log and attachments next to each other.
+```
+output_files/
+├── measurement_data.csv
+└── test_results.json
+```
+
+The CSV file `measurement_data.csv` contains the following data:
+```python {{ title: 'measurement_data.csv' }}
+Voltage,Current
+12.0,1.5
+```
+
+## Example 2: Image file
+
+In this example, we generate a PNG image of a curve using a library like Matplotlib and attach it to the test record.
+```sh
+pip install matplotlib
+```
+
+```python
+import openhtf as htf
+import logging
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+from openhtf.output.callbacks import json_factory
+from openhtf.util import validators
+
+# Use a non-interactive backend for Matplotlib
+plt.switch_backend('Agg')
+
+@htf.measures(
+    htf.Measurement('temperature').with_units('C').in_range(20, 30)
+)
+def temperature_measurement(test):
+    test.logger.info('Starting temperature measurement phase.')
+    temperature = 25  # Initial temperature in Celsius
+    test.measurements.temperature = temperature
+
+    # Create a folder for output files
+    os.makedirs('output_files', exist_ok=True)
+    
+    # Generate a realistic temperature curve within limits
+    time = np.linspace(0, 10, 100)
+    temperature_curve = temperature + 3 * np.sin(time) + np.random.normal(0, 0.5, size=time.shape)
+    temperature_curve = np.clip(temperature_curve, 20, 30)  # Ensure values stay within limits
+    
+    # Plot the temperature curve
+    plt.figure()
+    plt.plot(time, temperature_curve, label='Temperature')
+    plt.axhline(y=30, color='r', linestyle='--', label='Upper Limit')
+    plt.axhline(y=20, color='r', linestyle='--', label='Lower Limit')
+    plt.title('Temperature Measurement Over Time')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Temperature (C)')
+    plt.legend()
+    plt.ylim(15, 35)  # Add some margin around the limits
+    image_file_path = 'output_files/temperature_curve.png'
+    plt.savefig(image_file_path)
+    plt.close()
+
+    # Attach the image file
+    with open(image_file_path, 'rb') as f:
+        test.attach('temperature_curve_image', f.read(), mimetype='image/png')
+    
+    test.logger.info('Completed temperature measurement phase.')
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    test = htf.Test(temperature_measurement)
+    test.add_output_callbacks(
+        json_factory.OutputToJSON('./output_files/test_results.json', indent=2)
+    )
+    test.execute(test_start=lambda: 'DeviceUnderTest456')
+
+if __name__ == '__main__':
+    main()
+```
+
+Test log and attachments are stored next to each other in the output directory:
+
+```txt
+output_files/
+├── temperature_curve.png
+└── test_results.json
+```
+
+The generated image looks like this:
+
+<Image src="/temperature_curve.png" alt="Create API key" />
+
+The JSON log also includes a binary version of the image:
+
+```javascript {{ title: 'test_results.json' }}
+"attachments": {
+    "temperature_curve_image": {
+      "mimetype": "image/png",
+      "sha1": "90ab4aa2f71b52b0492e31be3430cc53581cd5d6",
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAoAAAAHgCAYAAAA10dzkAAA..."
+    }
+}
+```

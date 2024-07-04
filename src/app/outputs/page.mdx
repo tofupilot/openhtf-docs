@@ -1,0 +1,118 @@
+# Outputs
+
+OpenHTF supports various output formats to record test results, such as JSON and protobuf. This guide explains how to configure these formats, including examples of adding output callbacks to your script and sample output files.
+
+## JSON output
+
+To add output callbacks in your OpenHTF script, specify the output mechanism you want to use. Here’s how to output test results to a JSON file.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.output.callbacks import json_factory
+
+@htf.measures(htf.Measurement('voltage'), htf.Measurement('current'))
+def electrical_measurements(test):
+    test.measurements.voltage = 12.0  # Volts
+    test.measurements.current = 1.5  # Amperes
+
+def main():
+    test = htf.Test(electrical_measurements)
+    test.add_output_callbacks(
+        json_factory.OutputToJSON('./test_results.json', indent=2)
+    )
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
+
+if __name__ == '__main__':
+    main()
+```
+
+Here’s an example of what the JSON output might look like. Note that some additional information is logged, such as detailed metadata, phase options, and log records, but is not displayed here for brevity:
+```javascript {{ title: 'test_results.json' }}
+{
+  "dut_id": "DeviceUnderTest123",
+  "start_time_millis": 1720126751249,
+  "end_time_millis": 1720126751250,
+  "outcome": "PASS",
+  "outcome_details": [],
+  "marginal": false,
+  "metadata": {
+    "test_name": "openhtf_test",
+    "config": {
+      "attachments_directory": null,
+      "plug_teardown_timeout_s": 0,
+      "allow_unset_measurements": false,
+      "station_id": "Juliens-Air",
+      "cancel_timeout_s": 2,
+      "stop_on_first_failure": false,
+      "capture_source": false
+    }
+  },
+  "phases": [
+    {
+      "measurements": {},
+      "name": "trigger_phase",
+      "outcome": "PASS",
+      ...
+    },
+    {
+      "measurements": {
+        "voltage": {
+          "name": "voltage",
+          "outcome": "PASS",
+          "measured_value": 12.0
+        },
+        "current": {
+          "name": "current",
+          "outcome": "PASS",
+          "measured_value": 1.5
+        }
+      },
+      "name": "electrical_measurements",
+      "outcome": "PASS",
+      ...
+    }
+  ],
+  ...
+}
+```
+
+## Custom output
+
+You can also implement custom output mechanisms if the built-in ones do not meet your requirements. This involves creating a function that handles the test record and adding it as an output callback.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.output import callbacks
+
+def custom_output_callback(test_record):
+    with open('./custom_output.txt', 'w') as f:
+        f.write('Custom Output\n')
+        f.write(f'DUT ID: {test_record.dut_id}\n')
+        f.write(f'Outcome: {test_record.outcome}\n')
+        for phase in test_record.phases:
+            f.write(f'Phase: {phase.name}\n')
+            for measurement in phase.measurements.values():
+                f.write(f'{measurement.name}: {measurement.value}\n')
+
+@htf.measures(htf.Measurement('temperature').with_units('C'))
+def temperature_measurement(test):
+    test.measurements.temperature = 25  # Celsius
+
+def main():
+    test = htf.Test(temperature_measurement)
+    test.add_output_callbacks(custom_output_callback)
+    test.execute(test_start=lambda: 'DeviceUnderTest456')
+
+if __name__ == '__main__':
+    main()
+```
+
+The output file will then be:
+
+```txt {{ title: 'custom_output.txt' }}
+Custom Output
+DUT ID: DeviceUnderTest456
+Outcome: Outcome.PASS
+Phase: trigger_phase
+Phase: temperature_measurement
+```

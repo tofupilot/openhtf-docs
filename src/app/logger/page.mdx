@@ -1,0 +1,105 @@
+# Logger
+
+OpenHTF provides various logger options to capture and manage log output during test execution. This guide explains how to configure these logger options, including examples of adding log handlers to your script and sample log outputs.
+
+## Standard logger
+
+To configure logger options in your OpenHTF script, you need to specify the log level and log handlers. Here’s how to configure the logger.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.output.callbacks import json_factory
+
+@htf.measures(htf.Measurement('voltage'), htf.Measurement('current'))
+def electrical_measurements(test):
+    test.logger.info('Starting electrical measurements phase.')
+    test.measurements.voltage = 12.0  # Volts
+    test.measurements.current = 1.5  # Amperes
+    test.logger.info('Completed electrical measurements phase.')
+
+def main():
+    test = htf.Test(electrical_measurements)
+    test.add_output_callbacks(
+        json_factory.OutputToJSON('./test_results.json', indent=2)
+    )
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
+
+if __name__ == '__main__':
+    main()
+```
+
+Here’s what the log output will look like.
+
+```javascript {{ title: 'test_results.json' }}
+{
+  "dut_id": "DeviceUnderTest123",
+  "start_time_millis": 1720127825373,
+  "end_time_millis": 1720127825374,
+  "outcome": "PASS",
+  ...
+  "log_records": [
+    ...
+    {
+      "level": 20,
+      "logger_name": "openhtf.test_record.15424:cc5eb1ddc31a4aa5:58fbe628bee4449c:1720127825373.phase.electrical_measurements",
+      "source": "first-testbench-ui.py",
+      "lineno": 10,
+      "timestamp_millis": 1720127825373,
+      "message": "Starting electrical measurements phase."
+    },
+    {
+      "level": 20,
+      "logger_name": "openhtf.test_record.15424:cc5eb1ddc31a4aa5:58fbe628bee4449c:1720127825373.phase.electrical_measurements",
+      "source": "first-testbench-ui.py",
+      "lineno": 13,
+      "timestamp_millis": 1720127825374,
+      "message": "Completed electrical measurements phase."
+    },
+    ...
+  ]
+  ...
+}
+```
+
+## Custom log handlers
+
+If the built-in log handlers do not meet your requirements, you can implement custom log handlers. This involves creating a handler function and adding it to the logger.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+
+class CustomLogHandler(logging.Handler):
+    def emit(self, record):
+        log_entry = self.format(record)
+        with open('./custom_log.txt', 'a') as f:
+            f.write(log_entry + '\n')
+
+@htf.measures(htf.Measurement('temperature').with_units('C'))
+def temperature_measurement(test):
+    test.logger.info('Starting temperature measurement phase.')
+    test.measurements.temperature = 25  # Celsius
+    test.logger.info('Completed temperature measurement phase.')
+
+def main():
+    logger = logging.getLogger('openhtf')
+    logger.setLevel(logging.INFO)
+    handler = CustomLogHandler()
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+
+    test = htf.Test(temperature_measurement)
+    test.execute(test_start=lambda: 'DeviceUnderTest456')
+
+if __name__ == '__main__':
+    main()
+```
+
+Here’s what the log output will look like.
+
+```txt {{ title: 'custom_log.txt' }}¨
+...
+2024-07-04 23:34:12,438 - openhtf.test_record.15992:3934a78ed3f94487:fc54e7cb7bac42b4:1720128852437.phase.temperature_measurement - INFO - Starting temperature measurement phase.
+2024-07-04 23:34:12,438 - openhtf.test_record.15992:3934a78ed3f94487:fc54e7cb7bac42b4:1720128852437.phase.temperature_measurement - INFO - Completed temperature measurement phase.
+...
+```

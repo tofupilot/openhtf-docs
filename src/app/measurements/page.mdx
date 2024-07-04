@@ -1,0 +1,162 @@
+# Measurements
+
+In the previous example, we introduced a basic phase in OpenHTF. Now, let's delve into measurements, which are critical components in OpenHTF that allow us to capture and validate data within these phases. Measurements provide a structured way to record test results, apply validations, and ensure data consistency throughout the testing process.
+
+## Simple measurement
+
+Let's add a simple measurement to our phase. In this example, device_status captures a string value within status_check_phase. Measurements in OpenHTF record and store data generated during a phase, providing a structured way to validate and analyze test results.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(htf.Measurement('device_status'))
+def status_check_phase(test):
+    test.measurements.device_status = 'Operational'
+
+def main():
+    test = htf.Test(status_check_phase)
+    test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Multiple measurements
+
+In the previous example, we used a single measurement to capture data. Now, we'll extend this concept by introducing multiple measurements within a single phase. This allows us to record various types of data simultaneously, using both string declarations and the Measurement class.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures('voltage', 'current')
+@htf.measures(htf.Measurement('resistance'), htf.Measurement('power'))
+def electrical_measurements(test):
+    # Simulate test measurements
+    test.measurements.voltage = 12.0  # Volts
+    test.measurements.current = 1.5  # Amperes
+
+    # Calculate resistance (Ohm's Law: V = IR) and power (P = VI)
+    test.measurements.resistance = test.measurements.voltage / test.measurements.current  # Ohms
+    test.measurements.power = test.measurements.voltage * test.measurements.current  # Watts
+
+def main():
+    test = htf.Test(electrical_measurements)
+    test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Validated measurements
+
+In addition to capturing data, we often need to ensure that the data meets specific criteria. This can be done using validation functions. Validators in OpenHTF allow us to define constraints on measurements, ensuring that the values recorded are within acceptable ranges or conditions.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.util import validators
+
+@htf.measures(
+    htf.Measurement('test_duration').in_range(0, 10).with_units(htf.units.SECOND))
+def measure_duration(test):
+    test.measurements.test_duration = 5  # Seconds
+
+def main():
+    test = htf.Test(measure_duration)
+    test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Inline measurement declaration
+
+For greater flexibility, measurements can also be declared inline with additional attributes. This approach allows you to specify details such as docstring, units, and validators directly within the phase, making the code more concise and readable.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.util import validators
+
+@htf.measures(
+    'frequency', docstring='Frequency measurement', units=htf.units.HERTZ, validators=[validators.in_range(0, 10)])
+@htf.measures('status', docstring='Status message')
+def inline_phase(test):
+    test.measurements.frequency = 15  # Hertz (out of valid range)
+    test.measurements.status = 'This one is unvalidated.'
+
+def main():
+    test = htf.Test(inline_phase)
+    test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Multidimensional measurements
+
+Sometimes, measurements need to capture data across multiple dimensions. Multidimensional measurements in OpenHTF enable detailed data analysis. These measurements can be converted into DataFrames and NumPy arrays for further processing and visualization. Pandas, a powerful Python library, helps convert measurement data into DataFrames for easier analysis. To install pandas, use:
+
+```sh
+pip install pandas
+```
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import random
+import pandas as pd
+
+@htf.measures(
+    htf.Measurement('power_time_series').with_dimensions('ms', 'V', 'A'))
+@htf.measures(htf.Measurement('average_voltage').with_units('V'))
+@htf.measures(htf.Measurement('average_current').with_units('A'))
+@htf.measures(htf.Measurement('resistance').with_units('ohm').in_range(9, 11))
+def multdim_measurements(test):
+    for t in range(10):
+        resistance = 10
+        voltage = 10 + 10.0 * t
+        current = voltage / resistance + .01 * random.random()
+        dimensions = (t, voltage, current)
+        test.measurements['power_time_series'][dimensions] = 0
+
+    # Convert to DataFrame
+    power_df = test.measurements['power_time_series'].to_dataframe(columns=['ms', 'V', 'A', 'n/a'])
+    test.logger.info('DataFrame:\n%s', power_df)
+    test.measurements['average_voltage'] = power_df['V'].mean()
+
+    # Convert to NumPy array
+    power_array = power_df.to_numpy()
+    test.logger.info('NumPy Array:\n%s', power_array)
+    test.measurements['average_current'] = power_array.mean(axis=0)[2]
+
+    # Calculate resistance
+    test.measurements['resistance'] = (
+        test.measurements['average_voltage'] /
+        test.measurements['average_current'])
+
+def main():
+    test = htf.Test(multdim_measurements)
+    test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Marginal Mmasurements
+
+For finer granularity in test results, use marginal measurements. They set stricter limits within the acceptable range, giving detailed information about test performance. This allows distinguishing between fully passing results and those close to failing, without affecting the overall phase outcome, helping identify potential issues early.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    htf.Measurement('resistance').with_units('ohm').in_range(
+        minimum=5, maximum=17, marginal_minimum=9, marginal_maximum=11))
+def measure_resistance(test):
+    test.measurements.resistance = 13  # Ohms
+
+def main():
+    test = htf.Test(measure_resistance)
+    test.execute()
+
+if __name__ == '__main__':
+    main()
+```

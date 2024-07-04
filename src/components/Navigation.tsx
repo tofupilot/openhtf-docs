@@ -229,45 +229,6 @@ function NavigationGroup({
   )
 }
 
-// export const navigation: Array<NavGroup> = [
-//   {
-//     title: 'Old',
-//     links: [
-//       { title: 'Introduction', href: '/' },
-//       { title: 'Quickstart', href: '/quickstart' },
-//       { title: 'SDKs', href: '/sdks' },
-//       { title: 'Authentication', href: '/authentication' },
-//       { title: 'Pagination', href: '/pagination' },
-//       { title: 'Errors', href: '/errors' },
-//       { title: 'Webhooks', href: '/webhooks' },
-//     ],
-//   },
-//   {
-//     title: 'New',
-//     links: [
-//       { title: 'Getting started', href: '/getting-started' },
-//       { title: 'First testbench tutorial', href: '/first-testbench' },
-//       { title: 'Web application', href: '/web-application' },
-//       { title: 'Form', href: '/form' },
-//       { title: 'test-flow', href: '/test-flow' },
-//       { title: 'doc', href: '/doc' },
-//       { title: 'project-structure', href: '/project-structure' },
-//       { title: 'test-flow', href: '/test-flow' },
-
-//     ],
-//   },
-//   {
-//     title: 'Resources',
-//     links: [
-//       { title: 'Contacts', href: '/contacts' },
-//       { title: 'Conversations', href: '/conversations' },
-//       { title: 'Messages', href: '/messages' },
-//       { title: 'Groups', href: '/groups' },
-//       { title: 'Attachments', href: '/attachments' },
-//     ],
-//   },
-// ]
-
 export const navigation: Array<NavGroup> = [
   {
     title: 'Getting Started',
@@ -277,12 +238,20 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: 'Testbench Development',
+    title: 'Main Concepts',
     links: [
-      { title: 'Running a Simple Test', href: '/running-simple-test' },
+      { title: 'Measurements', href: '/measurements' },
       {
-        title: 'Enhancing Test Complexity',
-        href: '/enhancing-test-complexity',
+        title: 'Outputs',
+        href: '/outputs',
+      },
+      {
+        title: 'Logger',
+        href: '/logger',
+      },
+      {
+        title: 'Attachments',
+        href: '/attachments',
       },
       { title: 'Integrating Plugs', href: '/integrating-plugs' },
       { title: 'Using Forms and Feedback', href: '/using-forms-feedback' },

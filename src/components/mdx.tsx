@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
 import { Prose } from '@/components/Prose'
+import Image from 'next/image'
 
 export const a = Link
 export { Button } from '@/components/Button'
@@ -92,6 +93,19 @@ export function Properties({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
+
+function CustomImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <Image
+      {...{ src, alt }}
+      width={1000}
+      height={800}
+      className="w-full rounded-lg border-4 border-zinc-300 shadow-sm ring-1 ring-zinc-400 dark:ring-zinc-500"
+    />
+  )
+}
+
+export { CustomImage as Image }
 
 export function Property({
   name,

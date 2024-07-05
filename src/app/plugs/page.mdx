@@ -1,137 +1,84 @@
-.. _plugs-label:
+# Plugs
 
-## About Plugs
+OpenHTF provides a powerful plugin system, known as "plugs," which allows to abstract hardware interactions. They can be used to encapsulate reusable test logic, hardware interfaces, or any other functionality you need. {{ className: 'lead' }}
 
-Plugs are an OpenHTF concept. The OpenHTF team defines them as follow:
+## Defining plugs
 
-> The essence of an OpenHTF test is to interact with a DUT to exercise it in various ways and observe the result. Sometimes this is done by communicating directly with the DUT, and other times it's done by communicating with a piece of test equipment to which the DUT is attached in some way. A **plug** is a piece of code written to enable OpenHTF to interact with a particular type of hardware, whether that be a DUT itself or a piece of test equipment.
+Plugs are defined as classes that inherit from `htf.Plug`.
 
-Technically, plugs are a Python class that is instanciated once per test and shared between test phases. They have a strong sense of *cleanup* that allows them to execute specific teardown actions regardless of the test outcome.
+A plug is a class that inherits from `plugs.BasePlug` and can implement a `tearDown function`. This design makes test scripts cleaner and more modular. Plugs simplify setup and teardown processes, promote code reuse, and can wrap existing Python objects for seamless integration​
 
-Although OpenHTF references hardware directly, plugs are also used in various roles that are non-related to hardware, such as user input. Overall, a better explanation would be that they are used for resources that are shared by test cases:
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.plugs import Plug
 
-- Plugs for test equipments
-- Plugs for DUT interfacing, which can be subdivised in some cases:
-    - COM Interface
-    - SSH Interface
-    - Etc.
-- Plugs for user input
-- Plugs for custom frontend interaction
-- Plugs for sharing test context, such as calibration performed over multiple test cases
+class MyCustomPlug(Plug):
+    def setup(self):
+        self.value = 42
 
-## Using Plugs
+    def do_something(self):
+        return self.value
 
-Using plugs in spintop-openhtf is pretty straightforward. Let's take the UserInput plug as example since it is used in pretty much all tests.
+@htf.plug(my_plug=MyCustomPlug)
+def my_test_phase(test, my_plug):
+    result = my_plug.do_something()
+    test.logger.info('Plug returned: %s', result)
 
-1. First, the plug must be imported.
-    ```python
-    from openhtf.plugs.user_input import UserInput
-    ```
+def main():
+    test = htf.Test(my_test_phase)
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
 
-2. Then, on testcases that require this plug, the plug decorator must be used.
-
-    ```python
-    from openhtf.plugs.user_input import UserInput
-    from spintop_openhtf import TestPlan
-
-    plan = TestPlan('mytest')
-
-    @plan.testcase('TEST1')
-    @plan.plug(prompt=UserInput) # 'prompt' is user-defined
-    def test_1(test, prompt): # prompt will contain an instance of UserInput
-
-    ```
-
-The *class* of the plug is used as argument to the plug decorator. **This is important**. The executor will instantiate an instance of the class and use the same object across a test run. **On each new test, the plug will be re-instantiated.**
-
-.. warning:: 
-    You choose the name you want to give to the argument. The name must have a match in the function definition. For example, **the following would FAIL**:
-
-```python
-
-# Will complain that 'prompt' is not an argument
-@plan.testcase('TEST1')
-@plan.plug(prompt=UserInput) 
-def test_1(test, user_input): # WRONG. No user_input argument exists
-
+if __name__ == '__main__':
+    main()
 ```
 
-## Creating Plugs
+## Using plugs in test phases
 
-Creating plugs is the basis of reusing interface functionnalities. As an example, we will create a plug that copies a file from a source folder to a destination.
+Plugs can be injected into test phases using the `@htf.plug` decorator. This makes it easy to share plug instances across multiple phases.
 
-### Base Structure
+```python {{ title: 'main.py' }}
+@htf.plug(my_plug=MyCustomPlug)
+def another_test_phase(test, my_plug):
+    my_plug.value = 100
+    test.logger.info('Plug value set to: %s', my_plug.value)
 
-Every plug must inherit from `BasePlug`. Moreover, the `__init__` method must take no arguments. The following excerpt illustrates the plug definition
+def main():
+    test = htf.Test(my_test_phase, another_test_phase)
+    test.execute(test_start=lambda: 'DeviceUnderTest456')
 
-```python
-
-import shutil
-
-from openhtf.plugs import BasePlug
-
-class FileCopier(BasePlug):
-    def copy_file(self, source_file, destination_folder):
-        shutil.copy(source_file, destination_folder)
-
+if __name__ == '__main__':
+    main()
 ```
 
-The following excerpt instanciates the plug in a test case.
+## Plug configuration
 
-```python
+Plugs can also have their own configurations. You can declare configuration options and load them similarly to how you do it for tests.
 
-@plan.testcase('File Copy Test')
-@plan.plug(copy_plug=FileCopier) 
-def file_copy_test(test, copy_plug): 
-    copy_plug.copy_file(source, destination)
+```python {{ title: 'main.py' }}
+from openhtf.util import conf
 
-```
+# Define configuration options for the plug
+conf.declare('custom_value', default_value=10, description='Custom value for the plug')
 
-:download:`Tutorial source <../tutorials/main_plug.py>`
+class ConfigurablePlug(Plug):
+    def setup(self):
+        self.value = conf.custom_value
 
+    def do_something(self):
+        return self.value
 
+@htf.plug(config_plug=ConfigurablePlug)
+def config_test_phase(test, config_plug):
+    result = config_plug.do_something()
+    test.logger.info('Configurable plug returned: %s', result)
 
-## Wrapping spintop-openhtf Plugs
+def main():
+    # Load configuration from file if needed
+    conf.load_from_file('config.yaml')
 
-A typical manner of creating custom plugs for a test bench is to wrap an existing, spintop-openhtf plug, to add applicative functionalities to it. 
+    test = htf.Test(config_test_phase)
+    test.execute(test_start=lambda: 'DeviceUnderTest789')
 
-For example, a linux shell plug specific to a product can be created by wrapping the spintop-openhtf comport plug. The plug adds typical linux features to the comport plug such as login, file read, file copy, etc. 
-
-The plug is created
-
-```python
-from spintop_openhtf.plugs.iointerface.comport import ComportInterface
-
-class LinuxPlug(ComportInterface):
-
-    def __init__(self, comport, baudrate=115200):
-		super().__init__(comport, baudrate)
-        
-	def login(self, username):
-		return self.com_target("{}".format(username), '{}@'.format(username), timeout=10, keeplines=0)	
-        
-	def file_read(self, file):
-		return self.com_target("cat {}".format(file), '@', timeout=10, keeplines=0)	
-        
-	def file_copy(self, source, destination):
-		return self.com_target("cp {} {}".format(source, destination), '@', timeout=10, keeplines=0)	
-``` 
-
-and imported in a test case
-
-```python
-linux_plug = LinuxPlug.as_plug( 'linux_plug', comport='COM5',  baudrate=115200)
-
-@plan.testcase('Linux_Test')
-@plan.plug(linux=linux_plug)
-def LinuxTest(test, linux):
-	try:
-		linux.open_with_log()
-		test.logger.info ("COM Port open")
-        print(linux.file_read('file.txt'))
-        linux.file_copy('file.txt',destination)
-	except:
-		test.logger.info ("COM Port open failed")
-		return PhaseResult.STOP
-
+if __name__ == '__main__':
+    main()
 ```

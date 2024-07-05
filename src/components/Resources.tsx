@@ -1,23 +1,17 @@
 'use client'
 
-import Link from 'next/link'
 import {
   type MotionValue,
   motion,
   useMotionTemplate,
   useMotionValue,
 } from 'framer-motion'
+import Link from 'next/link'
 
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
-import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
-import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
-import { UserIcon } from '@/components/icons/UserIcon'
-import { UsersIcon } from '@/components/icons/UsersIcon'
-import { RocketIcon } from './icons/RocketIcon'
-import { AnalyticsIcon } from './icons/AnalyticsIcon'
 import { PuzzleIcon } from './icons/PuzzleIcon'
-import { UiIcon } from './icons/UiIcon'
+import { RocketIcon } from './icons/RocketIcon'
 
 interface Resource {
   href: string

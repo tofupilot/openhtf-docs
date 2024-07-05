@@ -233,9 +233,9 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Getting Started',
     links: [
-      { title: 'Introduction', href: '/introduction' },
+      { title: 'Introduction', href: '/' },
+      { title: 'Installation', href: '/installation' },
       { title: 'Create your first testbench', href: '/first-testbench' },
-      { title: 'Complete testbench example', href: '/complete-testbench' },
     ],
   },
   {
@@ -256,13 +256,12 @@ export const navigation: Array<NavGroup> = [
       },
       { title: 'Configuration', href: '/configuration' },
       { title: 'Plugs', href: '/plugs' },
-      { title: 'Good practices', href: '/good-practices' },
     ],
   },
-  {
-    title: 'Reference',
-    links: [{ title: 'Reference', href: '/reference' }],
-  },
+  // {
+  //   title: 'Reference',
+  //   links: [{ title: 'Reference', href: '/reference' }],
+  // },
 ]
 
 export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
@@ -270,7 +269,9 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
     <nav {...props}>
       <ul role="list">
         {/* <TopLevelNavItem href="#">Documentation</TopLevelNavItem> */}
-        <TopLevelNavItem href="https://github.com/google/openhtf">GitHub</TopLevelNavItem>
+        <TopLevelNavItem href="https://github.com/google/openhtf">
+          GitHub
+        </TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
             key={group.title}

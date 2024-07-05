@@ -14,6 +14,10 @@ import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
 import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
 import { UserIcon } from '@/components/icons/UserIcon'
 import { UsersIcon } from '@/components/icons/UsersIcon'
+import { RocketIcon } from './icons/RocketIcon'
+import { AnalyticsIcon } from './icons/AnalyticsIcon'
+import { PuzzleIcon } from './icons/PuzzleIcon'
+import { UiIcon } from './icons/UiIcon'
 
 interface Resource {
   href: string
@@ -28,11 +32,11 @@ interface Resource {
 
 const resources: Array<Resource> = [
   {
-    href: '/contacts',
-    name: 'Contacts',
+    href: '/first-testbench',
+    name: 'Getting started',
     description:
-      'Learn about the contact model and how to create, retrieve, update, delete, and list contacts.',
-    icon: UserIcon,
+      'Learn how to write test scripts with OpenHTF, including defining phases and collecting measurements.',
+    icon: RocketIcon,
     pattern: {
       y: 16,
       squares: [
@@ -42,25 +46,11 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/conversations',
-    name: 'Conversations',
+    href: '/tofupilot',
+    name: 'Analytics',
     description:
-      'Learn about the conversation model and how to create, retrieve, update, delete, and list conversations.',
-    icon: ChatBubbleIcon,
-    pattern: {
-      y: -6,
-      squares: [
-        [-1, 2],
-        [1, 3],
-      ],
-    },
-  },
-  {
-    href: '/messages',
-    name: 'Messages',
-    description:
-      'Learn about the message model and how to create, retrieve, update, delete, and list messages.',
-    icon: EnvelopeIcon,
+      'Discover how to seamlessly integrate OpenHTF with TofuPilot for instant test step analytics and insights.',
+    icon: AnalyticsIcon,
     pattern: {
       y: 32,
       squares: [
@@ -70,11 +60,25 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/groups',
-    name: 'Groups',
+    href: '/plugs',
+    name: 'Plugs',
     description:
-      'Learn about the group model and how to create, retrieve, update, delete, and list groups.',
-    icon: UsersIcon,
+      'Explore how to use and create plugs in OpenHTF to interface with various hardware and test equipment.',
+    icon: PuzzleIcon,
+    pattern: {
+      y: -6,
+      squares: [
+        [-1, 2],
+        [1, 3],
+      ],
+    },
+  },
+  {
+    href: '/operator-ui',
+    name: 'Operator UI',
+    description:
+      'Learn about the web-based graphical interface in OpenHTF for real-time test monitoring and management.',
+    icon: UiIcon,
     pattern: {
       y: 22,
       squares: [[0, 1]],
@@ -174,7 +178,7 @@ export function Resources() {
   return (
     <div className="my-16 xl:max-w-none">
       <Heading level={2} id="resources">
-        Resources
+        Guides
       </Heading>
       <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/5 pt-10 sm:grid-cols-2 xl:grid-cols-4 dark:border-white/5">
         {resources.map((resource) => (

@@ -234,13 +234,7 @@ export const navigation: Array<NavGroup> = [
     title: 'Getting Started',
     links: [
       { title: 'Introduction', href: '/' },
-      { title: 'Installation', href: '/installation' },
       { title: 'Create your first testbench', href: '/first-testbench' },
-    ],
-  },
-  {
-    title: 'Guides',
-    links: [
       { title: 'Measurements', href: '/measurements' },
       {
         title: 'Outputs',
@@ -255,8 +249,24 @@ export const navigation: Array<NavGroup> = [
         href: '/attachments',
       },
       { title: 'Configuration', href: '/configuration' },
-      { title: 'Plugs', href: '/plugs' },
     ],
+  },
+  {
+    title: 'Analytics',
+    links: [
+      { title: 'Introduction to TofuPilot', href: '/tofupilot' },
+      { title: 'Unit test traceability', href: '/tofupilot' },
+      { title: 'First pass yield', href: '/tofupilot' },
+      { title: 'Test steps performances', href: '/tofupilot' },
+    ],
+  },
+  {
+    title: 'Plugs',
+    links: [{ title: 'Plugs', href: '/plugs' }],
+  },
+  {
+    title: 'Operator UI',
+    links: [{ title: 'Plugs', href: '/plugs' }],
   },
   // {
   //   title: 'Reference',

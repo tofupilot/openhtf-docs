@@ -6,6 +6,7 @@ import { Layout } from '@/components/Layout'
 import { type Section } from '@/components/SectionProvider'
 
 import '@/styles/tailwind.css'
+import { Analytics } from '@vercel/analytics/react'
 
 export const metadata: Metadata = {
   title: {
@@ -35,6 +36,7 @@ export default async function RootLayout({
           <div className="w-full">
             <Layout allSections={allSections}>{children}</Layout>
           </div>
+          <Analytics />
         </Providers>
       </body>
     </html>

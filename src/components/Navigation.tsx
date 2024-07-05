@@ -234,43 +234,39 @@ export const navigation: Array<NavGroup> = [
     title: 'Getting Started',
     links: [
       { title: 'Introduction', href: '/' },
-      { title: 'Create your first testbench', href: '/first-testbench' },
+      { title: 'Create your first test', href: '/first-test' },
       { title: 'Measurements', href: '/measurements' },
       {
         title: 'Outputs',
         href: '/outputs',
       },
       {
-        title: 'Logger',
-        href: '/logger',
-      },
-      {
         title: 'Attachments',
         href: '/attachments',
+      },
+      {
+        title: 'Logger',
+        href: '/logger',
       },
       { title: 'Configuration', href: '/configuration' },
     ],
   },
-  {
-    title: 'Analytics',
-    links: [
-      { title: 'Introduction to TofuPilot', href: '/tofupilot' },
-      { title: 'Unit test traceability', href: '/tofupilot' },
-      { title: 'First pass yield', href: '/tofupilot' },
-      { title: 'Test steps performances', href: '/tofupilot' },
-    ],
-  },
+  // {
+  //   title: 'Analytics',
+  //   links: [
+  //     { title: 'Introduction to TofuPilot', href: '/tofupilot' },
+  //     { title: 'Unit test traceability', href: '/tofupilot' },
+  //     { title: 'First pass yield', href: '/tofupilot' },
+  //     { title: 'Test steps performances', href: '/tofupilot' },
+  //   ],
+  // },
   {
     title: 'Plugs',
     links: [{ title: 'Plugs', href: '/plugs' }],
   },
-  {
-    title: 'Operator UI',
-    links: [{ title: 'Plugs', href: '/plugs' }],
-  },
   // {
-  //   title: 'Reference',
-  //   links: [{ title: 'Reference', href: '/reference' }],
+  //   title: 'Operator UI',
+  //   links: [{ title: 'Plugs', href: '/plugs' }],
   // },
 ]
 

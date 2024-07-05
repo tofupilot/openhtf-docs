@@ -45,20 +45,20 @@ const resources: Array<Resource> = [
       ],
     },
   },
-  {
-    href: '/tofupilot',
-    name: 'Analytics',
-    description:
-      'Discover how to seamlessly integrate OpenHTF with TofuPilot for instant test step analytics and insights.',
-    icon: AnalyticsIcon,
-    pattern: {
-      y: 32,
-      squares: [
-        [0, 2],
-        [1, 4],
-      ],
-    },
-  },
+  // {
+  //   href: '/tofupilot',
+  //   name: 'Analytics',
+  //   description:
+  //     'Discover how to seamlessly integrate OpenHTF with TofuPilot for instant test step analytics and insights.',
+  //   icon: AnalyticsIcon,
+  //   pattern: {
+  //     y: 32,
+  //     squares: [
+  //       [0, 2],
+  //       [1, 4],
+  //     ],
+  //   },
+  // },
   {
     href: '/plugs',
     name: 'Plugs',

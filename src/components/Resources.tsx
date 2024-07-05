@@ -73,17 +73,17 @@ const resources: Array<Resource> = [
       ],
     },
   },
-  {
-    href: '/operator-ui',
-    name: 'Operator UI',
-    description:
-      'Learn about the web-based graphical interface in OpenHTF for real-time test monitoring and management.',
-    icon: UiIcon,
-    pattern: {
-      y: 22,
-      squares: [[0, 1]],
-    },
-  },
+  // {
+  //   href: '/operator-ui',
+  //   name: 'Operator UI',
+  //   description:
+  //     'Learn about the web-based graphical interface in OpenHTF for real-time test monitoring and management.',
+  //   icon: UiIcon,
+  //   pattern: {
+  //     y: 22,
+  //     squares: [[0, 1]],
+  //   },
+  // },
 ]
 
 function ResourceIcon({ icon: Icon }: { icon: Resource['icon'] }) {

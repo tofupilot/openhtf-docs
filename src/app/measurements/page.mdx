@@ -1,10 +1,10 @@
 # Measurements
 
-In the previous example, we introduced a basic phase in OpenHTF. Now, let's delve into measurements, which are critical components in OpenHTF that allow us to capture and validate data within these phases. Measurements provide a structured way to record test results, apply validations, and ensure data consistency throughout the testing process. {{ className: 'lead' }}
+Measurements are essential components in OpenHTF for capturing and validating data within phases. They enable structured test result recording, apply validations, and ensure data consistency throughout the testing process. {{ className: 'lead' }}
 
 ## Simple measurement
 
-Let's add a simple measurement to our phase. In this example, device_status captures a string value within status_check_phase. Measurements in OpenHTF record and store data generated during a phase, providing a structured way to validate and analyze test results.
+Let's add a simple measurement to our phase. In this example, `device_status` captures a string value within `status_check_phase`.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf

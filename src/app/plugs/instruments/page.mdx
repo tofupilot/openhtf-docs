@@ -17,8 +17,7 @@ OpenHTF provides a powerful plugin system, known as "plugs," which allows to abs
 This plug design for the YKUSH USB hub allows programmatic control of USB port power states. Configuration settings specify the port number, initialization sets up the plug, and the teardown method is empty since no cleanup is needed. The plug uses the `ykushcmd` utility to switch the USB ports on and off.
 
 <Note>
-  You need to have the hardware connected and the driver installed from the
-  manufacturer's website for this code example to work.
+  You need to have the hardware connected for this code example to work.
 </Note>
 
 ```python {{ title: 'main.py' }}
@@ -98,8 +97,7 @@ pip install PyMata
 ### OpenHTF plug example
 
 <Note>
-  You need to have the hardware connected and the Firmata firmware installed on
-  the microcontroller for this code example to work.
+  You need to have the hardware connected for this code example to work.
 </Note>
 
 ```python {{ title: 'main.py' }}

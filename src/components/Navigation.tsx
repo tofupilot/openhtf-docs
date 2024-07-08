@@ -266,7 +266,10 @@ export const navigation: Array<NavGroup> = [
   // },
   {
     title: 'Plugs',
-    links: [{ title: 'Plugs', href: '/plugs' }],
+    links: [
+      { title: 'Syntax', href: '/plugs/syntax' },
+      { title: 'Instruments Plugs', href: '/plugs/instruments' },
+    ],
   },
   // {
   //   title: 'Operator UI',

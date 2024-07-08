@@ -235,7 +235,6 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
-      { title: 'Measurements', href: '/measurements' },
       {
         title: 'Outputs',
         href: '/outputs',
@@ -244,11 +243,12 @@ export const navigation: Array<NavGroup> = [
         title: 'Attachments',
         href: '/attachments',
       },
+      { title: 'Configuration', href: '/configuration' },
       {
         title: 'Logger',
         href: '/logger',
       },
-      { title: 'Configuration', href: '/configuration' },
+      { title: 'Measurements', href: '/measurements' },
     ],
   },
   // {

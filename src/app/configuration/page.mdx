@@ -1,3 +1,9 @@
+export const metadata = {
+  title: 'Test Configuration | TofuPilot',
+  description:
+    'Explore how to manage test settings with OpenHTF’s configuration module, allowing for adaptable, maintainable, and scalable test scripts using both in-code definitions and external configuration files.',
+}
+
 # Configuration
 
 The configuration module in OpenHTF offers a centralized, flexible, and scalable way to manage settings for your testing environment. It allows you to adapt tests to various hardware setups, environments, and requirements without hardcoding parameters, resulting in more maintainable, reusable, and adaptable test scripts. {{ className: 'lead' }}
@@ -20,10 +26,10 @@ conf.declare('voltage_limit', default_value=5.0, description='Voltage limit for 
 def voltage_measurement(test):
     voltage_limit = conf.voltage_limit
     test.logger.info('Voltage limit: %s', voltage_limit)
-    
+
     voltage = 4.5  # Example voltage within limit
     test.measurements.voltage = voltage
-    
+
     test.logger.info('Completed voltage measurement phase.')
 
 def main():
@@ -58,10 +64,10 @@ conf.declare('voltage_limit', default_value=5.0, description='Voltage limit for 
 def voltage_measurement(test):
     voltage_limit = conf.voltage_limit
     test.logger.info('Voltage limit: %s', voltage_limit)
-    
+
     voltage = 4.5  # Example voltage within limit
     test.measurements.voltage = voltage
-    
+
     test.logger.info('Completed voltage measurement phase.')
 
 def main():

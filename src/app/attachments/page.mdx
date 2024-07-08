@@ -1,3 +1,9 @@
+export const metadata = {
+  title: 'Test Attachments | TofuPilot',
+  description:
+    'Learn how to capture and attach various types of data files, such as CSV and image files, to your OpenHTF test records for comprehensive hardware testing.',
+}
+
 # Attachments
 
 Hardware testing often involves capturing data such as pictures or measurement files. OpenHTF makes it easy to link these files to the test records using its attachment features. {{ className: 'lead' }}
@@ -30,11 +36,11 @@ def electrical_measurements(test):
         writer = csv.writer(csvfile)
         writer.writerow(['Voltage', 'Current'])
         writer.writerow([voltage, current])
-    
+
     # Attach the CSV file
     with open(csv_file_path, 'rb') as f:
         test.attach('measurement_data_csv', f.read(), mimetype='text/csv')
-    
+
     test.logger.info('Completed electrical measurements phase.')
 
 def main():
@@ -50,6 +56,7 @@ if __name__ == '__main__':
 ```
 
 In this example, we created an output directory to store the test log and attachments next to each other.
+
 ```
 output_files/
 ├── measurement_data.csv
@@ -57,6 +64,7 @@ output_files/
 ```
 
 The CSV file `measurement_data.csv` contains the following data:
+
 ```python {{ title: 'measurement_data.csv' }}
 Voltage,Current
 12.0,1.5
@@ -65,6 +73,7 @@ Voltage,Current
 ## Example 2: Image file
 
 In this example, we generate a PNG image of a curve using a library like Matplotlib and attach it to the test record.
+
 ```sh
 pip install matplotlib
 ```
@@ -91,12 +100,12 @@ def temperature_measurement(test):
 
     # Create a folder for output files
     os.makedirs('output_files', exist_ok=True)
-    
+
     # Generate a realistic temperature curve within limits
     time = np.linspace(0, 10, 100)
     temperature_curve = temperature + 3 * np.sin(time) + np.random.normal(0, 0.5, size=time.shape)
     temperature_curve = np.clip(temperature_curve, 20, 30)  # Ensure values stay within limits
-    
+
     # Plot the temperature curve
     plt.figure()
     plt.plot(time, temperature_curve, label='Temperature')
@@ -114,7 +123,7 @@ def temperature_measurement(test):
     # Attach the image file
     with open(image_file_path, 'rb') as f:
         test.attach('temperature_curve_image', f.read(), mimetype='image/png')
-    
+
     test.logger.info('Completed temperature measurement phase.')
 
 def main():

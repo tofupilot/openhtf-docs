@@ -1,0 +1,146 @@
+# Phases
+
+Test phases are a fundamental concept in OpenHTF. Phases are typically defined as Python functions that execute specific tasks during the test process. Phases can interact with the operator, perform measurements, control devices, and more. {{ className: 'lead' }}
+
+## Definition
+
+Let's create a simple OpenHTF test with three phases that log messages and continue sequentially.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+def first_phase(test):
+    return htf.PhaseResult.CONTINUE
+
+def second_phase(test):
+    return htf.PhaseResult.CONTINUE
+
+def third_phase(test):
+    return htf.PhaseResult.CONTINUE
+
+if __name__ == '__main__':
+    test = htf.Test(first_phase, second_phase, third_phase)
+    test.execute()
+```
+
+The console returns:
+
+```txt
+======================= test: openhtf_test  outcome: PASS ======================
+```
+
+## Phase Results
+
+Phases return `PhaseResult` values to indicate the next action:
+
+- `PhaseResult.CONTINUE` : Proceed to next phase.
+- `PhaseResult.STOP` : Mark test as failed.
+- `PhaseResult.SKIP` : Ignore results, proceed to next.
+- `PhaseResult.REPEAT` : Repeat current phase.
+- `PhaseResult.FAIL_AND_CONTINUE` : Fail phase, proceed to next.
+
+Here's a simple example using different phase results:
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import random
+
+# Define a phase that will always pass
+def pass_phase(test):
+    return htf.PhaseResult.CONTINUE
+
+# Define a phase that retries on failure, with a max retry limit
+@htf.PhaseOptions(repeat_limit=3)
+def retry_phase(test):
+    if random.choice([True, False]):
+        return htf.PhaseResult.CONTINUE
+    else:
+        return htf.PhaseResult.REPEAT
+
+# Define a phase that will always fail
+def fail_phase(test):
+    return htf.PhaseResult.STOP
+
+# Define and execute the test
+if __name__ == '__main__':
+    test = htf.Test(pass_phase, retry_phase, fail_phase)
+    test.execute()
+```
+
+The console returns:
+
+```txt
+======================= test: openhtf_test  outcome: FAIL ======================
+```
+
+## Phase Options
+
+OpenHTF provides several options to control the behavior of test phases using the `@htf.PhaseOptions` decorator.
+
+### `repeat_limit`
+
+- **Description**: Specifies the number of times a phase can be repeated if it fails.
+- **Usage**:
+  ```python
+  @htf.PhaseOptions(repeat_limit=3)
+  def test_phase(test):
+      # Phase logic here
+  ```
+- **Example**:
+  ```python
+  @htf.PhaseOptions(repeat_limit=3)
+  def read_version(test):
+      version = read_hardware_version()
+      if version != EXPECTED_VERSION:
+          return htf.PhaseResult.REPEAT
+      test.measurements.version = version
+  ```
+
+### `timeout_s`
+
+- **Description**: Sets a timeout in seconds for the phase.
+- **Usage**:
+  ```python
+  @htf.PhaseOptions(timeout_s=10)
+  def test_phase(test):
+      # Phase logic here
+  ```
+- **Example**:
+  ```python
+  @htf.PhaseOptions(timeout_s=5)
+  def wait_for_signal(test):
+      signal = wait_for_external_signal()
+      test.measurements.signal = signal
+  ```
+
+### `run_if`
+
+- **Description**: A callable that determines whether the phase should run.
+- **Usage**:
+  ```python
+  @htf.PhaseOptions(run_if=lambda: True)
+  def test_phase(test):
+      # Phase logic here
+  ```
+- **Example**:
+  ```python
+  @htf.PhaseOptions(run_if=lambda: should_run_phase())
+  def conditional_phase(test):
+      test.logger.info("This phase runs conditionally.")
+  ```
+
+### `requires_state`
+
+- **Description**: Specifies any state dependencies for the phase.
+- **Usage**:
+  ```python
+  @htf.PhaseOptions(requires_state=['some_state'])
+  def test_phase(test):
+      # Phase logic here
+  ```
+- **Example**:
+  ```python
+  @htf.PhaseOptions(requires_state=['initialized'])
+  def phase_with_state(test):
+      test.logger.info("This phase requires the 'initialized' state.")
+  ```

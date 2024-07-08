@@ -10,19 +10,16 @@ Install OpenHTF and its dependencies using pip:
 pip install openhtf six
 ```
 
-## Syntax
+## First Run
 
 Create a file called `main.py` in the folder where you installed OpenHTF and copy this code.
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult, plugs
-from openhtf.plugs.user_input import UserInput
+from openhtf import Test, PhaseResult
 
 # Define the test phase
-@plugs.plug(prompts=UserInput)
-def power_on_test(test, prompts):
-    prompts.prompt('Power on the device and press Return.')
-    test.dut_id = 'PCB12345'
+def power_on_test(test):
+    print('Power on.')
     return PhaseResult.CONTINUE
 
 # Create a test instance with the defined phase
@@ -32,16 +29,7 @@ if __name__ == '__main__':
     test.execute()
 ```
 
-This simple testbench interacts with the operator by displaying "Power on the device and press Return."
-
-<Note>
-  Did you know about the @ syntax in Python, called decorators? They modify
-  functions or methods using other functions. For more details, see the
-  [official Python
-  documentation](https://docs.python.org/3/glossary.html#term-decorator).
-</Note>
-
-## Run
+The `main.py` script includes a test phase and a test instance. The test phase is a function that performs a specific part of the test, while the test instance is created using the `Test` class and the defined phase.
 
 Run it using the created virtual environment:
 
@@ -49,22 +37,11 @@ Run it using the created virtual environment:
 python main.py
 ```
 
-This test bench does not use the operator UI yet, so all interactions are made through the command line.
+This testbench does not use the operator UI yet, so all interactions are made through the command line.
 
 ```sh
 (venv) C:\tofupilot > python main.py
-Power on the device and press Return.
--->
+Power on.
 
-================ test: openhtf_test  outcome: PASS ================
+======================= test: openhtf_test  outcome: PASS ======================
 ```
-
-## Key concepts
-
-- **Tests**: Top-level abstractions representing a sequence of steps for a Device Under Test (DUT).
-- **Phases**: Logical blocks within a test, usually Python functions, that include measurements and control commands.
-- **Measurements**: Data collected during tests, often with pass/fail criteria.
-- **Attachments**: Additional data linked to a test, such as logs or binary files.
-- **Plugs**: Interfaces connecting OpenHTF to various hardware or test equipment.
-
-OpenHTF also offers a web-based UI for easy use in environments like manufacturing floors, allowing operators to interact with tests without deep technical knowledge.

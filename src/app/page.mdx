@@ -5,15 +5,25 @@ import { HeroPattern } from '@/components/HeroPattern'
 export const metadata = {
   title: 'OpenHTF Documentation',
   description:
-    'OpenHTF (Open Hardware Testing Framework) is an open-source Python library for hardware testing.',
+    'OpenHTF (Open Hardware Testing Framework) is an open-source Python hardware testing framework.',
 }
 
 <HeroPattern />
 
 # OpenHTF
 
-OpenHTF (Open Hardware Testing Framework) is an open-source Python library for hardware testing. {{ className: 'lead' }}
+OpenHTF (Open Hardware Testing Framework) is an open-source Python hardware testing framework. {{ className: 'lead' }}
 
-Originally created at **Google**, OpenHTF reduces boilerplate code in hardware test setups, enabling test engineers to focus on developing test logic. It supports diverse testing scenarios from lab experiments to manufacturing floors.
+Originally created at **Google**, OpenHTF is designed to streamline hardware testing. OpenHTF is used by hundreds of teams worldwide and offers out-of-the-box features for structuring tests, recording measurements, logging, managing resources with plugs, and handling phase options like timeouts and retries. It supports diverse testing scenarios, from lab experiments to manufacturing floors.
+
+## Key concepts
+
+- **Tests**: Top-level abstractions representing a sequence of steps for a Device Under Test (DUT).
+- **Phases**: Logical blocks within a test, usually Python functions, that include measurements and control commands.
+- **Measurements**: Data collected during tests, often with pass/fail criteria.
+- **Attachments**: Additional data linked to a test, such as logs or binary files.
+- **Plugs**: Interfaces connecting OpenHTF to various hardware or test equipment.
+
+OpenHTF also offers a web-based UI for easy use in environments like manufacturing floors, allowing operators to interact with tests without deep technical knowledge.
 
 <Resources />

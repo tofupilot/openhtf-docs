@@ -26,10 +26,10 @@ interface Resource {
 
 const resources: Array<Resource> = [
   {
-    href: '/first-testbench',
+    href: '/first-test',
     name: 'Getting started',
     description:
-      'Learn how to write test scripts with OpenHTF, including defining phases and collecting measurements.',
+      'Learn to write OpenHTF test scripts with phases, outputs, measurements and more.',
     icon: RocketIcon,
     pattern: {
       y: 16,

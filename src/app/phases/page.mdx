@@ -1,6 +1,6 @@
 # Phases
 
-Test phases are a fundamental concept in OpenHTF. Phases are typically defined as Python functions that execute specific tasks during the test process. Phases can interact with the operator, perform measurements, control devices, and more. {{ className: 'lead' }}
+Test phases are a fundamental concept in OpenHTF, defined as Python functions that execute specific tasks during the test process. These phases can perform measurements, control devices, and more. {{ className: 'lead' }}
 
 ## Definition
 
@@ -31,15 +31,7 @@ The console returns:
 
 ## Phase Results
 
-Phases return `PhaseResult` values to indicate the next action:
-
-- `PhaseResult.CONTINUE` : Proceed to next phase.
-- `PhaseResult.STOP` : Mark test as failed.
-- `PhaseResult.SKIP` : Ignore results, proceed to next.
-- `PhaseResult.REPEAT` : Repeat current phase.
-- `PhaseResult.FAIL_AND_CONTINUE` : Fail phase, proceed to next.
-
-Here's a simple example using different phase results:
+Specific `PhaseResult` can be returned by test phases to indicate the next action after phase execution.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -49,8 +41,7 @@ import random
 def pass_phase(test):
     return htf.PhaseResult.CONTINUE
 
-# Define a phase that retries on failure, with a max retry limit
-@htf.PhaseOptions(repeat_limit=3)
+# Define a phase that retries on failure
 def retry_phase(test):
     if random.choice([True, False]):
         return htf.PhaseResult.CONTINUE
@@ -73,74 +64,104 @@ The console returns:
 ======================= test: openhtf_test  outcome: FAIL ======================
 ```
 
+The following `PhaseResult` can be provided:
+
+<Properties>
+  <Property name="PhaseResult.CONTINUE">
+    Process phase measurement outcomes and execute the next phase.
+  </Property>
+  <Property name="PhaseResult.FAIL_AND_CONTINUE">
+    Mark phase as failed and execute the next phase.
+  </Property>
+  <Property name="PhaseResult.REPEAT">
+    Execute the same phase again, ignoring measurement outcomes.
+  </Property>
+  <Property name="PhaseResult.SKIP">
+    Ignore measurement outcomes and execute the next phase.
+  </Property>
+  <Property name="PhaseResult.STOP">
+    Stop executing, indicating a failure.
+  </Property>
+  <Property name="PhaseResult.FAIL_SUBTEST">
+    Stop the current subtest and mark as failed, then continue.
+  </Property>
+</Properties>
+
 ## Phase Options
 
-OpenHTF provides several options to control the behavior of test phases using the `@htf.PhaseOptions` decorator.
+Specific options can be set for test phases to override default behaviors using the `@htf.PhaseOptions` decorator.
 
-### `repeat_limit`
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf import PhaseOptions, PhaseResult
+import random
 
-- **Description**: Specifies the number of times a phase can be repeated if it fails.
-- **Usage**:
-  ```python
-  @htf.PhaseOptions(repeat_limit=3)
-  def test_phase(test):
-      # Phase logic here
-  ```
-- **Example**:
-  ```python
-  @htf.PhaseOptions(repeat_limit=3)
-  def read_version(test):
-      version = read_hardware_version()
-      if version != EXPECTED_VERSION:
-          return htf.PhaseResult.REPEAT
-      test.measurements.version = version
-  ```
+# Define a phase with a custom name and timeout
+@htf.PhaseOptions(name='Always Pass Phase', timeout_s=5)
+def pass_phase(test):
+    return PhaseResult.CONTINUE
 
-### `timeout_s`
+# Define a phase that retries on failure with a maximum repeat limit
+@htf.PhaseOptions(repeat_limit=3)
+def retry_phase(test):
+    if random.choice([True, False]):
+        return PhaseResult.CONTINUE
+    else:
+        return PhaseResult.REPEAT
 
-- **Description**: Sets a timeout in seconds for the phase.
-- **Usage**:
-  ```python
-  @htf.PhaseOptions(timeout_s=10)
-  def test_phase(test):
-      # Phase logic here
-  ```
-- **Example**:
-  ```python
-  @htf.PhaseOptions(timeout_s=5)
-  def wait_for_signal(test):
-      signal = wait_for_external_signal()
-      test.measurements.signal = signal
-  ```
+# Define a phase that will always fail, but only runs if a condition is met
+@htf.PhaseOptions(run_if=lambda: random.choice([True, False]))
+def conditional_fail_phase(test):
+    return PhaseResult.STOP
 
-### `run_if`
+# Define and execute the test
+if __name__ == '__main__':
+    # Create the test instance with the defined phases
+    test = htf.Test(pass_phase, retry_phase, conditional_fail_phase, debug_phase)
+    # Execute the test
+    test.execute()
+```
 
-- **Description**: A callable that determines whether the phase should run.
-- **Usage**:
-  ```python
-  @htf.PhaseOptions(run_if=lambda: True)
-  def test_phase(test):
-      # Phase logic here
-  ```
-- **Example**:
-  ```python
-  @htf.PhaseOptions(run_if=lambda: should_run_phase())
-  def conditional_phase(test):
-      test.logger.info("This phase runs conditionally.")
-  ```
+The console returns:
 
-### `requires_state`
+```txt
+======================= test: openhtf_test  outcome: FAIL ======================
+```
 
-- **Description**: Specifies any state dependencies for the phase.
-- **Usage**:
-  ```python
-  @htf.PhaseOptions(requires_state=['some_state'])
-  def test_phase(test):
-      # Phase logic here
-  ```
-- **Example**:
-  ```python
-  @htf.PhaseOptions(requires_state=['initialized'])
-  def phase_with_state(test):
-      test.logger.info("This phase requires the 'initialized' state.")
-  ```
+The following `@htf.PhaseOptions` can be provided:
+
+<Properties>
+  <Property name="name" type="string">
+    Override for the name of the phase.
+  </Property>
+  <Property name="timeout_s" type="float">
+    Timeout for the phase, in seconds.
+  </Property>
+  <Property name="run_if" type="callable">
+    Callback to decide whether to run the phase.
+  </Property>
+  <Property name="requires_state" type="bool">
+    Pass the whole TestState if True, otherwise pass TestApi.
+  </Property>
+  <Property name="force_repeat" type="bool">
+    Force the phase to repeat up to repeat_limit times.
+  </Property>
+  <Property name="repeat_on_measurement_fail" type="bool">
+    Repeat phase on measurement failure.
+  </Property>
+  <Property name="repeat_on_timeout" type="bool">
+    Repeat phase on timeout.
+  </Property>
+  <Property name="repeat_limit" type="int or None">
+    Maximum number of repeats, None for infinite.
+  </Property>
+  <Property name="run_under_pdb" type="bool">
+    Run the phase under the Python Debugger.
+  </Property>
+  <Property name="phase_name_case" type="string">
+    Case formatting options for phase name.
+  </Property>
+  <Property name="stop_on_measurement_fail" type="bool">
+    Stop the test if any measurements fail.
+  </Property>
+</Properties>

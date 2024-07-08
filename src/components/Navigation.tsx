@@ -268,7 +268,8 @@ export const navigation: Array<NavGroup> = [
     title: 'Plugs',
     links: [
       { title: 'Syntax', href: '/plugs/syntax' },
-      { title: 'Instruments Plugs', href: '/plugs/instruments' },
+      { title: 'User Input Plug', href: '/plugs/user-input' },
+      { title: 'Instruments Example Plugs', href: '/plugs/instruments' },
     ],
   },
   // {

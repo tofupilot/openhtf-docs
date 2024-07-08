@@ -57,7 +57,7 @@ const resources: Array<Resource> = [
     href: '/plugs',
     name: 'Plugs',
     description:
-      'Explore how to use and create plugs in OpenHTF to interface with various hardware and test equipment.',
+      'Learn to use and create plugs in OpenHTF to interact with external components.',
     icon: PuzzleIcon,
     pattern: {
       y: -6,

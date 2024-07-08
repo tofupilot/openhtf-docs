@@ -231,7 +231,7 @@ function NavigationGroup({
 
 export const navigation: Array<NavGroup> = [
   {
-    title: 'Getting Started',
+    title: 'Getting started',
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
@@ -249,8 +249,8 @@ export const navigation: Array<NavGroup> = [
       },
       { title: 'Configuration', href: '/configuration' },
       {
-        title: 'Logger',
-        href: '/logger',
+        title: 'Logging',
+        href: '/logging',
       },
       { title: 'Measurements', href: '/measurements' },
     ],

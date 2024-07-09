@@ -12,69 +12,133 @@ Hardware testing often involves capturing data such as pictures or measurement f
 
 To add attachments in your OpenHTF script, you can use the `test.attach` method. Below are examples of adding different types of attachments to your script and sample output files.
 
-## Example 1: CSV file
+### Creating and Attaching Content Directly
 
-In this example, we generate a CSV file containing measurement data and attach it to the test record.
+You can create and attach content directly to the test record using the `test.attach` function.
+
+```python {{ title: 'main.py' }}
+import os
+from openhtf import test, PhaseResult
+
+@test.PhaseOptions()
+def my_test_phase(test):
+    test.attach('test_attachment', 'This is test attachment data.'.encode('utf-8'))
+    return PhaseResult.CONTINUE
+
+if __name__ == "__main__":
+    test = openhtf.Test(my_test_phase)
+    test.execute()
+```
+
+### Attaching a Pre-existing File
+
+You can also attach an existing file to the test output using the `test.attach_from_file` function.
+
+```python {{ title: 'main.py' }}
+import os
+from openhtf import test, PhaseResult
+
+@test.PhaseOptions()
+def my_test_phase(test):
+    # Create a sample file to attach
+    with open('example_attachment.txt', 'w') as f:
+        f.write('This is example attachment content.')
+
+    # Attach the file to the test record
+    test.attach_from_file(os.path.join(os.path.dirname(__file__), 'example_attachment.txt'))
+    return PhaseResult.CONTINUE
+
+if __name__ == "__main__":
+    test = openhtf.Test(my_test_phase)
+    test.execute()
+    ```
+
+### Loading Attached Files
+To load and access attached files during test execution, use the `test.get_attachment` function.
+
+```python {{ title: 'main.py' }}
+import os
+from openhtf import test, PhaseResult
+
+@test.PhaseOptions()
+def attach_phase(test):
+    test.attach('test_attachment', 'This is test attachment data.'.encode('utf-8'))
+    return PhaseResult.CONTINUE
+
+@test.PhaseOptions()
+def load_attachment_phase(test):
+    test_attachment = test.get_attachment('test_attachment')
+    print(test_attachment)
+    return PhaseResult.CONTINUE
+
+if __name__ == "__main__":
+    test = openhtf.Test(attach_phase, load_attachment_phase)
+    test.execute()
+    ```
+
+## Example 1: CSV File
+
+In this example, we generate a CSV file containing measurement data and attach it to the test output.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-import logging
-import os
-import csv
 from openhtf.output.callbacks import json_factory
 
 @htf.measures(htf.Measurement('voltage'), htf.Measurement('current'))
 def electrical_measurements(test):
-    test.logger.info('Starting electrical measurements phase.')
     voltage = 12.0  # Volts
     current = 1.5  # Amperes
     test.measurements.voltage = voltage
     test.measurements.current = current
 
-    # Create a CSV file
-    os.makedirs('output_files', exist_ok=True)
-    csv_file_path = 'output_files/measurement_data.csv'
-    with open(csv_file_path, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['Voltage', 'Current'])
-        writer.writerow([voltage, current])
+    # Create and attach CSV content
+    csv_content = 'Voltage,Current\n{},{}'.format(voltage, current)
+    test.attach('measurement_data_csv', csv_content.encode('utf-8'), mimetype='text/csv')
 
-    # Attach the CSV file
-    with open(csv_file_path, 'rb') as f:
-        test.attach('measurement_data_csv', f.read(), mimetype='text/csv')
-
-    test.logger.info('Completed electrical measurements phase.')
+@htf.measures()
+def load_attachment_phase(test):
+    attachment = test.get_attachment('measurement_data_csv')
+    if attachment:
+        attachment_content = attachment.data.decode('utf-8')  # Assuming CSV content is UTF-8 encoded
+        print(attachment_content)
+        test.logger.info('Loaded and printed the attachment content:\n%s', attachment_content)
+    else:
+        test.logger.error('Attachment not found.')
 
 def main():
-    logging.basicConfig(level=logging.INFO)
-    test = htf.Test(electrical_measurements)
-    test.add_output_callbacks(
-        json_factory.OutputToJSON('./output_files/test_results.json', indent=2)
-    )
+    test = htf.Test(electrical_measurements, load_attachment_phase)
+    test.add_output_callbacks(json_factory.OutputToJSON('test_results.json', indent=2))
     test.execute(test_start=lambda: 'DeviceUnderTest123')
 
 if __name__ == '__main__':
     main()
 ```
 
-In this example, we created an output directory to store the test log and attachments next to each other.
+In this example, the CSV file is added directly to the test output file:
 
+```javascript {{ title: 'test_results.json' }}
+{
+  "dut_id": "DeviceUnderTest123",
+    ...
+  "phases": [
+    ...
+    {
+     ...
+      "attachments": {
+        "measurement_data_csv": {
+          "mimetype": "text/csv",
+          "sha1": "c85da4ff90e4feb5f7b4ca02a61cc193170dbfaa",
+          "data": "Vm9sdGFnZSxDdXJyZW50CjEyLjAsMS41"
+        }
+      },
+    }
+  ]
+}
 ```
-output_files/
-├── measurement_data.csv
-└── test_results.json
-```
 
-The CSV file `measurement_data.csv` contains the following data:
+## Example 2: Image File
 
-```python {{ title: 'measurement_data.csv' }}
-Voltage,Current
-12.0,1.5
-```
-
-## Example 2: Image file
-
-In this example, we generate a PNG image of a curve using a library like Matplotlib and attach it to the test record.
+In this example, we generate a PNG image of a curve using a library like Matplotlib and attach it to the test record as a pre-existing file.
 
 ```sh
 pip install matplotlib
@@ -87,7 +151,6 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from openhtf.output.callbacks import json_factory
-from openhtf.util import validators
 
 # Use a non-interactive backend for Matplotlib
 plt.switch_backend('Agg')

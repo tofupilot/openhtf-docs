@@ -1,8 +1,9 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
+import { forwardRef, Fragment, useState } from 'react'
 import { Transition } from '@headlessui/react'
-import clsx from 'clsx'
+import { track } from '@vercel/analytics/react'
+import { usePathname } from 'next/navigation'
 
 function CheckIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -33,17 +34,13 @@ function FeedbackButton(
 
 const FeedbackForm = forwardRef<
   React.ElementRef<'form'>,
-  React.ComponentPropsWithoutRef<'form'>
->(function FeedbackForm({ onSubmit, className, ...props }, ref) {
+  Pick<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'>
+>(function FeedbackForm({ onSubmit }, ref) {
   return (
     <form
-      {...props}
       ref={ref}
       onSubmit={onSubmit}
-      className={clsx(
-        className,
-        'absolute inset-0 flex items-center justify-center gap-6 md:justify-start',
-      )}
+      className="absolute inset-0 flex items-center justify-center gap-6 md:justify-start"
     >
       <p className="text-sm text-zinc-600 dark:text-zinc-400">
         Was this page helpful?
@@ -57,49 +54,59 @@ const FeedbackForm = forwardRef<
   )
 })
 
-const FeedbackThanks = forwardRef<
-  React.ElementRef<'div'>,
-  React.ComponentPropsWithoutRef<'div'>
->(function FeedbackThanks({ className, ...props }, ref) {
-  return (
-    <div
-      {...props}
-      ref={ref}
-      className={clsx(
-        className,
-        'absolute inset-0 flex justify-center md:justify-start',
-      )}
-    >
-      <div className="flex items-center gap-3 rounded-full bg-teal-50/50 py-1 pl-1.5 pr-3 text-sm text-teal-900 ring-1 ring-inset ring-teal-500/20 dark:bg-teal-500/5 dark:text-teal-200 dark:ring-teal-500/30">
-        <CheckIcon className="h-5 w-5 flex-none fill-teal-500 stroke-white dark:fill-teal-200/20 dark:stroke-teal-200" />
-        Thanks for your feedback!
+const FeedbackThanks = forwardRef<React.ElementRef<'div'>>(
+  function FeedbackThanks(_props, ref) {
+    return (
+      <div
+        ref={ref}
+        className="absolute inset-0 flex justify-center md:justify-start"
+      >
+        <div className="flex items-center gap-3 rounded-full bg-teal-50/50 py-1 pl-1.5 pr-3 text-sm text-teal-900 ring-1 ring-inset ring-teal-500/20 dark:bg-teal-500/5 dark:text-teal-200 dark:ring-teal-500/30">
+          <CheckIcon className="h-5 w-5 flex-none fill-teal-500 stroke-white dark:fill-teal-200/20 dark:stroke-teal-200" />
+          Thanks for your feedback!
+        </div>
       </div>
-    </div>
-  )
-})
+    )
+  },
+)
 
 export function Feedback() {
   let [submitted, setSubmitted] = useState(false)
+  const path = usePathname()
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    // event.nativeEvent.submitter.dataset.response
-    // => "yes" or "no"
+    // Sending feedback to vercel
+    switch ((event.nativeEvent as SubmitEvent)?.submitter?.dataset.response) {
+      case 'yes':
+        track('Feedback Yes', { path })
+        break
+      case 'no':
+        track('Feedback No', { path })
+        break
+    }
 
     setSubmitted(true)
   }
 
   return (
     <div className="relative h-8">
-      <Transition show={!submitted}>
-        <FeedbackForm
-          className="duration-300 data-[leave]:pointer-events-none data-[closed]:opacity-0"
-          onSubmit={onSubmit}
-        />
+      <Transition
+        show={!submitted}
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+        leave="pointer-events-none duration-300"
+      >
+        <FeedbackForm onSubmit={onSubmit} />
       </Transition>
-      <Transition show={submitted}>
-        <FeedbackThanks className="delay-150 duration-300 data-[closed]:opacity-0" />
+      <Transition
+        show={submitted}
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        enter="delay-150 duration-300"
+      >
+        <FeedbackThanks />
       </Transition>
     </div>
   )

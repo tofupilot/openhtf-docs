@@ -1,0 +1,17 @@
+2024-09-03 15:49:57,944 - openhtf.core.test_descriptor - INFO - Executing test: 
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase_executor - DEBUG - Executing phase trigger_phase
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase_executor_thread - DEBUG - Thread finished: <PhaseExecutorThread: (trigger_phase)>
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase.trigger_phase - DEBUG - Phase outcome of trigger_phase is PASS.
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase_executor - DEBUG - Phase trigger_phase finished with result PhaseResult.CONTINUE
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944 - DEBUG - Executing phase temperature_measurement
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase_executor - DEBUG - Executing phase temperature_measurement
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase.temperature_measurement - INFO - Starting temperature measurement phase.
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase.temperature_measurement - INFO - Completed temperature measurement phase.
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase_executor_thread - DEBUG - Thread finished: <PhaseExecutorThread: (temperature_measurement)>
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase.temperature_measurement - DEBUG - Phase outcome of temperature_measurement is PASS.
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944.phase_executor - DEBUG - Phase temperature_measurement finished with result PhaseResult.CONTINUE
+2024-09-03 15:49:57,945 - openhtf.plugs - DEBUG - Tearing down all plugs.
+2024-09-03 15:49:57,945 - openhtf.test_record.76952:5a1b112149864dd7:1b9fcba6ca624d0c:1725371397944 - DEBUG - Finishing test execution normally with outcome PASS.
+2024-09-03 15:49:57,945 - openhtf.util.threads - DEBUG - Thread finished: TestExecutorThread
+2024-09-03 15:49:57,945 - openhtf.core.test_descriptor - DEBUG - Test completed for openhtf_test, outputting now.
+2024-09-03 15:49:57,945 - openhtf.util.console_output - DEBUG - test: openhtf_test  outcome: PASS

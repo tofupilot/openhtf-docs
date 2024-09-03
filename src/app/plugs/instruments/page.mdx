@@ -6,9 +6,22 @@ export const metadata = {
 
 # Instrument Plugs
 
-OpenHTF provides a powerful plugin system, known as "plugs," which allows to abstract hardware interactions. They can be used to encapsulate reusable test logic, hardware interfaces, or any other functionality you need. {{ className: 'lead' }}
+OpenHTF provides a powerful plugin system, known as "plugs" which allows to abstract hardware interactions. They can be used to encapsulate reusable test logic, hardware interfaces, or any other functionality you need. {{ className: 'lead' }}
 
-## YKUSH USB hub
+## Pre-Made Instrument Plugs
+
+OpenHTF includes a collection of pre-made, useful plugs and also allows you to create custom plugs tailored to your needs.
+
+<Note>
+  You can find a comprehensive list of the built-in hardware plugs
+  [here](https://github.com/google/openhtf/tree/master/openhtf/plugs).
+</Note>
+
+## Custom Instrument Plugs
+
+Below are implementation examples of user-defined plugs
+
+### YKUSH USB Hub
 
 [YKUSH USB](https://www.yepkit.com/products/ykush) hubs are programmable USB hubs that allow users to control the power state of individual USB ports programmatically. These hubs are typically used in test benches for automated testing and development environments, where devices need to be power-cycled or reset remotely without manual intervention.
 
@@ -72,7 +85,7 @@ if __name__ == '__main__':
     main()
 ```
 
-## Firmata
+### Firmata
 
 This plug design for a Firmata-based device allows for programmatic control and monitoring of pin states on a microcontroller like Arduino or Teensy. Using Firmata, you can abstract away the serial communication protocol, simplifying the interaction between the microcontroller and OpenHTF.
 

@@ -1,34 +1,3 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""Example OpenHTF test logic.
-
-Run with (your virtualenv must be activated first):
-
-  python hello_world.py
-
-Afterwards, take a look at the hello_world.json output file.  This will
-give you a basic idea of what a minimal test outputs.
-
-For more information on measurements, see the measurements.py example.
-
-TODO(someone): Write an output example.
-For more information on output, see the output.py example.
-"""
-
-# Import openhtf with an abbreviated name, as we'll be using a bunch of stuff
-# from it throughout our test scripts. See __all__ at the top of
-# openhtf/__init__.py for details on what's in top-of-module namespace.
 import openhtf as htf
 
 # Import this output mechanism as it's the specific one we want to use.

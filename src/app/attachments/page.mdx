@@ -8,73 +8,82 @@ export const metadata = {
 
 Hardware testing often involves capturing data such as pictures or measurement files. OpenHTF makes it easy to link these files to the test records using its attachment features. {{ className: 'lead' }}
 
-## Usage
-
 To add attachments in your OpenHTF script, you can use the `test.attach` method. Below are examples of adding different types of attachments to your script and sample output files.
 
-### Creating and Attaching Content Directly
+## Creating and Attaching Content Directly
 
 You can create and attach content directly to the test record using the `test.attach` function.
 
 ```python {{ title: 'main.py' }}
-import os
-from openhtf import test, PhaseResult
+from openhtf import Test, PhaseResult
 
-@test.PhaseOptions()
-def my_test_phase(test):
-    test.attach('test_attachment', 'This is test attachment data.'.encode('utf-8'))
+def attachment_phase(test):
+    print("Attaching file...")
+    test.attach("test_attachment", "This is test attachment data.".encode("utf-8"))
+    print("Attached file...")
     return PhaseResult.CONTINUE
 
+def main():
+    # Create a test instance with the defined phase
+    test = Test(attachment_phase)
+    test.execute(lambda: "DeviceUnderTest123")
+
 if __name__ == "__main__":
-    test = openhtf.Test(my_test_phase)
-    test.execute()
+    main()
 ```
 
-### Attaching a Pre-existing File
+## Attaching a Pre-existing File
 
 You can also attach an existing file to the test output using the `test.attach_from_file` function.
 
 ```python {{ title: 'main.py' }}
 import os
-from openhtf import test, PhaseResult
+from openhtf import Test, PhaseResult
 
-@test.PhaseOptions()
-def my_test_phase(test):
-    # Create a sample file to attach
-    with open('example_attachment.txt', 'w') as f:
-        f.write('This is example attachment content.')
+def attachment_phase(test):
+    with open("example_attachment.txt", "w") as f:
+        f.write("This is example attachment content.")
 
     # Attach the file to the test record
-    test.attach_from_file(os.path.join(os.path.dirname(__file__), 'example_attachment.txt'))
+    test.attach_from_file(
+        os.path.join(os.path.dirname(__file__), "example_attachment.txt")
+    )
     return PhaseResult.CONTINUE
 
-if __name__ == "__main__":
-    test = openhtf.Test(my_test_phase)
-    test.execute()
-    ```
+def main():
+    # Create a test instance with the defined phase
+    test = Test(attachment_phase)
+    test.execute(lambda: "DeviceUnderTest123")
 
-### Loading Attached Files
+if __name__ == "__main__":
+    main()
+```
+
+## Loading Attached Files
+
 To load and access attached files during test execution, use the `test.get_attachment` function.
 
 ```python {{ title: 'main.py' }}
 import os
-from openhtf import test, PhaseResult
+from openhtf import Test, PhaseResult
 
-@test.PhaseOptions()
-def attach_phase(test):
-    test.attach('test_attachment', 'This is test attachment data.'.encode('utf-8'))
+def attachment_phase(test):
+    test.attach("test_attachment", "This is test attachment data.".encode("utf-8"))
     return PhaseResult.CONTINUE
 
-@test.PhaseOptions()
 def load_attachment_phase(test):
-    test_attachment = test.get_attachment('test_attachment')
+    test_attachment = test.get_attachment("test_attachment")
     print(test_attachment)
     return PhaseResult.CONTINUE
 
+def main():
+    # Create a test instance with the defined phase
+    test = Test(attachment_phase, load_attachment_phase)
+    test.execute(lambda: "DeviceUnderTest123")
+
 if __name__ == "__main__":
-    test = openhtf.Test(attach_phase, load_attachment_phase)
-    test.execute()
-    ```
+    main()
+```
 
 ## Example 1: CSV File
 
@@ -84,7 +93,8 @@ In this example, we generate a CSV file containing measurement data and attach i
 import openhtf as htf
 from openhtf.output.callbacks import json_factory
 
-@htf.measures(htf.Measurement('voltage'), htf.Measurement('current'))
+
+@htf.measures(htf.Measurement("voltage"), htf.Measurement("current"))
 def electrical_measurements(test):
     voltage = 12.0  # Volts
     current = 1.5  # Amperes
@@ -92,25 +102,33 @@ def electrical_measurements(test):
     test.measurements.current = current
 
     # Create and attach CSV content
-    csv_content = 'Voltage,Current\n{},{}'.format(voltage, current)
-    test.attach('measurement_data_csv', csv_content.encode('utf-8'), mimetype='text/csv')
+    csv_content = "Voltage,Current\n{},{}".format(voltage, current)
+    test.attach(
+        "measurement_data_csv", csv_content.encode("utf-8"), mimetype="text/csv"
+    )
 
-@htf.measures()
+
 def load_attachment_phase(test):
-    attachment = test.get_attachment('measurement_data_csv')
+    attachment = test.get_attachment("measurement_data_csv")
     if attachment:
-        attachment_content = attachment.data.decode('utf-8')  # Assuming CSV content is UTF-8 encoded
+        attachment_content = attachment.data.decode(
+            "utf-8"
+        )  # Assuming CSV content is UTF-8 encoded
         print(attachment_content)
-        test.logger.info('Loaded and printed the attachment content:\n%s', attachment_content)
+        test.logger.info(
+            "Loaded and printed the attachment content:\n%s", attachment_content
+        )
     else:
-        test.logger.error('Attachment not found.')
+        test.logger.error("Attachment not found.")
+
 
 def main():
     test = htf.Test(electrical_measurements, load_attachment_phase)
-    test.add_output_callbacks(json_factory.OutputToJSON('test_results.json', indent=2))
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
+    test.add_output_callbacks(json_factory.OutputToJSON("test_results.json", indent=2))
+    test.execute(test_start=lambda: "DeviceUnderTest123")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -136,7 +154,7 @@ In this example, the CSV file is added directly to the test output file:
 }
 ```
 
-## Example 2: Image File
+## Example 2: Image
 
 In this example, we generate a PNG image of a curve using a library like Matplotlib and attach it to the test record as a pre-existing file.
 

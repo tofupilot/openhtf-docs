@@ -1,6 +1,7 @@
 export const metadata = {
   title: 'Measurements | TofuPilot',
-  description: 'Learn how to capture and validate data within OpenHTF phases, including simple, multiple, validated, inline, multidimensional, and marginal measurements, with detailed examples and code snippets.',
+  description:
+    'Learn how to capture and validate data within OpenHTF phases, including simple, multiple, validated, inline, multidimensional, and marginal measurements, with detailed examples and code snippets.',
 }
 
 # Measurements
@@ -20,7 +21,7 @@ def status_check_phase(test):
 
 def main():
     test = htf.Test(status_check_phase)
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 
 if __name__ == '__main__':
     main()
@@ -46,7 +47,7 @@ def electrical_measurements(test):
 
 def main():
     test = htf.Test(electrical_measurements)
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 
 if __name__ == '__main__':
     main()
@@ -61,15 +62,24 @@ import openhtf as htf
 from openhtf.util import validators
 
 @htf.measures(
-    htf.Measurement('test_duration').in_range(0, 10).with_units(htf.units.SECOND))
+    htf.Measurement("test_duration")
+    .in_range(
+        0, 10
+    )  # Specifies that the measurement must be between 0 and 10, if the measurement is outside this range, the test will fail.
+    .with_units(htf.units.SECOND)  # Sets the units of the measurement to seconds
+)
 def measure_duration(test):
-    test.measurements.test_duration = 5  # Seconds
+    # Simulate capturing the duration of a test
+    measured_duration = 5  # Example value for the test duration (in seconds)
+
+    # Assign the simulated duration to the 'test_duration' measurement
+    test.measurements.test_duration = measured_duration
 
 def main():
     test = htf.Test(measure_duration)
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
 
@@ -90,7 +100,7 @@ def inline_phase(test):
 
 def main():
     test = htf.Test(inline_phase)
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 
 if __name__ == '__main__':
     main()
@@ -139,7 +149,7 @@ def multdim_measurements(test):
 
 def main():
     test = htf.Test(multdim_measurements)
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 
 if __name__ == '__main__':
     main()
@@ -147,7 +157,7 @@ if __name__ == '__main__':
 
 ## Marginal measurements
 
-For finer granularity in test results, use marginal measurements. They set stricter limits within the acceptable range, giving detailed information about test performance. This allows distinguishing between fully passing results and those close to failing, without affecting the overall phase outcome, helping identify potential issues early.
+For finer granularity in test results, use marginal measurements. They set stricter limits within the acceptable range, giving detailed information about test performance. **This allows distinguishing between fully passing results and those close to failing, without affecting the overall phase outcome**, helping identify potential issues early.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -160,7 +170,7 @@ def measure_resistance(test):
 
 def main():
     test = htf.Test(measure_resistance)
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 
 if __name__ == '__main__':
     main()

@@ -241,6 +241,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
+      { title: 'Device Under Test', href: '/dut' },
       {
         title: 'Phases',
         href: '/phases',
@@ -249,6 +250,7 @@ export const navigation: Array<NavGroup> = [
         title: 'Outputs',
         href: '/outputs',
       },
+      { title: 'Measurements', href: '/measurements' },
       {
         title: 'Attachments',
         href: '/attachments',
@@ -258,7 +260,6 @@ export const navigation: Array<NavGroup> = [
         title: 'Logging',
         href: '/logging',
       },
-      { title: 'Measurements', href: '/measurements' },
     ],
   },
   {
@@ -279,7 +280,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Syntax', href: '/plugs/syntax' },
       { title: 'User Input Plug', href: '/plugs/user-input' },
-      { title: 'Instruments Example Plugs', href: '/plugs/instruments' },
+      { title: 'Instruments Plugs', href: '/plugs/instruments' },
     ],
   },
   // {

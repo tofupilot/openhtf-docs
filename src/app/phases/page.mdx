@@ -6,7 +6,7 @@ export const metadata = {
 
 # Phases
 
-Test phases are a fundamental concept in OpenHTF, defined as Python functions that execute specific tasks during the test process. These phases can perform measurements, control devices, and more. {{ className: 'lead' }}
+Test phases in OpenHTF are Python functions that execute specific tasks during the test process, similar to steps in TofuPilot. They can perform measurements, control devices, and handle various other test-related activities. {{ className: 'lead' }}
 
 ## Definition
 
@@ -26,7 +26,7 @@ def third_phase(test):
 
 if __name__ == '__main__':
     test = htf.Test(first_phase, second_phase, third_phase)
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 ```
 
 The console returns:
@@ -61,7 +61,7 @@ def fail_phase(test):
 # Define and execute the test
 if __name__ == '__main__':
     test = htf.Test(pass_phase, retry_phase, fail_phase)
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 ```
 
 The console returns:
@@ -123,9 +123,9 @@ def conditional_fail_phase(test):
 # Define and execute the test
 if __name__ == '__main__':
     # Create the test instance with the defined phases
-    test = htf.Test(pass_phase, retry_phase, conditional_fail_phase, debug_phase)
+    test = htf.Test(pass_phase, retry_phase, conditional_fail_phase)
     # Execute the test
-    test.execute()
+    test.execute(lambda: "DeviceUnderTest123")
 ```
 
 The console returns:

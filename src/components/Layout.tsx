@@ -9,6 +9,7 @@ import { Header } from '@/components/Header'
 import { Logo } from '@/components/Logo'
 import { Navigation } from '@/components/Navigation'
 import { type Section, SectionProvider } from '@/components/SectionProvider'
+import { TofuPilotBanner } from './TofuPilotBanner'
 
 export function Layout({
   children,
@@ -36,6 +37,7 @@ export function Layout({
             <Navigation className="hidden lg:mt-10 lg:block" />
           </div>
         </motion.header>
+        <TofuPilotBanner />
         <div className="relative flex h-full flex-col px-4 pt-14 sm:px-6 lg:px-8">
           <main className="flex-auto">{children}</main>
           <Footer />

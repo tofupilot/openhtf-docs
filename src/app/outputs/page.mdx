@@ -13,26 +13,30 @@ Creating structured test results is essential for production testing traceabilit
 To enable the default JSON output format in OpenHTF, simply specify the output mechanism with one callback.
 
 ```python {{ title: 'main.py' }}
-import openhtf as htf
+from openhtf import Test, PhaseResult
 from openhtf.output.callbacks import json_factory
 
-@htf.measures(htf.Measurement('voltage'), htf.Measurement('current'))
-def electrical_measurements(test):
-    test.measurements.voltage = 12.0  # Volts
-    test.measurements.current = 1.5  # Amperes
+def power_on_test(test):
+    print("Power on.")
+    return PhaseResult.CONTINUE
 
 def main():
-    test = htf.Test(electrical_measurements)
-    test.add_output_callbacks(
-        json_factory.OutputToJSON('./test_results.json', indent=2)
-    )
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
+    test = Test(power_on_test)
 
-if __name__ == '__main__':
+    # Add a JSON output callback to export the results to a JSON file
+    test.add_output_callbacks(json_factory.OutputToJSON(
+        "test_result.json",  # The name of the output file
+        indent=2             # Pretty-printing the JSON with an indentation of 2 spaces
+    ))
+
+    # Execute the test
+    test.execute(lambda: "DeviceUnderTest123")
+
+if __name__ == "__main__":
     main()
 ```
 
-Here's an example of the JSON output. Note that detailed metadata, phase options, and log records are also logged but not displayed here for brevity:
+Here's an excerpt of the JSON output. Note that detailed metadata, phase options, and log records are also logged but not displayed here for brevity:
 
 ```javascript {{ title: 'test_results.json' }}
 {
@@ -59,23 +63,16 @@ Here's an example of the JSON output. Note that detailed metadata, phase options
       "measurements": {},
       "name": "trigger_phase",
       "outcome": "PASS",
+      "start_time_millis": 1725366624798,
+      "end_time_millis": 1725366624798,
       ...
     },
     {
-      "measurements": {
-        "voltage": {
-          "name": "voltage",
-          "outcome": "PASS",
-          "measured_value": 12.0
-        },
-        "current": {
-          "name": "current",
-          "outcome": "PASS",
-          "measured_value": 1.5
-        }
-      },
-      "name": "electrical_measurements",
+      "measurements": {},
+      "name": "power_on_test",
       "outcome": "PASS",
+      "start_time_millis": 1725366624798,
+      "end_time_millis": 1725366624798,
       ...
     }
   ],
@@ -101,16 +98,20 @@ def custom_output_callback(test_record):
             for measurement in phase.measurements.values():
                 f.write(f'{measurement.name}: {measurement.value}\n')
 
-@htf.measures(htf.Measurement('temperature').with_units('C'))
-def temperature_measurement(test):
-    test.measurements.temperature = 25  # Celsius
+def power_on_test(test):
+    print("Power on.")
+    return PhaseResult.CONTINUE
 
 def main():
-    test = htf.Test(temperature_measurement)
-    test.add_output_callbacks(custom_output_callback)
-    test.execute(test_start=lambda: 'DeviceUnderTest456')
+    test = Test(power_on_test)
 
-if __name__ == '__main__':
+    test.add_output_callbacks(custom_output_callback)
+    test.execute(test_start=lambda: "DeviceUnderTest456")
+
+    # Execute the test
+    test.execute(lambda: "DeviceUnderTest456")
+
+if __name__ == "__main__":
     main()
 ```
 
@@ -121,5 +122,5 @@ Custom Output
 DUT ID: DeviceUnderTest456
 Outcome: Outcome.PASS
 Phase: trigger_phase
-Phase: temperature_measurement
+Phase: power_on_test
 ```

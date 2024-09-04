@@ -93,7 +93,6 @@ In this example, we generate a CSV file containing measurement data and attach i
 import openhtf as htf
 from openhtf.output.callbacks import json_factory
 
-
 @htf.measures(htf.Measurement("voltage"), htf.Measurement("current"))
 def electrical_measurements(test):
     voltage = 12.0  # Volts
@@ -106,7 +105,6 @@ def electrical_measurements(test):
     test.attach(
         "measurement_data_csv", csv_content.encode("utf-8"), mimetype="text/csv"
     )
-
 
 def load_attachment_phase(test):
     attachment = test.get_attachment("measurement_data_csv")
@@ -121,12 +119,10 @@ def load_attachment_phase(test):
     else:
         test.logger.error("Attachment not found.")
 
-
 def main():
     test = htf.Test(electrical_measurements, load_attachment_phase)
     test.add_output_callbacks(json_factory.OutputToJSON("test_results.json", indent=2))
     test.execute(test_start=lambda: "DeviceUnderTest123")
-
 
 if __name__ == "__main__":
     main()

@@ -12,7 +12,7 @@ OpenHTF provides a powerful plugin system, known as "plugs," which allows to abs
 
 [YKUSH USB](https://www.yepkit.com/products/ykush) hubs are programmable USB hubs that allow users to control the power state of individual USB ports programmatically. These hubs are typically used in test benches for automated testing and development environments, where devices need to be power-cycled or reset remotely without manual intervention.
 
-<Image src="/ykush.png" alt="YKUSH USB hub" />
+<Image srcLight="/ykush.png" srcDark="/ykush.png" alt="YKUSH USB hub" />
 
 This plug design for the YKUSH USB hub allows programmatic control of USB port power states. Configuration settings specify the port number, initialization sets up the plug, and the teardown method is empty since no cleanup is needed. The plug uses the `ykushcmd` utility to switch the USB ports on and off.
 

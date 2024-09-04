@@ -68,12 +68,7 @@ export function Libraries() {
                 </Button>
               </p>
             </div>
-            <Image
-              src={library.logo}
-              alt=""
-              className="h-12 w-12"
-              unoptimized
-            />
+            <Image src={library.logo} alt="" className="size-12" unoptimized />
           </div>
         ))}
       </div>

@@ -1,0 +1,103 @@
+export const metadata = {
+  title: 'Create your first test | OpenHTF',
+  description:
+    'Learn how to install OpenHTF and create your first test script. This guide includes step-by-step instructions to set up a simple test phase and execute it using the command line.',
+}
+
+# Device Under Test
+
+OpenHTF requires that a Device Under Test (DUT) ID is set each time a test is executed. If a DUT ID is not provided at the start, the test will begin immediately, assuming the DUT ID will be set later. {{ className: 'lead' }}
+
+<Note>
+  OpenHTF will raise an exception when the test completes if a DUT ID has not
+  been set.
+</Note>
+
+## Providing DUT ID at Runtime
+
+The simplest way to provide a DUT ID is by prompting the user for it. OpenHTF provides a built-in `user_input` method for this purpose.
+
+```python {title: 'main.py'}
+from openhtf import Test, PhaseResult
+from openhtf.plugs import user_input
+
+# Define the test phase
+def power_on_test(test):
+    print('Power on.')
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(power_on_test)
+    # prompt_for_test_start prompts the operator for a DUT ID
+    test.execute(test_start=user_input.prompt_for_test_start())
+
+if __name__ == '__main__':
+    main()
+```
+
+### Explanation
+
+- The main.py script defines a test phase (power_on_test) and creates a test instance (test) using the Test class.
+- The prompt_for_test_start method prompts the operator to input a DUT ID before the test starts.
+
+To run the script, use the following command in the virtual environment:
+
+```sh
+python main.py
+```
+
+This testbench does not use the operator UI yet, so all interactions are made through the command line.
+
+```sh
+(venv) C:\tofupilot > python main.py
+Power on.
+
+======================= test: openhtf_test  outcome: PASS ======================
+```
+
+## Providing DUT ID Statically
+
+Alternatively, the DUT ID can be set programmatically.
+
+```python {title: 'main.py'}
+from openhtf import Test, PhaseResult
+
+# Define the test phase
+def power_on_test(test):
+    print('Power on.')
+    return PhaseResult.CONTINUE
+
+def main():
+    # Create a test instance with the defined phase
+    test = Test(power_on_test)
+    # Provide a static DUT ID for the test start
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
+
+if __name__ == '__main__':
+    main()
+```
+
+### Explanation
+
+- The main.py script includes a test phase (power_on_test) and a test instance (test).
+- A static DUT ID (DeviceUnderTest123) is provided programmatically when starting the test.
+
+To run the script, use the following command in the virtual environment:
+
+```sh
+python main.py
+```
+
+This testbench does not use the operator UI yet, so all interactions are made through the command line.
+
+```sh
+(venv) C:\tofupilot > python main.py
+Power on.
+
+======================= test: openhtf_test  outcome: PASS ======================
+```
+
+<Note>
+  For more complete examples about user interactivity in OpenHTF, see [this
+  section](https://www.openhtf.com/plugs/user-input).
+</Note>

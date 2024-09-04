@@ -18,6 +18,7 @@ interface NavGroup {
     title: string
     href: string
   }>
+  new?: boolean
 }
 
 function useInitialValue<T>(value: T, condition = true) {
@@ -190,9 +191,14 @@ function NavigationGroup({
         <ul role="list" className="border-l border-transparent">
           {group.links.map((link) => (
             <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={link.href} active={link.href === pathname}>
+              <NavLink
+                href={link.href}
+                active={link.href === pathname}
+                tag={group.new ? 'New' : undefined}
+              >
                 {link.title}
               </NavLink>
+
               <AnimatePresence mode="popLayout" initial={false}>
                 {link.href === pathname && sections.length > 0 && (
                   <motion.ul
@@ -255,15 +261,19 @@ export const navigation: Array<NavGroup> = [
       { title: 'Measurements', href: '/measurements' },
     ],
   },
-  // {
-  //   title: 'Analytics',
-  //   links: [
-  //     { title: 'Introduction to TofuPilot', href: '/tofupilot' },
-  //     { title: 'Unit test traceability', href: '/tofupilot' },
-  //     { title: 'First pass yield', href: '/tofupilot' },
-  //     { title: 'Test steps performances', href: '/tofupilot' },
-  //   ],
-  // },
+  {
+    title: 'Analytics',
+    links: [
+      { title: 'Introduction to TofuPilot', href: '/analytics/tofupilot' },
+      {
+        title: 'Import tests to TofuPilot',
+        href: '/analytics/import-to-tofupilot',
+      },
+      { title: 'First pass yield', href: '/tofupilot' },
+      { title: 'Process capability', href: '/tofupilot' },
+    ],
+    new: true,
+  },
   {
     title: 'Plugs',
     links: [

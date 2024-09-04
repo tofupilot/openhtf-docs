@@ -94,38 +94,14 @@ export function Properties({ children }: { children: React.ReactNode }) {
   )
 }
 
-function CustomImage({
-  srcLight,
-  srcDark,
-  alt,
-}: {
-  srcLight: string
-  srcDark: string
-  alt: string
-}) {
-  const width = 1000
-  const height = 800
-  const className =
-    'w-full rounded-lg border-4 border-zinc-300 shadow-sm ring-1 ring-zinc-400 dark:ring-zinc-500'
+function CustomImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <>
-      {/* Light */}
-      <Image
-        src={srcLight}
-        alt={alt}
-        width={width}
-        height={height}
-        className={clsx('block dark:hidden', className)}
-      />
-      {/* Dark */}
-      <Image
-        src={srcDark}
-        alt={alt}
-        width={width}
-        height={height}
-        className={clsx('hidden dark:block', className)}
-      />
-    </>
+    <Image
+      {...{ src, alt }}
+      width={1000}
+      height={800}
+      className="w-full rounded-lg border-4 border-zinc-300 shadow-sm ring-1 ring-zinc-400 dark:ring-zinc-500"
+    />
   )
 }
 

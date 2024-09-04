@@ -106,7 +106,7 @@ function CustomImage({
   const width = 1000
   const height = 800
   const className =
-    'w-full rounded-lg border-4 border-zinc-300 shadow-sm ring-1 ring-zinc-400 dark:ring-zinc-500'
+    'w-full rounded-lg border-4 border-zinc-300 dark:border-zinc-600 shadow-sm ring-1 ring-zinc-400 dark:ring-zinc-700'
   return (
     <>
       {/* Light */}

@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Measurements | TofuPilot',
+  title: 'Measurements | OpenHTF',
   description:
     'Learn how to capture and validate data within OpenHTF phases, including simple, multiple, validated, inline, multidimensional, and marginal measurements, with detailed examples and code snippets.',
 }
@@ -59,7 +59,6 @@ In addition to capturing data, we often need to ensure that the data meets speci
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-from openhtf.util import validators
 
 @htf.measures(
     htf.Measurement("test_duration")

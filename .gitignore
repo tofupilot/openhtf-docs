@@ -8,3 +8,7 @@ myenv/*
 
 *.py
 *.json
+
+# Do not ignore package.json and package-lock.json
+!package.json
+!package-lock.json

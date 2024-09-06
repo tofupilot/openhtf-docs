@@ -91,27 +91,36 @@ In this example, we generate a CSV file containing measurement data and attach i
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
+import logging
+import os
 from openhtf.output.callbacks import json_factory
 
 @htf.measures(htf.Measurement("voltage"), htf.Measurement("current"))
 def electrical_measurements(test):
+    # Simulated electrical measurements
     voltage = 12.0  # Volts
     current = 1.5  # Amperes
     test.measurements.voltage = voltage
     test.measurements.current = current
 
-    # Create and attach CSV content
-    csv_content = "Voltage,Current\n{},{}".format(voltage, current)
-    test.attach(
-        "measurement_data_csv", csv_content.encode("utf-8"), mimetype="text/csv"
-    )
+    # Create the output directory if it doesn't exist
+    os.makedirs("output_files", exist_ok=True)
+
+    # Save the data to a CSV file
+    csv_file_path = "output_files/measurement_data.csv"
+    with open(csv_file_path, "w") as csv_file:
+        csv_file.write("Voltage,Current\n")
+        csv_file.write(f"{voltage},{current}\n")
+
+    # Attach the CSV file to the test
+    with open(csv_file_path, "rb") as f:
+        test.attach("measurement_data_csv", f.read(), mimetype="text/csv")
 
 def load_attachment_phase(test):
+    # Load and print the attached CSV content
     attachment = test.get_attachment("measurement_data_csv")
     if attachment:
-        attachment_content = attachment.data.decode(
-            "utf-8"
-        )
+        attachment_content = attachment.data.decode("utf-8")
         print(attachment_content)
         test.logger.info(
             "Loaded and printed the attachment content:\n%s", attachment_content
@@ -120,8 +129,11 @@ def load_attachment_phase(test):
         test.logger.error("Attachment not found.")
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     test = htf.Test(electrical_measurements, load_attachment_phase)
-    test.add_output_callbacks(json_factory.OutputToJSON("test_results.json", indent=2))
+    test.add_output_callbacks(
+        json_factory.OutputToJSON("output_files/test_results.json", indent=2)
+    )
     test.execute(test_start=lambda: "DeviceUnderTest123")
 
 if __name__ == "__main__":

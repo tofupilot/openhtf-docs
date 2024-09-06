@@ -1,7 +1,7 @@
 {
   "dut_id": "DeviceUnderTest123",
-  "start_time_millis": 1725370503325,
-  "end_time_millis": 1725370503325,
+  "start_time_millis": 1725616602928,
+  "end_time_millis": 1725616602929,
   "outcome": "PASS",
   "outcome_details": [],
   "marginal": false,
@@ -14,7 +14,8 @@
       "station_id": "Felixs-Laptop.local",
       "cancel_timeout_s": 2,
       "stop_on_first_failure": false,
-      "capture_source": false
+      "capture_source": false,
+      "voltage_limit": 5.0
     }
   },
   "phases": [
@@ -34,8 +35,8 @@
       },
       "diagnosers": [],
       "subtest_name": null,
-      "start_time_millis": 1725370503325,
-      "end_time_millis": 1725370503325,
+      "start_time_millis": 1725616602928,
+      "end_time_millis": 1725616602928,
       "attachments": {},
       "diagnosis_results": [],
       "failure_diagnosis_results": [],
@@ -44,7 +45,7 @@
       },
       "outcome": "PASS",
       "marginal": false,
-      "descriptor_id": 4452191824,
+      "descriptor_id": 4403711456,
       "name": "trigger_phase",
       "codeinfo": {
         "name": "",
@@ -57,12 +58,7 @@
         "voltage": {
           "name": "voltage",
           "outcome": "PASS",
-          "measured_value": 12.0
-        },
-        "current": {
-          "name": "current",
-          "outcome": "PASS",
-          "measured_value": 1.5
+          "measured_value": 4.5
         }
       },
       "options": {
@@ -79,8 +75,8 @@
       },
       "diagnosers": [],
       "subtest_name": null,
-      "start_time_millis": 1725370503325,
-      "end_time_millis": 1725370503325,
+      "start_time_millis": 1725616602928,
+      "end_time_millis": 1725616602929,
       "attachments": {},
       "diagnosis_results": [],
       "failure_diagnosis_results": [],
@@ -89,8 +85,8 @@
       },
       "outcome": "PASS",
       "marginal": false,
-      "descriptor_id": 4452192272,
-      "name": "electrical_measurements",
+      "descriptor_id": 4403712128,
+      "name": "voltage_measurement",
       "codeinfo": {
         "name": "",
         "docstring": null,
@@ -105,106 +101,106 @@
   "log_records": [
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase_executor",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase_executor",
       "source": "phase_executor.py",
       "lineno": 307,
-      "timestamp_millis": 1725370503325,
+      "timestamp_millis": 1725616602928,
       "message": "Executing phase trigger_phase"
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase_executor_thread",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase_executor_thread",
       "source": "threads.py",
       "lineno": 118,
-      "timestamp_millis": 1725370503325,
+      "timestamp_millis": 1725616602928,
       "message": "Thread finished: <PhaseExecutorThread: (trigger_phase)>"
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase.trigger_phase",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase.trigger_phase",
       "source": "test_state.py",
       "lineno": 774,
-      "timestamp_millis": 1725370503325,
+      "timestamp_millis": 1725616602928,
       "message": "Phase outcome of trigger_phase is PASS."
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase_executor",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase_executor",
       "source": "phase_executor.py",
       "lineno": 336,
-      "timestamp_millis": 1725370503325,
+      "timestamp_millis": 1725616602928,
       "message": "Phase trigger_phase finished with result PhaseResult.CONTINUE"
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928",
       "source": "test_executor.py",
       "lineno": 310,
-      "timestamp_millis": 1725370503325,
-      "message": "Executing phase electrical_measurements"
+      "timestamp_millis": 1725616602928,
+      "message": "Executing phase voltage_measurement"
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase_executor",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase_executor",
       "source": "phase_executor.py",
       "lineno": 307,
-      "timestamp_millis": 1725370503325,
-      "message": "Executing phase electrical_measurements"
+      "timestamp_millis": 1725616602928,
+      "message": "Executing phase voltage_measurement"
     },
     {
       "level": 20,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase.electrical_measurements",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase.voltage_measurement",
       "source": "script.py",
-      "lineno": 7,
-      "timestamp_millis": 1725370503325,
-      "message": "Starting electrical measurements phase."
+      "lineno": 15,
+      "timestamp_millis": 1725616602928,
+      "message": "Voltage limit: 5.0"
     },
     {
       "level": 20,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase.electrical_measurements",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase.voltage_measurement",
       "source": "script.py",
-      "lineno": 10,
-      "timestamp_millis": 1725370503325,
-      "message": "Completed electrical measurements phase."
+      "lineno": 20,
+      "timestamp_millis": 1725616602928,
+      "message": "Completed voltage measurement phase."
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase_executor_thread",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase_executor_thread",
       "source": "threads.py",
       "lineno": 118,
-      "timestamp_millis": 1725370503325,
-      "message": "Thread finished: <PhaseExecutorThread: (electrical_measurements)>"
+      "timestamp_millis": 1725616602928,
+      "message": "Thread finished: <PhaseExecutorThread: (voltage_measurement)>"
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase.electrical_measurements",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase.voltage_measurement",
       "source": "test_state.py",
       "lineno": 774,
-      "timestamp_millis": 1725370503325,
-      "message": "Phase outcome of electrical_measurements is PASS."
+      "timestamp_millis": 1725616602929,
+      "message": "Phase outcome of voltage_measurement is PASS."
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325.phase_executor",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928.phase_executor",
       "source": "phase_executor.py",
       "lineno": 336,
-      "timestamp_millis": 1725370503325,
-      "message": "Phase electrical_measurements finished with result PhaseResult.CONTINUE"
+      "timestamp_millis": 1725616602929,
+      "message": "Phase voltage_measurement finished with result PhaseResult.CONTINUE"
     },
     {
       "level": 10,
       "logger_name": "openhtf.plugs",
       "source": "__init__.py",
       "lineno": 334,
-      "timestamp_millis": 1725370503325,
+      "timestamp_millis": 1725616602929,
       "message": "Tearing down all plugs."
     },
     {
       "level": 10,
-      "logger_name": "openhtf.test_record.76422:c20d184747cb4df4:637d3761b6fd4713:1725370503325",
+      "logger_name": "openhtf.test_record.6736:600e8135fb894371:667a2d17a6664d92:1725616602928",
       "source": "test_state.py",
       "lineno": 473,
-      "timestamp_millis": 1725370503325,
+      "timestamp_millis": 1725616602929,
       "message": "Finishing test execution normally with outcome PASS."
     },
     {
@@ -212,7 +208,7 @@
       "logger_name": "openhtf.util.threads",
       "source": "threads.py",
       "lineno": 118,
-      "timestamp_millis": 1725370503325,
+      "timestamp_millis": 1725616602929,
       "message": "Thread finished: TestExecutorThread"
     },
     {
@@ -220,7 +216,7 @@
       "logger_name": "openhtf.core.test_descriptor",
       "source": "test_descriptor.py",
       "lineno": 351,
-      "timestamp_millis": 1725370503325,
+      "timestamp_millis": 1725616602929,
       "message": "Test completed for openhtf_test, outputting now."
     }
   ],

@@ -1,29 +1,33 @@
 import openhtf as htf
+import logging
+from openhtf.util import configuration
 from openhtf.output.callbacks import json_factory
-from openhtf.util import validators
 
 
-@htf.measures(
-    "frequency",
-    docstring="Frequency measurement",
-    units=htf.units.HERTZ,
-    validators=[validators.in_range(0, 10)],
-)
-@htf.measures("status", docstring="Status message")
-def inline_phase(test):
-    test.measurements.frequency = 15  # Hertz (out of valid range)
-    test.measurements.status = "This one is unvalidated."
+CONF = configuration.CONF
+
+# Load from external file
+CONF.load_from_file("config.yaml")
+
+
+@htf.measures(htf.Measurement("voltage"))
+def voltage_measurement(test):
+    voltage_limit = CONF.voltage_limit
+    test.logger.info("Voltage limit: %s", voltage_limit)
+
+    voltage = 4.5  # Example voltage within limit
+    test.measurements.voltage = voltage
+
+    test.logger.info("Completed voltage measurement phase.")
 
 
 def main():
-    test = htf.Test(inline_phase)
+    logging.basicConfig(level=logging.INFO)
+    test = htf.Test(voltage_measurement)
     test.add_output_callbacks(
-        json_factory.OutputToJSON(
-            "test_result2.json",  # The name of the output file
-            indent=2,  # Pretty-printing the JSON with an indentation of 2 spaces
-        )
+        json_factory.OutputToJSON("./test_results.json", indent=2)
     )
-    test.execute(lambda: "DeviceUnderTest123")
+    test.execute(test_start=lambda: "DeviceUnderTest123")
 
 
 if __name__ == "__main__":

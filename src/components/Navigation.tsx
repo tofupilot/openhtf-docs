@@ -265,7 +265,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Analytics',
     links: [
-      { title: 'Introduction', href: '/analytics/tofupilot' },
+      { title: 'Manufacturing test analytics', href: '/analytics/tofupilot' },
       { title: 'First-pass yield', href: '/analytics/fpy' },
       { title: 'Process capability', href: '/analytics/cpk' },
     ],

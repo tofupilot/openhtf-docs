@@ -1,20 +1,52 @@
 export const metadata = {
-  title: 'Analytics with TofuPilot | OpenHTF',
+  title: 'Manufacturing Test Analytics | OpenHTF',
 }
 
-# Introduction to [TofuPilot](https://tofupilot.com)
+# Manufacturing test analytics
 
-Congratulations on writing effective test scripts with OpenHTF! However, to truly understand and improve your products, you need powerful analytics. Analytics are essential not just for technical insights, but also for driving sales and growth.
+OpenHTF standardizes test scripts and report formats. This section covers key analytics from these reports, their value in assessing test performance and product quality, and provides practical examples. {{ className: 'lead' }}
 
-<Image srcLight="/hero-light.png" srcDark="/hero-dark.png" />
+## Introduction
+
+A test execution framework like OpenHTF is highly useful for standardizing the writing of test scripts in your production processes. Once these scripts are deployed, they generate a report and attachments for each test, which quickly results in a large volume of data to process.
+
+These reports provide significant insights into test performance, production efficiency, and product quality. Analyzing this data is crucial for optimizing processes and improving outcomes. For example:
+
+- **First-pass yield (FPY)**: Percentage of units passing tests without re-test or rework. Higher values show better quality.
+
+- **Cycle time**: Time spent per test cycle. Shorter times improve production speed.
+
+- **Process capability**: Measures test results against limits. Helps control accuracy and spot quality variations.
+
+<Image
+  srcLight="/analytics-intro-light.png"
+  srcDark="/analytics-intro-dark.png"
+/>
+
+## In-house analytics
+
+If you want to compute these analytics, you could create your own algorithms using Excel, custom logging solutions, or in-house scripts. However, this approach has several drawbacks:
+
+- 💰 **High Costs**: Custom development is expensive and time-consuming.
+- 🐢 **Low Performance**: Handling large data volumes can slow things down.
+- 🛠️ **Maintenance**: Keeping custom tools updated is costly and tedious.
+- 🚫 **Focus Shift**: Instead of improving test stations, you're spending time building tools
+- 🔓 **Security Risks**: Sensitive data may be exposed due to improper permissions, especially on supplier systems.
+
+## Plug-and-play analytics: TofuPilot
+
+what is tofupilot
+
+keypoints
+- 
+- 
+- 
 
 That is why [TofuPilot](https://tofupilot.com) exists! TofuPilot is a platform that seamlessly integrates with OpenHTF to provide comprehensive analytics for your testing data.
 
-## Why TofuPilot
-
 TofuPilot not only fills the analytics gap in OpenHTF but also provides:
 
-### Seamless integration
+### Integration
 
 Quickly connect and start using TofuPilot with your existing OpenHTF setup.
 
@@ -48,9 +80,9 @@ Below is a table outlining the supported features of OpenHTF when using TofuPilo
 <table>
   <thead>
     <tr>
-      <th>Category</th>
-      <th>Feature</th>
-      <th>Supported in TP</th>
+      <th>OpenHTF Features</th>
+      <th></th>
+      <th>Support on TofuPilot</th>
     </tr>
   </thead>
   <tbody>
@@ -67,7 +99,7 @@ Below is a table outlining the supported features of OpenHTF when using TofuPilo
     <tr>
       <td />
       <td>String measurement</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td />
@@ -77,7 +109,7 @@ Below is a table outlining the supported features of OpenHTF when using TofuPilo
     <tr>
       <td />
       <td>Marginal limits</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td />
@@ -87,12 +119,12 @@ Below is a table outlining the supported features of OpenHTF when using TofuPilo
     <tr>
       <td />
       <td>Dimensions</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td />
       <td>Multi-measurements (in one phase)</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td>**Phases**</td>
@@ -107,37 +139,37 @@ Below is a table outlining the supported features of OpenHTF when using TofuPilo
     <tr>
       <td />
       <td>Skipped phases</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td />
       <td>Logging</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td />
       <td>Diagnosis</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td />
       <td>Plugs</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td>**Attachments**</td>
       <td>Local files</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td />
       <td>URL</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
     <tr>
       <td />
       <td>Raw files</td>
-      <td>⌛ Coming soon...</td>
+      <td>⌛</td>
     </tr>
   </tbody>
 </table>

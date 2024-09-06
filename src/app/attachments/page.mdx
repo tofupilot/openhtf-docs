@@ -111,7 +111,7 @@ def load_attachment_phase(test):
     if attachment:
         attachment_content = attachment.data.decode(
             "utf-8"
-        )  # Assuming CSV content is UTF-8 encoded
+        )
         print(attachment_content)
         test.logger.info(
             "Loaded and printed the attachment content:\n%s", attachment_content

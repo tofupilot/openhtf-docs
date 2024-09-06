@@ -9,6 +9,8 @@ import {
 } from '@/components/MobileNavigation'
 import { MobileSearch, Search } from '@/components/Search'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import Link from 'next/link'
+import { forwardRef } from 'react'
 
 function TopLevelNavItem({
   href,

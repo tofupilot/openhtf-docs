@@ -267,10 +267,6 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction to TofuPilot', href: '/analytics/tofupilot' },
       {
-        title: 'OpenHTF x TofuPilot',
-        href: '/analytics/tofupilot-openhtf-comparison',
-      },
-      {
         title: 'Import tests to TofuPilot',
         href: '/analytics/import-to-tofupilot',
       },

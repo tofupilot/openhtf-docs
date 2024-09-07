@@ -263,13 +263,13 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: 'Analytics',
+    title: 'Traceability & Analytics',
     links: [
-      { title: 'Manufacturing test analytics', href: '/analytics/tofupilot' },
-      { title: 'First-pass yield', href: '/analytics/fpy' },
-      { title: 'Process capability', href: '/analytics/cpk' },
+      { title: 'Introduction', href: '/tofupilot/introduction' },
+      { title: 'Traceability', href: '/tofupilot/traceability' },
+      { title: 'First-pass yield', href: '/tofupilot/firstpassyield' },
+      { title: 'Process capability', href: '/tofupilot/processcapability' },
     ],
-    new: true,
   },
   {
     title: 'Plugs',

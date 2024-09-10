@@ -265,7 +265,7 @@ export const navigation: Array<NavGroup> = [
     title: 'Traceability & Analytics',
     links: [
       { title: 'Introduction', href: '/tofupilot/introduction' },
-      // { title: 'First-pass yield', href: '/tofupilot/first-pass-yield' },
+      { title: 'First-pass yield', href: '/tofupilot/first-pass-yield' },
       // { title: 'Process capability', href: '/tofupilot/process-capability' },
     ],
   },

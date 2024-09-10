@@ -1,53 +1,46 @@
 export const metadata = {
   title: 'First-pass Yield | OpenHTF',
   description:
-    'Explore the concept of First-pass Yield (FPY) and its importance in production testing. Learn how to calculate and improve FPY in your testing processes using OpenHTF with practical examples and strategies.',
+    'Explore the concept of first-pass yield (FPY) and its importance in production testing. Learn how to calculate and improve FPY in your testing processes using OpenHTF with practical examples and strategies.',
 }
 
-# First-pass yield
+# Monitoring Quality with First-Pass Yield
 
-// issue 
+Managing test results at scale often leads to missed failures and rework. **First-Pass Yield (FPY)** helps identify inefficiencies. TofuPilot automates FPY tracking and breaks it down by individual test steps. {{ className: 'lead' }}
 
-// solution
+## Problem: Managing Test Failures
 
-// this is a summary of the entire page
+As production scales, tracking pass/fail rates becomes harder. Test failures cause:
 
-First-pass Yield (FPY) is a critical metric in production and manufacturing that measures the percentage of products passing all tests and inspections the first time, without any need for rework or repair. It is an essential indicator of the efficiency and effectiveness of a manufacturing or testing process. {{ className: 'lead' }}
+- 🛑 **Missed Issues**: Faulty products slip through.
+- 💸 **High Rework Rates**: More costs and delays.
+- 📉 **Inconsistent Quality**: Declining product standards.
 
-## Definition
+## Solution: First-Pass Yield
 
-// this is not the same thing? don't confuse, only one word
+FPY measures the percentage of units passing all tests on the first try, helping reduce failures and improve efficiency.
 
-**Formula:**
+_Here, we see the first procedure needs investigation due to low first-pass yield, while the second is fine:_
 
-```jsx
-FPY = (Number of units passing all tests on the first attempt) / (Total number of units tested)
-```
+<Image
+  srcLight="/fpy-procedures-light.png"
+  srcDark="/fpy-procedures-dark.png"
+/>
 
-// this is literraly useless
-## Importance
+## Implementation in TofuPilot
 
-Improving FPY helps reduce waste, lowers production costs, and enhances overall product quality. It also minimizes the time and resources spent on rework and repairs, contributing to a more efficient and streamlined production process.
+- ⚡️ **Real-time FPY Calculation**: Continuous tracking of FPY.
+- 🚨 **Threshold Alerts**: Alerts when FPY drops below set limits (e.g., 75%, 90%).
+- 🔍 **Detailed Breakdown**: FPY breakdown by individual test steps for deeper insights.
 
-// not needed
-## Calculation -> TofuPilot
+With TofuPilot, teams can improve efficiency, reduce rework, and maintain high-quality production.
 
-To visualize your tests' first-pass yield, simply import them on TofuPilot and it'll do the rest.
+<Image
+  srcLight="/fpy-analytics-light.png"
+  srcDark="/fpy-analytics-dark.png"
+/>
 
-// screeenshot is too big
-<Image srcLight="/fpy-light.png" srcDark="/fpy-dark.png" />
-
-// bullet point
-// fpy above > =>
-// fpy under < => low efficiency, some tests needs improvement or sudden quality drop
-// process 
-
-First-pass Yield, also known as Throughput Yield, is calculated as the number of units passing all required tests and inspections on the first attempt, divided by the total number of units tested. A higher FPY indicates a more efficient process with fewer defects and less waste.
-
-// get first pass yield on tofupilot
-
-// breakdown per steps
-
-// control charts -> understand why
-
-// link to process capability
+<Image
+  srcLight="/fpy-steps-light.png"
+  srcDark="/fpy-steps-dark.png"
+/>

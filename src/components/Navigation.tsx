@@ -1,12 +1,11 @@
 'use client'
 
-import { useRef } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { AnimatePresence, motion, useIsPresent } from 'framer-motion'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useRef } from 'react'
 
-import { Button } from '@/components/Button'
 import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
@@ -266,8 +265,8 @@ export const navigation: Array<NavGroup> = [
     title: 'Traceability & Analytics',
     links: [
       { title: 'Introduction', href: '/tofupilot/introduction' },
-      // { title: 'First-pass yield', href: '/tofupilot/firstpassyield' },
-      // { title: 'Process capability', href: '/tofupilot/processcapability' },
+      // { title: 'First-pass yield', href: '/tofupilot/first-pass-yield' },
+      // { title: 'Process capability', href: '/tofupilot/process-capability' },
     ],
   },
   {

@@ -46,7 +46,7 @@ OpenHTF plug-and-play test performances example with [TofuPilot](https://tofupil
 
 ## OpenHTF + Tofupilot
 
- = Complete Test Management
+= Complete Test Management
 
 ### How it works
 
@@ -56,9 +56,9 @@ Importing test data is simple: integrate directly into your OpenHTF scripts with
 ```python
 from tofupilot import Tofupilot
 
-// better example here
+client = TofuPilotClient()
 
-TofuPilotClient().import_log(file_path='path/to/your/openhtf/log.json')
+client.create_run_from_file(file_path='path/to/your/openhtf/log.json', importer='OPENHTF')
 ```
 
 You can also import test data from any language or file format using the [REST API](https://docs.tofupilot.com/api).
@@ -101,7 +101,7 @@ from tofupilot import TofuPilotClient
 client = TofuPilotClient()
 
 # Replace 'file_path' with the path to your OpenHTF log file
-client.import_log(file_path='path/to/your/openhtf/log.json')
+client.create_run_from_file(file_path='path/to/your/openhtf/log.json', importer='OPENHTF')
 ```
 
 ### Step 3: Access Your Analytics on TofuPilot

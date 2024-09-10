@@ -266,9 +266,8 @@ export const navigation: Array<NavGroup> = [
     title: 'Traceability & Analytics',
     links: [
       { title: 'Introduction', href: '/tofupilot/introduction' },
-      { title: 'Traceability', href: '/tofupilot/traceability' },
-      { title: 'First-pass yield', href: '/tofupilot/firstpassyield' },
-      { title: 'Process capability', href: '/tofupilot/processcapability' },
+      // { title: 'First-pass yield', href: '/tofupilot/firstpassyield' },
+      // { title: 'Process capability', href: '/tofupilot/processcapability' },
     ],
   },
   {
@@ -279,10 +278,6 @@ export const navigation: Array<NavGroup> = [
       { title: 'Instruments Plugs', href: '/plugs/instruments' },
     ],
   },
-  // {
-  //   title: 'Operator UI',
-  //   links: [{ title: 'Plugs', href: '/plugs' }],
-  // },
 ]
 
 export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {

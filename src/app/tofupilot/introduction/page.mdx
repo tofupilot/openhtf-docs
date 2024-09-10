@@ -4,15 +4,18 @@ export const metadata = {
 
 # Manufacturing Test Traceability & Analytics
 
-Frameworks like OpenHTF standardize tests scripts and reporting. As production scales, you need solid test data management to maintain traceability and ensure performance and quality. {{ className: 'lead' }}
+Frameworks like OpenHTF standardize tests scripts and reporting. As production scales, you need solid test data management to maintain test traceability and ensure performance and quality. {{ className: 'lead' }}
 
-As a test engineer, you may already be using frameworks like OpenHTF to standardize how tests are written and to ensure a consistent log format. This is a great first step to scaling your testing infrastructure and maintaining product quality.
+As a test engineer, you might already use OpenHTF to standardize test scripts and ensure consistent log formats. This is a great step toward scaling your testing infrastructure and ensuring product quality at scale.
 
-But to truly optimize your process, you also need to ensure traceability of the parts tested and continuous monitoring of test performance. Here's where **test data management** tools like [TofuPilot](https://tofupilot.com) comes in, offering a plug-and-play solution for managing your OpenHTF test reports at scale. It provides a secure cloud workspace for all your test data, accessible only by your team. For teams managing their own infrastructure, there's also an on-premises option.
+But to truly optimize your process after production deployment, you need traceability and continuous test performance monitoring. Manufacturing test data platforms like [TofuPilot](https://tofupilot.com) provide a plug-and-play solution for managing OpenHTF reports at scale, offering a **secure cloud workspace** or an **on-premises option** for teams handling their own infrastructure.
+
+<Image
+  srcLight="/tofupilot-landing-page-light.png"
+  srcDark="/tofupilot-landing-page-dark.png"
+/>
 
 ## Test Traceability
-
-While ERP or MES systems typically handle traceability for parts purchasing and shipment, the automatic test process is often disconnected. Local test logs contain valuable information that gets lost if not properly managed.
 
 Test traceability answers key questions like:
 
@@ -20,12 +23,14 @@ Test traceability answers key questions like:
 - What part number and revision was it?
 - When and where was the test done?
 
-OpenHTF plug-and-play test traceability example with [TofuPilot](https://tofupilot.com):
+OpenHTF plug-and-play test traceability example with TofuPilot:
 
 <Image
   srcLight="/tofupilot-traceability-light.png"
   srcDark="/tofupilot-traceability-dark.png"
 />
+
+While ERP or MES systems typically handle traceability for parts purchasing and shipment, the automatic test process is often disconnected. Local test logs contain valuable information that gets lost if not properly managed.
 
 ## Test Performances
 
@@ -37,75 +42,76 @@ Tracking and optimizing test performance is crucial as production scales. By mon
 
 - **Process capability**: Measures test results against limits.
 
-OpenHTF plug-and-play test performances example with [TofuPilot](https://tofupilot.com):
+OpenHTF plug-and-play test performances example with TofuPilot:
 
 <Image
   srcLight="/tofupilot-analytics-light.png"
   srcDark="/tofupilot-analytics-dark.png"
 />
 
-## OpenHTF + Tofupilot
+## OpenHTF + TofuPilot
 
-= Complete Test Management
+Connecting your OpenHTF test scripts with TofuPilot is really easy.
 
-### How it works
+### Get started in 5 minutes
 
-TofuPilot is designed to **seamlessly integrate with OpenHTF**.
-Importing test data is simple: integrate directly into your OpenHTF scripts with the open-source TofuPilot Python client.
+TofuPilot integrates seamlessly with OpenHTF.
 
-```python
-from tofupilot import Tofupilot
+1. Create your account on [TofuPilot](https://tofupilot.com) and install the TofuPilot open-source Python client:
 
-client = TofuPilotClient()
+    ```bash
+    pip install tofupilot
+    ```
 
-client.create_run_from_file(file_path='path/to/your/openhtf/log.json', importer='OPENHTF')
-```
+2. Install the TofuPilot Python client:
 
-You can also import test data from any language or file format using the [REST API](https://docs.tofupilot.com/api).
+   ```bash
+   pip install tofupilot
+   ```
 
-### Build It Yourself vs. Tofupilot
+3.  Retrieve your API key from [My Profile](/user-management#api-key) page and save it as an environment variable.
 
-You could build your own analytics with Excel or custom solutions, but this option can be expensive, slow, and hard to maintain, while taking focus away from more important work.
+    <CodeGroup>
+    ```bash {{ title: 'Linux, macOS' }}
+    echo 'export TOFUPILOT_API_KEY=[your_key_here]' >> ~/.zshenv
+    ```
 
-| Build Your Own             | Use Tofupilot           |
+    ```bash {{ title: 'Windows' }}
+    setx TOFUPILOT_API_KEY "<your_key_here>"
+    ```
+
+    </CodeGroup>
+
+4. Add the `report_upload` function to your OpenHTF test scripts:
+
+    ```python
+    from tofupilot import Tofupilot
+
+    // better example of where in a script from what we're providing before
+
+    TofuPilotClient().import_log(file_path='path/to/your/openhtf/log.json')
+    ```
+
+Your test reports will be automatically uploaded and processe by TofuPilot 🚀
+
+// full functional openhtf script with procedure name etc..
+
+<Image srcLight="/tofupilot-analytics-light.png" srcDark="/tofupilot-analytics-dark.png" />
+
+### Build it yourself vs. TofuPilot
+
+You could build your own analytics with Excel or custom solutions, but this option is expensive, slow, and hard to maintain, while taking focus away from more important work.
+
+<Row>
+<Col>
+| Build Your Own             | Use TofuPilot           |
 | -------------------------- | ----------------------- |
-| 🕛 Define architecture     |                         |
-| 🕐 Select infrastructure   |                         |
-| 🕑 Set up database         |                         |
-| 🕒 Develop dashboards      |                         |
-| 🕓 Secure platform         |                         |
-| 🕔 Implement logging logic |                         |
-| 🕕 Maintain and update     | ⚡ One-line integration |
-
-### Get started
-
-# Import tests to TofuPilot
-
-To start using TofuPilot for analytics with OpenHTF, you need to connect your OpenHTF logs to TofuPilot. Follow these steps to get started:
-
-### Step 1: Install the TofuPilot Python Client
-
-First, make sure you have the TofuPilot Python client installed. You can install it using pip:
-
-```bash
-pip install tofupilot
-```
-
-### Step 2: Import Your OpenHTF Logs to TofuPilot
-
-Once the client is installed, you can import your OpenHTF log files to TofuPilot for analytics. Use the import method provided by the TofuPilot client:
-
-```python
-from tofupilot import TofuPilotClient
-
-client = TofuPilotClient()
-
-# Replace 'file_path' with the path to your OpenHTF log file
-client.create_run_from_file(file_path='path/to/your/openhtf/log.json', importer='OPENHTF')
-```
-
-### Step 3: Access Your Analytics on TofuPilot
-
-After importing your log files, TofuPilot will process the data and provide a range of analytics tools and insights. Visit the TofuPilot dashboard to view detailed reports, visualize data trends, and make informed decisions based on your test results.
-
-<Image srcLight="/hero-light.png" srcDark="/hero-dark.png" />
+| 1️⃣ Define architecture     | ⚡ One-line integration |
+| 2️⃣ Select infrastructure   |                         |
+| 3️⃣ Set up database         |                         |
+| 4️⃣ Develop dashboards      |                         |
+| 5️⃣ Secure platform         |                         |
+| 6️⃣ Implement logging logic |                         |
+| 7️⃣ Maintain and update     |                         |
+</Col>
+</Row>

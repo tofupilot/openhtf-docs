@@ -1,12 +1,11 @@
 'use client'
 
-import { useRef } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { AnimatePresence, motion, useIsPresent } from 'framer-motion'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useRef } from 'react'
 
-import { Button } from '@/components/Button'
 import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
@@ -18,6 +17,7 @@ interface NavGroup {
     title: string
     href: string
   }>
+  new?: boolean
 }
 
 function useInitialValue<T>(value: T, condition = true) {
@@ -190,9 +190,14 @@ function NavigationGroup({
         <ul role="list" className="border-l border-transparent">
           {group.links.map((link) => (
             <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={link.href} active={link.href === pathname}>
+              <NavLink
+                href={link.href}
+                active={link.href === pathname}
+                tag={group.new ? 'New' : undefined}
+              >
                 {link.title}
               </NavLink>
+
               <AnimatePresence mode="popLayout" initial={false}>
                 {link.href === pathname && sections.length > 0 && (
                   <motion.ul
@@ -235,7 +240,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
-      { title: 'Device Under Test', href: '/dut' },
+      { title: 'Device under test', href: '/dut' },
       {
         title: 'Phases',
         href: '/phases',
@@ -256,15 +261,14 @@ export const navigation: Array<NavGroup> = [
       },
     ],
   },
-  // {
-  //   title: 'Analytics',
-  //   links: [
-  //     { title: 'Introduction to TofuPilot', href: '/tofupilot' },
-  //     { title: 'Unit test traceability', href: '/tofupilot' },
-  //     { title: 'First pass yield', href: '/tofupilot' },
-  //     { title: 'Test steps performances', href: '/tofupilot' },
-  //   ],
-  // },
+  {
+    title: 'Traceability & Analytics',
+    links: [
+      { title: 'Introduction', href: '/tofupilot/introduction' },
+      { title: 'First-pass yield', href: '/tofupilot/first-pass-yield' },
+      // { title: 'Process capability', href: '/tofupilot/process-capability' },
+    ],
+  },
   {
     title: 'Plugs',
     links: [
@@ -273,10 +277,6 @@ export const navigation: Array<NavGroup> = [
       { title: 'Instruments Plugs', href: '/plugs/instruments' },
     ],
   },
-  // {
-  //   title: 'Operator UI',
-  //   links: [{ title: 'Plugs', href: '/plugs' }],
-  // },
 ]
 
 export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
@@ -295,9 +295,9 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
           />
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <Button href="#" variant="filled" className="w-full">
+          {/* <Button href="#" variant="filled" className="w-full">
             Sign in
-          </Button>
+          </Button> */}
         </li>
       </ul>
     </nav>

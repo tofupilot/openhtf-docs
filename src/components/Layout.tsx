@@ -34,7 +34,7 @@ export function Layout({
               </Link>
             </div>
             <Header />
-            <Navigation className="hidden lg:mt-10 lg:block" />
+            <Navigation className="hidden lg:mt-10 lg:block lg:h-3/4 lg:overflow-y-auto" />
           </div>
         </motion.header>
         <TofuPilotBanner />

@@ -1,0 +1,64 @@
+export const metadata = {
+  title: 'Process Capability Index (CPK) | OpenHTF',
+  description:
+    'Explore the concept of Process Capability Index (CPK) and its significance in production testing. Learn how to calculate and improve CPK in your processes using OpenHTF with practical examples and strategies.',
+}
+
+# Process Capability Index (Cpk)
+
+// this should be a summary
+The Process Capability Index (Cpk) is a key statistical tool used in production and manufacturing to measure how well a process is performing relative to its specification limits. It indicates the ability of a process to produce output within the desired specification limits consistently. {{ className: 'lead' }}
+
+// issue -> 
+
+// solution -> track capability measurement
+
+// detail -> all indicators, cp, cpk, pp, ppk
+
+// result -> the most useful is cpk?
+
+// this is not a note
+
+<Note>
+  Cpk is only meaningful for test phases that include measurements with both
+  defined values and limits.
+</Note>
+
+## Definition
+
+Cpk is a measure of process capability that takes into account both the centering of the process and its variability. It shows how closely a process is running to its specification limits, considering the natural variability in the process.
+
+**Formula:**
+
+```jsx
+Cpk = min[(USL - μ) / (3σ), (μ - LSL) / (3σ)]
+```
+
+Where:
+
+- USL = Upper Specification Limit
+- LSL = Lower Specification Limit
+- μ = Process Mean
+- σ = Standard Deviation
+
+// illustrate now with tofupilot 
+
+## Interpretation
+
+A Cpk value of 1.33 or higher is typically considered acceptable, indicating that the process is capable of producing output within specification limits. A Cpk value of less than 1 suggests that the process is not capable, and there is a need for process improvement or control measures.
+
+### Key Points:
+
+- Cpk > 1.33: Process is highly capable.
+- Cpk = 1: Process is marginally capable.
+- Cpk < 1: Process is not capable; improvements are needed.
+
+## Importance
+
+Improving Cpk is crucial for maintaining consistent product quality and reducing the number of defects. A higher Cpk value indicates a more capable process, with outputs that are more likely to meet the desired specifications. This leads to fewer defects, less waste, and lower production costs.
+
+## Calculation
+
+To visualize your process’s Cpk, simply import your data on TofuPilot, and it will automatically calculate the Cpk values, providing insights into the capability of your processes.
+
+<Image srcLight="/cpk-light.png" srcDark="/cpk-dark.png" />

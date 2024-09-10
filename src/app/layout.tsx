@@ -1,5 +1,5 @@
-import { type Metadata } from 'next'
 import glob from 'fast-glob'
+import { type Metadata } from 'next'
 
 import { Providers } from '@/app/providers'
 import { Layout } from '@/components/Layout'
@@ -7,7 +7,6 @@ import { type Section } from '@/components/SectionProvider'
 
 import '@/styles/tailwind.css'
 import { Analytics } from '@vercel/analytics/react'
-import { TofuPilotBanner } from '@/components/TofuPilotBanner'
 
 export const metadata: Metadata = {
   title: {
@@ -39,7 +38,6 @@ export default async function RootLayout({
           </div>
           <Analytics />
         </Providers>
-        <TofuPilotBanner />
       </body>
     </html>
   )

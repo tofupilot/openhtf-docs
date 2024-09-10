@@ -1,5 +1,3 @@
-import { forwardRef } from 'react'
-import Link from 'next/link'
 import clsx from 'clsx'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
@@ -7,10 +5,12 @@ import { Logo } from '@/components/Logo'
 import {
   MobileNavigation,
   useIsInsideMobileNavigation,
+  useMobileNavigationStore,
 } from '@/components/MobileNavigation'
-import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import { MobileSearch, Search } from '@/components/Search'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import Link from 'next/link'
+import { forwardRef } from 'react'
 
 function TopLevelNavItem({
   href,

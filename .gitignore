@@ -3,3 +3,12 @@ node_modules
 
 *.env
 myenv/*
+
+*.pyc
+
+*.py
+*.json
+
+# Do not ignore package.json and package-lock.json
+!package.json
+!package-lock.json

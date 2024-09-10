@@ -12,6 +12,7 @@ import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
 import { PuzzleIcon } from './icons/PuzzleIcon'
 import { RocketIcon } from './icons/RocketIcon'
+import { AnalyticsIcon } from './icons/AnalyticsIcon'
 
 interface Resource {
   href: string
@@ -39,20 +40,20 @@ const resources: Array<Resource> = [
       ],
     },
   },
-  // {
-  //   href: '/tofupilot',
-  //   name: 'Analytics',
-  //   description:
-  //     'Discover how to seamlessly integrate OpenHTF with TofuPilot for instant test step analytics and insights.',
-  //   icon: AnalyticsIcon,
-  //   pattern: {
-  //     y: 32,
-  //     squares: [
-  //       [0, 2],
-  //       [1, 4],
-  //     ],
-  //   },
-  // },
+  {
+    href: '/tofupilot/introduction',
+    name: 'Analytics',
+    description:
+      'Integrate OpenHTF with TofuPilot for real-time traceability and analytics.',
+    icon: AnalyticsIcon,
+    pattern: {
+      y: 32,
+      squares: [
+        [0, 2],
+        [1, 4],
+      ],
+    },
+  },
   {
     href: '/plugs',
     name: 'Plugs',
@@ -67,17 +68,6 @@ const resources: Array<Resource> = [
       ],
     },
   },
-  // {
-  //   href: '/operator-ui',
-  //   name: 'Operator UI',
-  //   description:
-  //     'Learn about the web-based graphical interface in OpenHTF for real-time test monitoring and management.',
-  //   icon: UiIcon,
-  //   pattern: {
-  //     y: 22,
-  //     squares: [[0, 1]],
-  //   },
-  // },
 ]
 
 function ResourceIcon({ icon: Icon }: { icon: Resource['icon'] }) {
@@ -88,7 +78,7 @@ function ResourceIcon({ icon: Icon }: { icon: Resource['icon'] }) {
   )
 }
 
-function ResourcePattern({
+export function ResourcePattern({
   mouseX,
   mouseY,
   ...gridProps

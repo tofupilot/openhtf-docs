@@ -23,7 +23,7 @@ Test traceability answers key questions like:
 - What part number and revision was it?
 - When and where was the test done?
 
-OpenHTF plug-and-play test traceability example with TofuPilot:
+_OpenHTF plug-and-play test traceability example with TofuPilot:_
 
 <Image
   srcLight="/tofupilot-traceability-light.png"
@@ -42,7 +42,7 @@ Tracking and optimizing test performance is crucial as production scales. By mon
 
 - **Process capability**: Measures test results against limits.
 
-OpenHTF plug-and-play test performances example with TofuPilot:
+_OpenHTF plug-and-play test performances example with TofuPilot:_
 
 <Image
   srcLight="/tofupilot-analytics-light.png"
@@ -59,44 +59,41 @@ TofuPilot integrates seamlessly with OpenHTF.
 
 1. Create your account on [TofuPilot](https://tofupilot.com) and install the TofuPilot open-source Python client:
 
-    ```bash
-    pip install tofupilot
-    ```
+```bash
+pip install tofupilot
+```
 
-2. Install the TofuPilot Python client:
+2. Retrieve your API key from [My Profile](/user-management#api-key) page and save it as an environment variable.
 
-   ```bash
-   pip install tofupilot
-   ```
+<CodeGroup>
+```bash {{ title: 'Linux, macOS' }}
+echo 'export TOFUPILOT_API_KEY=[your_key_here]' >> ~/.zshenv
+```
 
-3.  Retrieve your API key from [My Profile](/user-management#api-key) page and save it as an environment variable.
+```bash {{ title: 'Windows' }}
+setx TOFUPILOT_API_KEY "<your_key_here>"
+```
 
-    <CodeGroup>
-    ```bash {{ title: 'Linux, macOS' }}
-    echo 'export TOFUPILOT_API_KEY=[your_key_here]' >> ~/.zshenv
-    ```
+</CodeGroup>
 
-    ```bash {{ title: 'Windows' }}
-    setx TOFUPILOT_API_KEY "<your_key_here>"
-    ```
+3. Add the `report_upload` function to your OpenHTF test scripts:
 
-    </CodeGroup>
+```python
+from tofupilot import Tofupilot
 
-4. Add the `report_upload` function to your OpenHTF test scripts:
+// better example of where in a script from what we're providing before
 
-    ```python
-    from tofupilot import Tofupilot
-
-    // better example of where in a script from what we're providing before
-
-    TofuPilotClient().import_log(file_path='path/to/your/openhtf/log.json')
-    ```
+TofuPilotClient().import_log(file_path='path/to/your/openhtf/log.json')
+```
 
 Your test reports will be automatically uploaded and processe by TofuPilot 🚀
 
 // full functional openhtf script with procedure name etc..
 
-<Image srcLight="/tofupilot-analytics-light.png" srcDark="/tofupilot-analytics-dark.png" />
+<Image
+  srcLight="/tofupilot-analytics-light.png"
+  srcDark="/tofupilot-analytics-dark.png"
+/>
 
 ### Build it yourself vs. TofuPilot
 

@@ -66,7 +66,6 @@ export function TofuPilotBanner() {
           </div>
         </div>
       </a>
-      ﬁ{' '}
     </div>
   )
 }

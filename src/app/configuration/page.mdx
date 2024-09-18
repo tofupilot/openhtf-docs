@@ -49,7 +49,7 @@ You can also load configurations from external files written in YAML or JSON for
 voltage_limit: 10.0
 ```
 
-Load the configuration file in your script using `conf.load_from_file()`.
+Load the configuration file in your script using `CONF.load_from_file()`.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -59,8 +59,12 @@ from openhtf.output.callbacks import json_factory
 
 CONF = configuration.CONF
 
+# Declare the voltage_limit key
+CONF.declare('voltage_limit')
+
 # Load from external file
-CONF.load_from_file("config.yaml")
+with open("config.yaml", "r") as yamlfile:
+    CONF.load_from_file(yamlfile)
 
 @htf.measures(htf.Measurement("voltage"))
 def voltage_measurement(test):

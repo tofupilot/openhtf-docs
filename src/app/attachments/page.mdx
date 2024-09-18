@@ -140,7 +140,15 @@ if __name__ == "__main__":
     main()
 ```
 
-In this example, the CSV file is added directly to the test output file:
+Test log and attachments are stored next to each other in the output_files directory:
+
+```txt
+output_files/
+├── measurement_data.csv
+└── test_results.json
+```
+
+And the CSV file is added directly to the test output file:
 
 ```javascript {{ title: 'test_results.json' }}
 {
@@ -170,7 +178,7 @@ In this example, we generate a PNG image of a curve using a library like Matplot
 pip install matplotlib
 ```
 
-```python
+```python {{ title: 'main.py' }}
 import openhtf as htf
 import logging
 import os

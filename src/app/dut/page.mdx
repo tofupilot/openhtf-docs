@@ -17,7 +17,7 @@ OpenHTF requires that a Device Under Test (DUT) ID is set each time a test is ex
 
 The simplest way to provide a DUT ID is by prompting the user for it. OpenHTF provides a built-in `user_input` method for this purpose.
 
-```python {title: 'main.py'}
+```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
 from openhtf.plugs import user_input
 
@@ -37,8 +37,8 @@ if __name__ == '__main__':
 
 ### Explanation
 
-- The main.py script defines a test phase (power_on_test) and creates a test instance (test) using the Test class.
-- The prompt_for_test_start method prompts the operator to input a DUT ID before the test starts.
+- The main.py script defines a test phase `power_on_test` and creates a test instance `test` using the `Test` class.
+- The `prompt_for_test_start` method prompts the operator to input a DUT ID before the test starts.
 
 To run the script, use the following command in the virtual environment:
 
@@ -46,10 +46,13 @@ To run the script, use the following command in the virtual environment:
 python main.py
 ```
 
-This testbench does not use the operator UI yet, so all interactions are made through the command line.
+This testbench does not use the operator UI yet, so all interactions are made through the command line. 
+In this exemple, the operator UI enters the device name "DeviceUnderTest123".
 
 ```sh
 (venv) C:\tofupilot > python main.py
+Enter a DUT ID in order to start the test.
+--> DeviceUnderTest123
 Power on.
 
 ======================= test: openhtf_test  outcome: PASS ======================
@@ -59,7 +62,7 @@ Power on.
 
 Alternatively, the DUT ID can be set programmatically.
 
-```python {title: 'main.py'}
+```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
 
 # Define the test phase
@@ -79,7 +82,7 @@ if __name__ == '__main__':
 
 ### Explanation
 
-- The main.py script includes a test phase (power_on_test) and a test instance (test).
+- The main.py script includes a test phase `power_on_test` and a test instance `test`.
 - A static DUT ID (DeviceUnderTest123) is provided programmatically when starting the test.
 
 To run the script, use the following command in the virtual environment:

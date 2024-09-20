@@ -55,7 +55,7 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/plugs',
+    href: '/plugs/syntax',
     name: 'Plugs',
     description:
       'Learn to use and create plugs in OpenHTF to interact with external components.',

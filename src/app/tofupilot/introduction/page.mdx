@@ -114,11 +114,15 @@ def main():
 
     # Upload the test results to TofuPilot, specifying the importer type
     client.create_run_from_report(file_path, importer="OPENHTF")
+
+if __name__ == "__main__":
+  main()
 ```
 
 Your test reports will be automatically uploaded and processed by TofuPilot 🚀
 
 ```text
+TofuPilot Python Client 1.2.2
 Power on.
 
 ======================= test: openhtf_test  outcome: PASS ======================

@@ -43,7 +43,11 @@ function Banner() {
 export function TofuPilotBanner() {
   return (
     <div className="fixed bottom-0 left-0 z-50 px-4 pb-4">
-      <a href="https://tofupilot.com" target="_blank" className="block">
+      <a
+        href="https://tofupilot.com"
+        target="_blank"
+        className="block h-[144px]"
+      >
         <div className="mx-auto w-[288px] rounded-2xl bg-white p-4 ring-1 ring-inset ring-zinc-900/7.5 group-hover:ring-zinc-900/10 dark:bg-zinc-900 dark:ring-white/10 dark:group-hover:ring-white/20">
           <p className="text-2xs text-zinc-600 dark:text-zinc-400">Sponsored</p>
           <h3 className="mt-2 text-sm font-semibold text-zinc-900 dark:text-white">

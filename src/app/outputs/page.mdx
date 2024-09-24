@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Test Outputs | OpenHTF',
+  title: 'Outputs',
   description:
     'Learn how to create structured test results with OpenHTF. This guide covers generating JSON output and implementing custom output mechanisms with detailed examples and code snippets.',
 }
@@ -8,7 +8,7 @@ export const metadata = {
 
 Creating structured test results is essential for production testing traceability, and analytics. OpenHTF generates structured JSON files and offers customizable output formats to meet your specific needs. {{ className: 'lead' }}
 
-## JSON Output
+## JSON output
 
 To enable the default JSON output format in OpenHTF, simply specify the output mechanism with one callback.
 
@@ -80,7 +80,7 @@ Here's an excerpt of the JSON output. Note that detailed metadata, phase options
 }
 ```
 
-## Custom Output
+## Custom output
 
 You can also implement custom output mechanisms if the built-in ones do not meet your requirements. This involves creating a function that handles the test record and adding it as an output callback.
 

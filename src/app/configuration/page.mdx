@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Test Configuration | OpenHTF',
+  title: 'Configuration',
   description:
     'Explore how to manage test settings with OpenHTF’s configuration module, allowing for adaptable, maintainable, and scalable test scripts using both in-code definitions and external configuration files.',
 }
@@ -10,7 +10,7 @@ The configuration module in OpenHTF offers a centralized, flexible, and scalable
 
 You can define configuration options directly in your code or load them from an external configuration file. Using external configuration files can make your tests more flexible and easier to manage.
 
-## Defining configurations in code
+## Implementation
 
 To set configurations in your OpenHTF script, use the `conf` module to declare configuration options within your script. Here’s a simple example:
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     main()
 ```
 
-## Using external configuration files
+## External configuration files
 
 You can also load configurations from external files written in YAML or JSON format like:
 
@@ -49,7 +49,7 @@ You can also load configurations from external files written in YAML or JSON for
 voltage_limit: 10.0
 ```
 
-Load the configuration file in your script using `conf.load_from_file()`.
+Load the configuration file in your script using `CONF.load_from_file()`.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -59,8 +59,12 @@ from openhtf.output.callbacks import json_factory
 
 CONF = configuration.CONF
 
+# Declare the voltage_limit key
+CONF.declare('voltage_limit')
+
 # Load from external file
-CONF.load_from_file("config.yaml")
+with open("config.yaml", "r") as yamlfile:
+    CONF.load_from_file(yamlfile)
 
 @htf.measures(htf.Measurement("voltage"))
 def voltage_measurement(test):

@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Manufacturing Test Traceability & Analytics | OpenHTF',
+  title: 'Manufacturing Test Traceability & Analytics',
 }
 
 # Test Data Managemement
@@ -20,7 +20,7 @@ Frameworks like OpenHTF can be used to standardize test scripts and reports, ens
   srcDark="/tofupilot-landing-page-dark.png"
 />
 
-## Test Traceability
+## Traceability
 
 Test traceability answers key questions like:
 
@@ -37,7 +37,7 @@ _OpenHTF plug-and-play test traceability example with TofuPilot:_
 
 While ERP or MES systems typically handle traceability for parts purchasing and shipment, the automatic test process is often disconnected. Local test logs contain valuable information that gets lost if not properly managed.
 
-## Test Performances
+## Performances
 
 Tracking and optimizing test performance is crucial as production scales. By monitoring key metrics, you can identify inefficiencies, improve throughput, and maintain product quality. Key test performance metrics include:
 
@@ -114,11 +114,15 @@ def main():
 
     # Upload the test results to TofuPilot, specifying the importer type
     client.create_run_from_report(file_path, importer="OPENHTF")
+
+if __name__ == "__main__":
+  main()
 ```
 
 Your test reports will be automatically uploaded and processed by TofuPilot 🚀
 
 ```text
+TofuPilot Python Client 1.2.2
 Power on.
 
 ======================= test: openhtf_test  outcome: PASS ======================

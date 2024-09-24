@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Test Attachments | OpenHTF',
+  title: 'Attachments',
   description:
     'Learn how to capture and attach various types of data files, such as CSV and image files, to your OpenHTF test records for comprehensive hardware testing.',
 }
@@ -10,7 +10,7 @@ Hardware testing often involves capturing data such as pictures or measurement f
 
 To add attachments in your OpenHTF script, you can use the `test.attach` method. Below are examples of adding different types of attachments to your script and sample output files.
 
-## Creating and Attaching Content Directly
+## Attaching content
 
 You can create and attach content directly to the test record using the `test.attach` function.
 
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## Attaching a Pre-existing File
+## Attaching file
 
 You can also attach an existing file to the test output using the `test.attach_from_file` function.
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## Loading Attached Files
+## Loading attachment
 
 To load and access attached files during test execution, use the `test.get_attachment` function.
 
@@ -140,7 +140,15 @@ if __name__ == "__main__":
     main()
 ```
 
-In this example, the CSV file is added directly to the test output file:
+Test log and attachments are stored next to each other in the output_files directory:
+
+```txt
+output_files/
+├── measurement_data.csv
+└── test_results.json
+```
+
+And the CSV file is added directly to the test output file:
 
 ```javascript {{ title: 'test_results.json' }}
 {
@@ -170,7 +178,7 @@ In this example, we generate a PNG image of a curve using a library like Matplot
 pip install matplotlib
 ```
 
-```python
+```python {{ title: 'main.py' }}
 import openhtf as htf
 import logging
 import os

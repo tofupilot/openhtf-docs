@@ -236,45 +236,63 @@ function NavigationGroup({
 
 export const navigation: Array<NavGroup> = [
   {
-    title: 'Getting started',
+    title: 'Getting Started',
     links: [
-      { title: 'Introduction', href: '/' },
-      { title: 'Create your first test', href: '/first-test' },
-      { title: 'Device under test', href: '/dut' },
+      { title: 'Installation', href: '/first-test' },
+      { title: 'Templates', href: '/templates' },
+      { title: 'Community', href: '/templates' },
+    ],
+  },
+  {
+    title: 'Writing Tests',
+    links: [
+      { title: 'Device Under Test', href: '/dut' },
       {
         title: 'Phases',
         href: '/phases',
-      },
-      {
-        title: 'Outputs',
-        href: '/outputs',
       },
       { title: 'Measurements', href: '/measurements' },
       {
         title: 'Attachments',
         href: '/attachments',
       },
-      { title: 'Configuration', href: '/configuration' },
+      { title: 'Plugs', href: '/configuration' },
       {
         title: 'Logging',
         href: '/logging',
       },
+      { title: 'Configurations', href: '/configuration' },
     ],
   },
   {
-    title: 'Traceability & Analytics',
+    title: 'Deploying to Production',
     links: [
-      { title: 'Introduction', href: '/tofupilot/introduction' },
-      { title: 'First-pass yield', href: '/tofupilot/first-pass-yield' },
-      // { title: 'Process capability', href: '/tofupilot/process-capability' },
+      { title: 'Operator UI', href: '/tofupilot/introduction' },
+      {
+        title: 'Outputs & Database',
+        href: '/outputs',
+      },
+      {
+        title: 'Release Process',
+        href: '/outputs',
+      },
+      { title: 'Traceability', href: '/tofupilot/first-pass-yield' },
+      { title: 'Analytics', href: '/tofupilot/first-pass-yield' },
     ],
   },
+  // {
+  //   title: 'Connecting Plugs',
+  //   links: [
+  //     { title: 'Syntax', href: '/plugs/syntax' },
+  //     { title: 'User Input Plug', href: '/plugs/user-input' },
+  //     { title: 'Instruments Plugs', href: '/plugs/instruments' },
+  //   ],
+  // },
   {
-    title: 'Plugs',
+    title: 'Resources',
     links: [
-      { title: 'Syntax', href: '/plugs/syntax' },
-      { title: 'User Input Plug', href: '/plugs/user-input' },
-      { title: 'Instruments Plugs', href: '/plugs/instruments' },
+      { title: 'Development Guidelines', href: '' },
+      { title: 'Units Reference', href: '' },
     ],
   },
 ]

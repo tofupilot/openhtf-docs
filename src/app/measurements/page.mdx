@@ -6,155 +6,344 @@ export const metadata = {
 
 # Measurements
 
-Measurements are essential components in OpenHTF for capturing and validating data within phases. They enable structured test result recording, apply validations, and ensure data consistency throughout the testing process. {{ className: 'lead' }}
+You can use measurements to capture and validate data within phases. {{ className: 'lead' }}
 
-## Simple measurement
+<Image
+  src="/measurements-header.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
 
-Let's add a simple measurement to our phase. In this example, `device_status` captures a string value within `status_check_phase`.
+## Overview
+
+You can use measurements in OpenHTF to capture and validate values during a test. These values can be numeric, boolean, or string, and may be either simple or multidimensional. The framework offers built-in validation, and test authors can declare measurements with units, types, and validation rules using the `@openhtf.measures()` decorator.
+
+<Note>
+  Measurements should not be used for large data, such as binary files, which
+  should be stored as [attachments](/attachments).
+</Note>
+
+## Numeric
+
+Numeric measurements represent values that need to be within a defined range or pass specific numeric validation criteria.
+
+### Example
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
+from openhtf.util import measurements
 
-@htf.measures(htf.Measurement('device_status'))
-def status_check_phase(test):
-    test.measurements.device_status = 'Operational'
+@htf.measures(
+    measurements.Measurement('temperature')  # Declares a measurement 'temperature'
+    .in_range(0, 100)  # Ensures the value is between 0 and 100
+    .with_units('C')   # Specifies the unit as Celsius
+    .with_precision(1)  # Rounds to 1 decimal place
+)
+def temperature_phase(test):
+    test.measurements.temperature = 25  # Set the temperature value to 25°C
 
-def main():
-    test = htf.Test(status_check_phase)
-    test.execute(lambda: "DeviceUnderTest123")
+    def main():
+    test = htf.Test(temperature_phase)
+    test.execute(lambda: "SI051AB7B0001")
 
 if __name__ == '__main__':
     main()
 ```
 
-## Multiple measurements
+### Validators
 
-In the previous example, we used a single measurement to capture data. Now, we'll extend this concept by introducing multiple measurements within a single phase. This allows us to record various types of data simultaneously, using both string declarations and the Measurement class.
+<Properties>
+  <Property name=".in_range(min_value, max_value)">
+    Ensures the value is within the given range.
+  </Property>
+  <Property name=".with_units(units)">
+    Rounds the value to the specified precision before validation.
+  </Property>
+  <Property name=".with_precision(precision)">
+    Rounds the value to the specified precision before validation.
+  </Property>
+</Properties>
 
-```python {{ title: 'main.py' }}
-import openhtf as htf
+### Options
 
-@htf.measures('voltage', 'current')
-@htf.measures(htf.Measurement('resistance'), htf.Measurement('power'))
-def electrical_measurements(test):
-    # Simulate test measurements
-    test.measurements.voltage = 12.0  # Volts
-    test.measurements.current = 1.5  # Amperes
+<Properties>
+  <Property name=".with_units(unit)">
+    Adds units to the measurement (e.g., Celsius, Volts).
+  </Property>
+  <Property name=".with_transform(fn)">
+    Applies a transformation function to modify the value before validation.
+  </Property>
+</Properties>
 
-    # Calculate resistance (Ohm's Law: V = IR) and power (P = VI)
-    test.measurements.resistance = test.measurements.voltage / test.measurements.current  # Ohms
-    test.measurements.power = test.measurements.voltage * test.measurements.current  # Watts
+## Boolean
 
-def main():
-    test = htf.Test(electrical_measurements)
-    test.execute(lambda: "DeviceUnderTest123")
+Boolean measurements represent pass/fail, true/false type data, commonly used to check test conditions.
 
-if __name__ == '__main__':
-    main()
-```
-
-## Validated measurements
-
-In addition to capturing data, we often need to ensure that the data meets specific criteria. This can be done using validation functions. Validators in OpenHTF allow us to define constraints on measurements, ensuring that the values recorded are within acceptable ranges or conditions.
+### Syntax
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
 @htf.measures(
-    htf.Measurement("test_duration")
-    .in_range(
-        0, 10
-    )  # Specifies that the measurement must be between 0 and 10, if the measurement is outside this range, the test will fail.
-    .with_units(htf.units.SECOND)  # Sets the units of the measurement to seconds
+    measurements.Measurement('is_device_connected')  # Declares a boolean measurement
+    .equals(True)  # Ensures the value is exactly True
 )
-def measure_duration(test):
-    # Simulate capturing the duration of a test
-    measured_duration = 5  # Example value for the test duration (in seconds)
-
-    # Assign the simulated duration to the 'test_duration' measurement
-    test.measurements.test_duration = measured_duration
+def is_device_connected_phase(test):
+    test.measurements.is_device_connected = True  # Sets the boolean value to True
 
 def main():
-    test = htf.Test(measure_duration)
-    test.execute(lambda: "DeviceUnderTest123")
+    test = htf.Test(is_device_connected_phase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == '__main__':
+    main()
+```
+
+### Validators
+
+<Properties>
+  <Property name=".equals(value)">
+    Ensures the measurement exactly matches the specified boolean value.
+  </Property>
+  <Property name=".in_set({value1, value2})">
+    Ensures the string is one of the predefined valid values.
+  </Property>
+</Properties>
+
+### Options
+
+<Properties>
+  <Property name=".with_units(unit)">
+    Adds units to the measurement (e.g., Celsius, Volts).
+  </Property>
+  <Property name=".with_transform(fn)">
+    Applies a transformation function to modify the value before validation.
+  </Property>
+</Properties>
+
+## String
+
+String measurements store text or labels, which are validated for exact matches or based on predefined sets of valid values.
+
+### Example
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    measurements.Measurement('device_status')  # Declares a string measurement 'device_status'
+    .equals('OK')  # Ensures the value is exactly 'OK'
+)
+def StatusCheckPhase(test):
+    test.measurements.device_status = 'OK'  # Set the status value to 'OK'
+
+def main():
+    test = htf.Test(StatusCheckPhase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == '__main__':
+    main()
+```
+
+### Validators
+
+<Properties>
+  <Property name=".equals(value)">
+    Ensures the string matches the expected value.
+  </Property>
+  <Property name=".in_set({value1, value2})">
+    Ensures the string is one of the predefined valid values.
+  </Property>
+</Properties>
+
+## Multidimensional
+
+Multidimensional measurements allow for capturing data that spans multiple coordinates, such as time-series data or data across multiple levels or categories.
+
+### Example
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    measurements.Measurement('voltage_over_time')  # Declares a multidimensional measurement
+    .with_dimensions('time', 'voltage')  # Specifies the dimensions: time and voltage
+)
+def VoltagePhase(test):
+    test.measurements.voltage_over_time[0] = 3.3  # At time 0, voltage is 3.3V
+    test.measurements.voltage_over_time[1] = 3.5  # At time 1, voltage is 3.5V
+
+def main():
+    test = htf.Test(VoltagePhase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == '__main__':
+    main()
+```
+
+### Validators
+
+<Properties>
+  <Property name=".in_range(min_value, max_value)">
+    Can be applied to each value in the multidimensional set.{' '}
+  </Property>
+</Properties>
+
+### Options
+
+<Properties>
+  <Property name=".with_dimensions(*dims)">
+    Adds multiple units for multidimensional measurements (e.g., time,
+    frequency).
+  </Property>
+</Properties>
+
+## Multiple
+
+You can use multiple measurements in a single test phase to capture different types of data at once. This is helpful when a test involves monitoring several aspects (e.g., temperature, pressure, and voltage) simultaneously.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    measurements.Measurement('temperature')  # Temperature measurement
+    .in_range(0, 100)  # Ensure the temperature is between 0 and 100°C
+    .with_units('C'),  # Specify Celsius as the unit
+    measurements.Measurement('pressure')  # Pressure measurement
+    .in_range(950, 1050)  # Ensure the pressure is between 950 and 1050 hPa
+    .with_units('hPa'),  # Specify hectopascals as the unit
+    measurements.Measurement('voltage')  # Voltage measurement
+    .in_range(0, 5)  # Ensure the voltage is between 0 and 5V
+    .with_units('V')  # Specify volts as the unit
+)
+def EnvTestPhase(test):
+    test.measurements.temperature = 22.5  # Set temperature to 22.5°C
+    test.measurements.pressure = 1013  # Set pressure to 1013 hPa
+    test.measurements.voltage = 3.3  # Set voltage to 3.3V
+
+def main():
+    test = htf.Test(EnvTestPhase)
+    test.execute(lambda: "SI051AB7B0001")
 
 if __name__ == "__main__":
     main()
 ```
 
-## Inline measurement declaration
+## TofuPilot Integration
 
-For greater flexibility, measurements can also be declared inline with additional attributes. This approach allows you to specify details such as docstring, units, and validators directly within the phase, making the code more concise and readable.
+vous pouvez analyser les mesures faites par les diférntes de vos tests sur tofupilot sans cahnegemnt dans votre test car tofupilot support nativement les phases et measures d'openhtf
+
+après avoir installé le client tofupilot et ajouter la callback d'upload dans votre script
+
+exemple
+
+vous verrez les mesures dans la page de chaque run
+
+<Image
+  src="/measurements-header.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+en cliquant sur n'importe quelle measure vous pouvez voir ses comparer les résultats avec tous les runs
+
+<Image
+  srcLight="/measurements-header.png"
+  srcDark="/measurements-header.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+## Advanced features
+
+You can leverage advanced OpenHTF options to handle complex measurement use cases.
+
+### Documentation
+
+You can add a description to your measurements.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-from openhtf.util import validators
 
 @htf.measures(
-    'frequency', docstring='Frequency measurement', units=htf.units.HERTZ, validators=[validators.in_range(0, 10)])
-@htf.measures('status', docstring='Status message')
-def inline_phase(test):
-    test.measurements.frequency = 15  # Hertz (out of valid range)
-    test.measurements.status = 'This one is unvalidated.'
+    measurements.Measurement('temperature').in_range(0, 100).with_units('C')
+    .doc('This measurement tracks the ambient temperature during the test.')
+)
+def TemperaturePhase(test):
+    test.measurements.temperature = 25
 
 def main():
-    test = htf.Test(inline_phase)
-    test.execute(lambda: "DeviceUnderTest123")
+    test = htf.Test(TemperaturePhase)
+    test.execute(lambda: "SI051AB7B0001")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
 
-## Multidimensional measurements
+### Argument Substitution
 
-Sometimes, measurements need to capture data across multiple dimensions. Multidimensional measurements in OpenHTF enable detailed data analysis. These measurements can be converted into DataFrames and NumPy arrays for further processing and visualization. Pandas, a powerful Python library, helps convert measurement data into DataFrames for easier analysis. To install pandas, use:
-
-```sh
-pip install pandas
-```
+You can add a description to your measurements.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-import random
-import pandas as pd
 
 @htf.measures(
-    htf.Measurement('power_time_series').with_dimensions('ms', 'V', 'A'))
-@htf.measures(htf.Measurement('average_voltage').with_units('V'))
-@htf.measures(htf.Measurement('average_current').with_units('A'))
-@htf.measures(htf.Measurement('resistance').with_units('ohm').in_range(9, 11))
-def multdim_measurements(test):
-    for t in range(10):
-        resistance = 10
-        voltage = 10 + 10.0 * t
-        current = voltage / resistance + .01 * random.random()
-        dimensions = (t, voltage, current)
-        test.measurements['power_time_series'][dimensions] = 0
-
-    # Convert to DataFrame
-    power_df = test.measurements['power_time_series'].to_dataframe(columns=['ms', 'V', 'A', 'n/a'])
-    test.logger.info('DataFrame:\n%s', power_df)
-    test.measurements['average_voltage'] = power_df['V'].mean()
-
-    # Convert to NumPy array
-    power_array = power_df.to_numpy()
-    test.logger.info('NumPy Array:\n%s', power_array)
-    test.measurements['average_current'] = power_array.mean(axis=0)[2]
-
-    # Calculate resistance
-    test.measurements['resistance'] = (
-        test.measurements['average_voltage'] /
-        test.measurements['average_current'])
+    measurements.Measurement('test_result_{level}').with_args(level='high').equals('PASS')
+)
+def TestPhase(test):
+    test.measurements.test_result_high = 'PASS'
 
 def main():
-    test = htf.Test(multdim_measurements)
-    test.execute(lambda: "DeviceUnderTest123")
+    test = htf.Test(TemperaturePhase)
+    test.execute(lambda: "SI051AB7B0001")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
 
-## Marginal measurements
+### Notification Callback
+
+You can set a callback to trigger when a measurement is set.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+def my_callback():
+    print("Measurement set!")
+
+@htf.measures(
+    measurements.Measurement('temperature').in_range(0, 100).with_units('C')
+    .set_notification_callback(my_callback)
+)
+def TemperaturePhase(test):
+    test.measurements.temperature = 25
+
+def main():
+    test = htf.Test(TemperaturePhase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+```
+
+### Marginal Measurements
+
+You can mark a measurement as marginal, indicating that while it passes validation, it is near the boundary of failure.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    measurements.Measurement('power_output').in_range(0, 100)
+    .validate_on({'PASS': lambda x: x > 50})
+)
+def PowerTestPhase(test):
+    test.measurements.power_output = 75
+
+def main():
+    test = htf.Test(PowerTestPhase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+```
 
 For finer granularity in test results, use marginal measurements. They set stricter limits within the acceptable range, giving detailed information about test performance. **This allows distinguishing between fully passing results and those close to failing, without affecting the overall phase outcome**, helping identify potential issues early.
 
@@ -172,5 +361,49 @@ def main():
     test.execute(lambda: "DeviceUnderTest123")
 
 if __name__ == '__main__':
+    main()
+```
+
+### Conditional Validation
+
+You can apply conditional validation based on outcomes.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    measurements.Measurement('power_output').in_range(0, 100)
+    .validate_on({'PASS': lambda x: x > 50})
+)
+def PowerTestPhase(test):
+    test.measurements.power_output = 75
+
+def main():
+    test = htf.Test(PowerTestPhase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+```
+
+### Transformation Function
+
+You can modify measurement values before validation.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    measurements.Measurement('voltage').in_range(0, 10)
+    .with_transform(lambda x: x * 1.1).with_units('V')
+)
+def VoltagePhase(test):
+    test.measurements.voltage = 5
+
+def main():
+    test = htf.Test(VoltagePhase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
     main()
 ```

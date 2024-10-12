@@ -95,36 +95,42 @@ export function Properties({ children }: { children: React.ReactNode }) {
 }
 
 function CustomImage({
-  srcLight,
-  srcDark,
+  src,
   alt,
+  withDarkMode = false,
 }: {
-  srcLight: string
-  srcDark: string
+  src: string
   alt: string
+  withDarkMode?: boolean
 }) {
   const width = 1000
   const height = 800
   const className =
     'w-full rounded-lg border-4 border-zinc-200 dark:border-zinc-600 shadow-sm ring-1 ring-zinc-300 dark:ring-zinc-700'
+
+  // Replace "-light" with "-dark" if dark mode option is enabled
+  const srcDark = withDarkMode ? src.replace('-light', '-dark') : src
+
   return (
     <>
       {/* Light */}
       <Image
-        src={srcLight}
+        src={src}
         alt={alt}
         width={width}
         height={height}
-        className={clsx('block dark:hidden', className)}
+        className={clsx('block', withDarkMode && 'dark:hidden', className)}
       />
       {/* Dark */}
-      <Image
-        src={srcDark}
-        alt={alt}
-        width={width}
-        height={height}
-        className={clsx('hidden dark:block', className)}
-      />
+      {withDarkMode && (
+        <Image
+          src={srcDark}
+          alt={alt}
+          width={width}
+          height={height}
+          className={clsx('hidden dark:block', className)}
+        />
+      )}
     </>
   )
 }

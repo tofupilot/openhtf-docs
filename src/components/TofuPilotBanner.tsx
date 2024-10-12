@@ -49,9 +49,11 @@ export function TofuPilotBanner() {
         className="block h-[144px]"
       >
         <div className="mx-auto w-[288px] rounded-2xl bg-white p-4 ring-1 ring-inset ring-zinc-900/7.5 group-hover:ring-zinc-900/10 dark:bg-zinc-900 dark:ring-white/10 dark:group-hover:ring-white/20">
-          <p className="text-2xs text-zinc-600 dark:text-zinc-400">Sponsored</p>
+          <p className="text-2xs text-zinc-600 dark:text-zinc-400">
+            Docs maintained by the TofuPilot team
+          </p>
           <h3 className="mt-2 text-sm font-semibold text-zinc-900 dark:text-white">
-            Looking for plug-and-play <br /> OpenHTF test analytics?
+            Looking for plug-and-play <br /> OpenHTF database & analytics?
           </h3>
           <div className="mt-3 flex items-center gap-3">
             <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-zinc-200 shadow">

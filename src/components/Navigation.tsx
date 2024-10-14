@@ -244,7 +244,7 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: 'Writing Tests',
+    title: 'Develop',
     links: [
       { title: 'Device Under Test', href: '/dut' },
       {
@@ -264,22 +264,6 @@ export const navigation: Array<NavGroup> = [
       { title: 'Configurations', href: '/configuration' },
     ],
   },
-  {
-    title: 'Deploying to Production',
-    links: [
-      { title: 'Operator UI', href: '/tofupilot/introduction' },
-      {
-        title: 'Outputs & Database',
-        href: '/outputs',
-      },
-      {
-        title: 'Release Process',
-        href: '/outputs',
-      },
-      { title: 'Traceability', href: '/tofupilot/first-pass-yield' },
-      { title: 'Analytics', href: '/tofupilot/first-pass-yield' },
-    ],
-  },
   // {
   //   title: 'Connecting Plugs',
   //   links: [
@@ -289,7 +273,29 @@ export const navigation: Array<NavGroup> = [
   //   ],
   // },
   {
-    title: 'Resources',
+    title: 'Deploy',
+    links: [
+      {
+        title: 'Outputs',
+        href: '/outputs',
+      },
+      { title: 'Operator UI', href: '/tofupilot/introduction' },
+      {
+        title: 'Release',
+        href: '/outputs',
+      },
+    ],
+  },
+  {
+    title: 'Monitor',
+    links: [
+      { title: 'Database', href: '/tofupilot/introduction' },
+      { title: 'Traceability', href: '/tofupilot/first-pass-yield' },
+      { title: 'Performances', href: '/tofupilot/first-pass-yield' },
+    ],
+  },
+  {
+    title: 'Advanced',
     links: [
       { title: 'Development Guidelines', href: '' },
       { title: 'Units Reference', href: '' },

@@ -31,7 +31,7 @@ export const metadata = {
 
 # Device Under Test
 
-You can track the serial number of the unit under test with every test run. {{ className: 'lead' }}
+You can track the unit's serial number with each test run. {{ className: 'lead' }}
 
 <Image
   src="/dut-header.png"
@@ -40,17 +40,9 @@ You can track the serial number of the unit under test with every test run. {{ c
 
 ## Overview
 
-When you're testing devices, you usually need to track the serial number of each unit for test traceability. With OpenHTF, you can track the serial number by:
+When testing devices, tracking the serial number for traceability is essential. OpenHTF lets you enter the serial number manually at the start or set it programmatically at the start or during the test.
 
-- Having the operator enter it manually.
-- Setting it at the start.
-- Setting it during the test.
-
-With TofuPilot integration, it will automatically:
-
-- Create a new unit during the first test run where the serial number is detected.
-- Link test results to the corresponding unit.
-- Track the unit’s history across all test procedures.
+By connecting your test scripts to a dedicated database like <TofuPilotLink utmMedium="dut-overview"/>, the serial number is automatically used to organize the tests for each unit and to compare performance by component revision or batch number.
 
 ## Prompt at start
 
@@ -60,22 +52,21 @@ You can prompt the operator to input the serial number manually at the start of 
 from openhtf import Test, PhaseResult
 from openhtf.plugs import user_input
 
-def phase_power_on(test):
+def power_on(test):
     return PhaseResult.CONTINUE
 
 def main():
-    test = Test(phase_power_on)
-    # Operator enters serial number at test start
-    test.execute(test_start=user_input.prompt_for_test_start())
+    test = Test(power_on)
+    test.execute(test_start=user_input.prompt_for_test_start()) # Prompt at start
 
 if __name__ == '__main__':
     main()
 ```
 
-This script runs from the command line, where the operator enters the device name "SI051AB7B0001".
+When executed, the script prompts the user to enter a serial number.
 
 ```sh
-(venv) C:\tofupilot > python main.py
+(venv) C:\tofupilot > python3 main.py
 Enter a DUT ID in order to start the test.
 --> SI051AB7B0001
 
@@ -89,13 +80,12 @@ You can set the serial number at the start of the test.
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
 
-def phase_power_on(test):
+def power_on(test):
     return PhaseResult.CONTINUE
 
 def main():
-    test = Test(phase_power_on)
-    # Serial number set at test start
-    test.execute(test_start=lambda: 'SI051AB7B0001')
+    test = Test(power_on)
+    test.execute(test_start=lambda: 'SI051AB7B0001') # Set at start
 
 if __name__ == '__main__':
     main()
@@ -108,13 +98,12 @@ You can also set the serial number during the test.
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
 
-def phase_get_sn(test):
-    # Serial number captured during test
-    test.test_record.dut_id = 'SI051AB7B0001'
+def get_sn(test):
+    test.test_record.dut_id = 'SI051AB7B0001' # Set during test
     return PhaseResult.CONTINUE
 
 def main():
-    test = Test(phase_get_sn)
+    test = Test(get_sn)
     test.execute()
 
 if __name__ == '__main__':
@@ -123,18 +112,58 @@ if __name__ == '__main__':
 
 ## TofuPilot integration
 
-TofuPilot works seamlessly with OpenHTF reports using the `dut_id` for the serial number.
+The <TofuPilotLink utmMedium="dut-integration" /> integration automatically uploads the OpenHTF report to a secure workspace and imports the DUT's serial number.
 
-- If the unit was created in a previous test, no action is needed.
-- If not, specify the `part_number`.
-- Optionally, add the `revision`. If none is provided, 'A' is used by default.
+### Dashboard
 
-This example extracts the part number and revision from the serial number, but you can also set them manually.
+A dedicated page is created for each test run, linking to the unit page.
+
+<Image
+  src="/dut-page-run.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+On the unit page, you can view all test runs conducted on this unit across all procedures.
+
+<Image
+  src="/dut-page-unit.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+You can specify additional parameters like component, revision, or batch number.
+
+There's also support for [sub-units](https://docs.tofupilot.com/sub-units) to track parts during assembly, each with its own tests.
+
+### One-line integration
+
+To enable the TofuPilot integration, simply install the tofupilot open-source Python client with:
+
+```sh
+pip install tofupilot
+```
+
+And add the import function in your script:
+
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+from tofupilot import upload
+
+def power_on(test):
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(power_on)
+    test.execute(test_start=lambda: 'SI051AB7B0001')
+    tofupilot.upload(test) # activate upload
+
+if __name__ == '__main__':
+    main()
+```
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
 
-def phase_get_pn_rev(test):
+def get_pn_rev(test):
     # Extract the part number and revision from the serial number
     test.test_record.part_number = test.test_record.dut_id[:5]
     test.test_record.revision = test.test_record.dut_id[5:7]
@@ -142,7 +171,7 @@ def phase_get_pn_rev(test):
 
 def main():
     test = Test(
-        phase_get_pn_rev,
+        get_pn_rev,
         procedure_id="FVT1", # Procedure ID in TofuPilot
     )
     # TofuPilot callback
@@ -155,18 +184,36 @@ if __name__ == '__main__':
     main()
 ```
 
-On the run page in TofuPilot, a link is available to the unit under test page.
+- If the unit was created in a previous test, no action is needed. - If not,
+  specify the `part_number`. - Optionally, add the `revision`. If none is
+  provided, 'A' is used by default.
 
-<Image
-  srcLight="/header-dut.png"
-  srcDark="/header-dut.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
-/>
+This example extracts the part number and revision from the serial number, but you can also set them manually.
 
-On the unit page, you can see all test runs performed on this unit across all procedures.
+### Component, revision and batch number
 
-<Image
-  srcLight="/header-dut.png"
-  srcDark="/header-dut.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
-/>
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+
+def get_pn_rev(test):
+    # Extract the part number and revision from the serial number
+    test.test_record.part_number = test.test_record.dut_id[:5]
+    test.test_record.revision = test.test_record.dut_id[5:7]
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(
+        get_pn_rev,
+        procedure_id="FVT1", # Procedure ID in TofuPilot
+    )
+    # TofuPilot callback
+    # TODO Felix
+
+    # Serial number set at test start
+    test.execute(test_start=lambda: 'SI051AB7B0001')
+
+if __name__ == '__main__':
+    main()
+```
+
+### Interface

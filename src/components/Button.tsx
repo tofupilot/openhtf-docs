@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 function ArrowIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -24,7 +24,7 @@ const variantStyles = {
   outline:
     'rounded-full py-1 px-3 text-zinc-700 ring-1 ring-inset ring-zinc-900/10 hover:bg-zinc-900/2.5 hover:text-zinc-900 dark:text-zinc-400 dark:ring-white/10 dark:hover:bg-white/5 dark:hover:text-white',
   text: 'text-teal-500 hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-500',
-  teal: 'text-teal-500 hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-500'
+  blue: 'text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500',
 }
 
 type ButtonProps = {

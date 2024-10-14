@@ -275,11 +275,11 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Deploy',
     links: [
+      { title: 'Operator UI', href: '/tofupilot/introduction' },
       {
         title: 'Outputs',
         href: '/outputs',
       },
-      { title: 'Operator UI', href: '/tofupilot/introduction' },
       // {
       //   title: 'Release',
       //   href: '/outputs',

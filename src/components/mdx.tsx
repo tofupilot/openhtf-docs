@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 export const a = Link
 export { Button } from '@/components/Button'
-export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
+export { Code as code, CodeGroup, Pre as pre } from '@/components/Code'
 
 export function wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -18,6 +18,19 @@ export function wrapper({ children }: { children: React.ReactNode }) {
         <Feedback />
       </footer>
     </article>
+  )
+}
+
+export const TofuPilotLink = ({ utmMedium }: { utmMedium: string }) => {
+  const baseUrl = 'https://tofupilot.com'
+  const utmSource = 'openhtf.com'
+
+  const fullHref = `${baseUrl}?utm_source=${utmSource}&utm_medium=${utmMedium}`
+
+  return (
+    <a href={fullHref} target="_blank" rel="noopener noreferrer">
+      TofuPilot
+    </a>
   )
 }
 

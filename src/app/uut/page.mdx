@@ -1,11 +1,11 @@
 export const metadata = {
-  title: 'Device Under Test (DUT)',
+  title: 'Unit Under Test (UUT)',
   description:
-    'Learn how to track and record the Device Under Test (DUT) serial number in OpenHTF tests. This guide covers operator prompts, setting programmatically, and TofuPilot integration for full traceability.',
+    'Learn how to track and record the Unit Under Test (UUT) serial number in OpenHTF tests. This guide covers operator prompts, setting programmatically, and TofuPilot integration for full traceability.',
   keywords: [
     'OpenHTF',
-    'DUT',
-    'Device Under Test',
+    'UUT',
+    'Unit Under Test',
     'Unit Under Test',
     'test serial number',
     'traceability',
@@ -14,35 +14,35 @@ export const metadata = {
   ],
   author: 'TofuPilot',
   og: {
-    title: 'Device Under Test (DUT) in OpenHTF',
+    title: 'Unit Under Test (UUT) in OpenHTF',
     description:
-      'Learn how to record and manage Device Under Test (DUT) serial numbers in OpenHTF tests with full traceability, including TofuPilot integration.',
-    image: '/dut-header.png',
+      'Learn how to record and manage Unit Under Test (UUT) serial numbers in OpenHTF tests with full traceability, including TofuPilot integration.',
+    image: '/UUT-header.png',
   },
   twitter: {
     card: 'summary_large_image',
     site: '@YourTwitterHandle',
-    title: 'Device Under Test (DUT) in OpenHTF',
+    title: 'Unit Under Test (UUT) in OpenHTF',
     description:
-      'This guide explains how to handle Device Under Test (DUT) serial numbers in OpenHTF, with operator prompts and TofuPilot integration.',
-    image: '/dut-header.png',
+      'This guide explains how to handle Unit Under Test (UUT) serial numbers in OpenHTF, with operator prompts and TofuPilot integration.',
+    image: '/UUT-header.png',
   },
 }
 
-# Device Under Test
+# Unit Under Test
 
 You can track the unit's serial number with each test run. {{ className: 'lead' }}
 
 <Image
-  src="/dut-header.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  src="/UUT-header.png"
+  alt="OpenHTF Unit Under Test (UUT) documentation section header with TofuPilot."
 />
 
 ## Overview
 
-When testing devices, tracking the serial number for traceability is essential. OpenHTF lets you enter the serial number manually at the start or set it programmatically at the start or during the test.
+When testing Units, tracking the serial number for traceability is essential. OpenHTF lets you enter the serial number manually at the start or set it programmatically at the start or during the test.
 
-By connecting your test scripts to a dedicated database like <TofuPilotLink utmMedium="dut-overview"/>, the serial number is automatically used to organize the tests for each unit and to compare performance by component revision or batch number.
+By connecting your test scripts to a dedicated database like <TofuPilotLink utmMedium="UUT-overview"/>, the serial number is automatically used to organize the tests for each unit and to compare performance by component revision or batch number.
 
 ## Prompt at start
 
@@ -67,7 +67,7 @@ When executed, the script prompts the user to enter a serial number.
 
 ```sh
 (venv) C:\tofupilot > python3 main.py
-Enter a DUT ID in order to start the test.
+Enter a UUT ID in order to start the test.
 --> SI051AB7B0001
 
 ======================= test: openhtf_test  outcome: PASS ======================
@@ -99,7 +99,7 @@ You can also set the serial number during the test.
 from openhtf import Test, PhaseResult
 
 def get_sn(test):
-    test.test_record.dut_id = 'SI051AB7B0001' # Set during test
+    test.test_record.UUT_id = 'SI051AB7B0001' # Set during test
     return PhaseResult.CONTINUE
 
 def main():
@@ -112,22 +112,22 @@ if __name__ == '__main__':
 
 ## TofuPilot integration
 
-The <TofuPilotLink utmMedium="dut-integration" /> integration automatically uploads the OpenHTF report to a secure workspace and imports the DUT's serial number.
+The <TofuPilotLink utmMedium="UUT-integration" /> integration automatically uploads the OpenHTF report to a secure workspace and imports the UUT's serial number.
 
 ### Dashboard
 
 A dedicated page is created for each test run, linking to the unit page.
 
 <Image
-  src="/dut-page-run.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  src="/UUT-page-run.png"
+  alt="OpenHTF Unit Under Test (UUT) documentation section header with TofuPilot."
 />
 
 On the unit page, you can view all test runs conducted on this unit across all procedures.
 
 <Image
-  src="/dut-page-unit.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  src="/UUT-page-unit.png"
+  alt="OpenHTF Unit Under Test (UUT) documentation section header with TofuPilot."
 />
 
 You can specify additional parameters like component, revision, or batch number.
@@ -165,8 +165,8 @@ from openhtf import Test, PhaseResult
 
 def get_pn_rev(test):
     # Extract the part number and revision from the serial number
-    test.test_record.part_number = test.test_record.dut_id[:5]
-    test.test_record.revision = test.test_record.dut_id[5:7]
+    test.test_record.part_number = test.test_record.UUT_id[:5]
+    test.test_record.revision = test.test_record.UUT_id[5:7]
     return PhaseResult.CONTINUE
 
 def main():
@@ -197,8 +197,8 @@ from openhtf import Test, PhaseResult
 
 def get_pn_rev(test):
     # Extract the part number and revision from the serial number
-    test.test_record.part_number = test.test_record.dut_id[:5]
-    test.test_record.revision = test.test_record.dut_id[5:7]
+    test.test_record.part_number = test.test_record.UUT_id[:5]
+    test.test_record.revision = test.test_record.UUT_id[5:7]
     return PhaseResult.CONTINUE
 
 def main():

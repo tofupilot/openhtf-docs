@@ -22,7 +22,7 @@ export function TofuPilotBanner() {
             </p>
             <XMarkIcon
               aria-hidden="true"
-              className="h-5 w-5 cursor-pointer dark:text-zinc-400"
+              className="h-4 w-4 cursor-pointer text-zinc-200 dark:text-zinc-800"
               onClick={() => setIsOpen(false)}
             />
           </div>
@@ -38,11 +38,11 @@ export function TofuPilotBanner() {
                 quality={100}
                 src="/tofupilot-icon.png"
                 alt="TofuPilot"
-                className="mb-0.5 h-4 w-4"
+                className="h-4 w-4"
               />
             </div>
             <a href="https://tofupilot.com" target="_blank">
-              <Button variant="teal" arrow="right">
+              <Button variant="blue" arrow="right">
                 Try TofuPilot
               </Button>
             </a>

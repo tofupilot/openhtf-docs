@@ -85,34 +85,9 @@ if __name__ == "__main__":
     main()
 ```
 
-## URL
+## Files by URL
 
 TODO Félix: are there a way to attach files URL?
-
-## Access attachments
-
-To load and access attached files during test execution, use the `test.get_attachment` function.
-
-```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
-
-def attachment_phase(test):
-    # Attach some data
-    test.attach("test_attachment", "Attachment data".encode("utf-8"))
-
-    # Retrieve and print the attached data
-    test_attachment = test.get_attachment("test_attachment")
-    print(test_attachment)
-
-    return PhaseResult.CONTINUE
-
-def main():
-    test = Test(attachment_phase)
-    test.execute(lambda: "SI051AB7B0001")
-
-if __name__ == "__main__":
-    main()
-```
 
 ## TofuPilot integration
 
@@ -136,6 +111,35 @@ if __name__ == "__main__":
 Attachments are available in a dedicated section of the run page, where they can be opened directly in the browser or downloaded.
 
 <Image
-  src="/attachments-header.png"
+  src="/attachments-page-run.png"
   alt="Attachments section on the OpenHTF run page, showing options to open files in the browser or download them with TofuPilot integration."
 />
+
+---
+
+## Advanced use-cases
+
+### Access attachments during execution
+
+To load and access attached files during test execution, use the `test.get_attachment` function.
+
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+
+def attachment_phase(test):
+    # Attach some data
+    test.attach("test_attachment", "Attachment data".encode("utf-8"))
+
+    # Retrieve and print the attached data
+    test_attachment = test.get_attachment("test_attachment")
+    print(test_attachment)
+
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(attachment_phase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+```

@@ -15,13 +15,15 @@ You can organize your test flow by breaking it down into multiple phases. {{ cla
 
 ## Overview
 
-In OpenHTF, you can use phases to handle specific test tasks like measurements, device control, and data processing. Each phase tracks its status and duration, showing whether it passed or failed and how long it took.
+Hardware tests typically consist of multiple test steps, which OpenHTF refers to as phases.
 
-When combined with anayltics platform like TofuPilot, phases help you clearly identify the cause of errors, and determine what is making the test take longer.
+We recommend performing a single read or write operation on the unit under test per phase. One or several [measurements](/measurements) will be added per phase, depending on the number of controls to perform on the data collected.
+
+By integrating <TofuPilotLink utmMedium="phases-overview"/>, you get precise analytics on failure rates and phase durations.
 
 ## Definition
 
-Phases are standard Python functions that take the `test` object as an input argument and return a `PhaseResult`. To execute them, you must add them to the test definition:
+Phases are standard Python functions that take the `test` object as an input argument and return a `PhaseResult`.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -40,11 +42,7 @@ if __name__ == '__main__':
     test.execute(lambda: "SI051AB7B0001")
 ```
 
-The console returns:
-
-```txt
-======================= test: openhtf_test  outcome: PASS ======================
-```
+To be executed, they must be individually added to the test definition.
 
 ## Results
 
@@ -66,7 +64,7 @@ You can use the following `PhaseResult`:
   </Property>
 </Properties>
 
-Specific `PhaseResult` can be returned by test phases to indicate the next action after phase execution.
+For example:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -100,41 +98,17 @@ The console returns:
 
 ## Options
 
-You can use the `@htf.PhaseOptions` decorator to override the default behaviors:
+You can use the `@htf.PhaseOptions` decorator to modify phase execution behavior.
 
 <Properties>
-  <Property name="name" type="string">
-    Override for the name of the phase.
-  </Property>
   <Property name="timeout_s" type="float">
-    Timeout for the phase, in seconds.
-  </Property>
-  <Property name="run_if" type="callable">
-    Callback to decide whether to run the phase.
-  </Property>
-  <Property name="repeat_on_measurement_fail" type="bool">
-    Repeat phase on measurement failure.
-  </Property>
-  <Property name="repeat_on_timeout" type="bool">
-    Repeat phase on timeout.
+    Timeout for the phase, in seconds. What is the default value?
   </Property>
   <Property name="repeat_limit" type="int or None">
-    Maximum number of repeats, None for infinite.
+    Maximum number of repeats, None for infinite. What is the default value?
   </Property>
-  <Property name="force_repeat" type="bool">
-    Force the phase to repeat up to repeat_limit times.
-  </Property>
-  <Property name="requires_state" type="bool">
-    Pass the whole TestState if True, otherwise pass TestApi.
-  </Property>
-  <Property name="run_under_pdb" type="bool">
-    Run the phase under the Python Debugger.
-  </Property>
-  <Property name="phase_name_case" type="enum">
-    Case formatting options for phase name.
-  </Property>
-  <Property name="stop_on_measurement_fail" type="bool">
-    Stop the test if any measurements fail.
+  <Property name="run_if" type="callback">
+    You can add a callback to decide whether to run the phase.
   </Property>
 </Properties>
 
@@ -142,32 +116,173 @@ For example:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-from openhtf import PhaseOptions, PhaseResult
 import random
 
 # Custom name and timeout
 @htf.PhaseOptions(name='Always Pass Phase', timeout_s=5)
 def pass_phase(test):
-    return PhaseResult.CONTINUE
+    return htf.PhaseResult.CONTINUE
 
 # Retries on failure with a maximum repeat limit
 @htf.PhaseOptions(repeat_limit=3)
 def retry_phase(test):
     if random.choice([True, False]):
-        return PhaseResult.CONTINUE
+        return htf.PhaseResult.CONTINUE
     else:
-        return PhaseResult.REPEAT
+        return htf.PhaseResult.REPEAT
 
 # Will always fail, but only runs if a condition is met
 @htf.PhaseOptions(run_if=lambda: random.choice([True, False]))
 def conditional_fail_phase(test):
-    return PhaseResult.STOP
+    return htf.PhaseResult.STOP
 
 if __name__ == '__main__':
     test = htf.Test(pass_phase, retry_phase, conditional_fail_phase)
     test.execute(lambda: "SI051AB7B0001")
 ```
 
+## TofuPilot integration
+
+The <TofuPilotLink utmMedium="phases-integration" /> integration provides immediate compatibility with OpenHTF phases, referred to as steps in TofuPilot.
+
+To enable TofuPilot integration, install the open-source Python client:
+
+```sh
+pip install tofupilot
+```
+
+And add the `tofupilot.synch` callback before the test execution:
+
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+import tofupilot
+
+def first_phase(test):
+    return htf.PhaseResult.CONTINUE
+
+def second_phase(test):
+    return htf.PhaseResult.SKIP
+
+def third_phase(test):
+    return htf.PhaseResult.STOP
+
+if __name__ == '__main__':
+    test = htf.Test(first_phase, second_phase, third_phase)
+    test.add_output_callbacks(tofupilot.synch()) # Add synch callback before test execution
+    test.execute(SI051AB7B0001)
+
+if **name** == '**main**':
+    main()
+```
+
+You can see the test phases on each run page, without measurements for now.
+
+<Image
+  src="/phases-page-run.png"
+  alt="Unit page showing all test runs for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
+/>
+
+You can click on a phase to compare its recent performance, like the duration between runs.
+
+<Image
+  src="/phases-page-procedure-duration.png"
+  alt="Unit page showing all test runs for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
+/>
+
+You can also compare the detailed first yield for each phase.
+
+<Image
+  src="/phases-page-procedure-fpy.png"
+  alt="Unit page showing all test runs for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
+/>
+
 ---
 
-## TofuPilot integration
+## Advanced use-cases
+
+You can leverage advanced OpenHTF options to handle more complex phase execution cases.
+
+### Override phase name
+
+You can override for the default phase name of the phase and case formatting.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.PhaseOptions(name="better_name", case="???")
+def example_phase(test):
+    return htf.PhaseResult.CONTINUE
+
+def main():
+  test = htf.Test(example_phase)
+  test.execute(lambda: "SI051AB7B0001")
+
+if **name** == "**main**":
+main()
+
+```
+
+### Change repeat behavior
+
+OpenHTF offers advanced options to repeat phases under specific conditions:
+
+<Properties>
+  <Property name="repeat_on_measurement_fail" type="bool">
+    Repeat the phase automatically when a measurement fails. What is the default
+    behavior?
+  </Property>
+  <Property name="repeat_on_timeout" type="bool">
+    Repeat the phase if it times out during execution.
+  </Property>
+  <Property name="force_repeat" type="bool">
+    Force the phase to repeat regardless of success or failure.
+  </Property>
+</Properties>
+
+```python {{ title: 'main.py' }}
+
+import openhtf as htf
+from openhtf import PhaseOptions, PhaseResult, Test
+
+@htf.PhaseOptions(force_repeat=True)
+def repeat_phase(test):
+    test.logger.info('This phase always repeats.')
+    return PhaseResult.CONTINUE
+
+@htf.PhaseOptions(repeat_on_timeout=True)
+def timeout_phase(test):
+    test.logger.info('This phase may repeat on timeout.')
+    return PhaseResult.CONTINUE
+
+test = Test(measure_temperature, repeat_phase, timeout_phase)
+
+test.test_record.dut_id = 'UUT-123456'
+
+if __name__ == '__main__':
+    test.execute()
+```
+
+### Requires state
+
+what is this feature?
+
+<Property name="requires_state" type="bool">
+  Pass the whole TestState if True, otherwise pass TestApi.
+</Property>
+
+### Stop the test
+
+¨
+document here
+
+<Property name="stop_on_measurement_fail" type="bool">
+  Stop the test if any measurements fail.
+</Property>
+
+### Python Debugger
+
+document here
+
+<Property name="run_under_pdb" type="bool">
+  Run the phase under the Python Debugger.
+</Property>

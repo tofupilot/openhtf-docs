@@ -23,6 +23,7 @@ function TopLevelNavItem({
     <li>
       <Link
         href={href}
+        target="_blank"
         className="text-sm leading-5 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
       >
         {children}
@@ -81,6 +82,9 @@ export const Header = forwardRef<
           <ul role="list" className="flex items-center gap-8">
             <TopLevelNavItem href="https://github.com/google/openhtf">
               GitHub
+            </TopLevelNavItem>
+            <TopLevelNavItem href="https://discord.gg/P7gEdEc7a6">
+              Discord
             </TopLevelNavItem>
           </ul>
         </nav>

@@ -36,6 +36,7 @@ function TopLevelNavItem({
     <li className="md:hidden">
       <Link
         href={href}
+        target="_blank"
         className="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
       >
         {children}
@@ -238,9 +239,9 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Getting Started',
     links: [
-      { title: 'Installation', href: '/first-test' },
-      // { title: 'Templates', href: '/templates' },
-      // { title: 'Community', href: '/community' },
+      { title: 'Installation', href: '/installation' },
+      { title: 'Community', href: '/community' },
+      { title: 'Templates', href: '/templates' },
     ],
   },
   {
@@ -256,26 +257,18 @@ export const navigation: Array<NavGroup> = [
         title: 'Attachments',
         href: '/attachments',
       },
+      {
+        title: 'Output Callbacks',
+        href: '/output-callbacks',
+      },
+      {
+        title: 'Logger',
+        href: '/logger',
+      },
       { title: 'Plugs', href: '/plugs' },
-      {
-        title: 'Outputs',
-        href: '/outputs',
-      },
-      {
-        title: 'Logging',
-        href: '/logging',
-      },
       { title: 'Configurations', href: '/configuration' },
     ],
   },
-  // {
-  //   title: 'Connecting Plugs',
-  //   links: [
-  //     { title: 'Syntax', href: '/plugs/syntax' },
-  //     { title: 'User Input Plug', href: '/plugs/user-input' },
-  //     { title: 'Instruments Plugs', href: '/plugs/instruments' },
-  //   ],
-  // },
   {
     title: 'Deploy',
     links: [
@@ -299,6 +292,9 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
         {/* <TopLevelNavItem href="#">Documentation</TopLevelNavItem> */}
         <TopLevelNavItem href="https://github.com/google/openhtf">
           GitHub
+        </TopLevelNavItem>
+        <TopLevelNavItem href="https://discord.gg/P7gEdEc7a6">
+          Discord
         </TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup

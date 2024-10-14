@@ -29,20 +29,20 @@ export const metadata = {
   },
 }
 
-# Unit Under Test
+# Unit Under Test (UUT)
 
 You can track the unit's serial number with each test run. {{ className: 'lead' }}
 
 <Image
   src="/UUT-header.png"
-  alt="OpenHTF Unit Under Test (UUT) documentation section header with TofuPilot."
+  alt="OpenHTF Unit Under Test (UUT) section header with TofuPilot integration."
 />
 
 ## Overview
 
-When testing Units, tracking the serial number for traceability is essential. OpenHTF lets you enter the serial number manually at the start or set it programmatically at the start or during the test.
+When testing units, tracking their serial numbers is key for traceability. OpenHTF allows you to manually input the serial number at the start or set it programmatically at any point during the test.
 
-By connecting your test scripts to a dedicated database like <TofuPilotLink utmMedium="UUT-overview"/>, the serial number is automatically used to organize the tests for each unit and to compare performance by component revision or batch number.
+By integrating <TofuPilotLink utmMedium="uut-overview"/> in your test scripts, the UUT's serial number is automatically used to organize test results for each unit and and enables performance comparisons across part numbers, revisions, or batch numbers.
 
 ## Prompt at start
 
@@ -99,7 +99,7 @@ You can also set the serial number during the test.
 from openhtf import Test, PhaseResult
 
 def get_sn(test):
-    test.test_record.UUT_id = 'SI051AB7B0001' # Set during test
+    test.test_record.dut_id = 'SI051AB7B0001' # Set during test
     return PhaseResult.CONTINUE
 
 def main():
@@ -112,108 +112,105 @@ if __name__ == '__main__':
 
 ## TofuPilot integration
 
-The <TofuPilotLink utmMedium="UUT-integration" /> integration automatically uploads the OpenHTF report to a secure workspace and imports the UUT's serial number.
-
-### Dashboard
+The <TofuPilotLink utmMedium="uut-integration" /> integration automatically uploads the OpenHTF report to a secure workspace and imports the UUT's serial number.
 
 A dedicated page is created for each test run, linking to the unit page.
 
 <Image
   src="/UUT-page-run.png"
-  alt="OpenHTF Unit Under Test (UUT) documentation section header with TofuPilot."
+  alt="Test run page for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
-On the unit page, you can view all test runs conducted on this unit across all procedures.
+On the unit page, you can view all test runs conducted on this unit across all procedures and its sub-units.
 
 <Image
   src="/UUT-page-unit.png"
-  alt="OpenHTF Unit Under Test (UUT) documentation section header with TofuPilot."
+  alt="Unit page showing all test runs for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
-You can specify additional parameters like component, revision, or batch number.
+### Simple integration
 
-There's also support for [sub-units](https://docs.tofupilot.com/sub-units) to track parts during assembly, each with its own tests.
-
-### One-line integration
-
-To enable the TofuPilot integration, simply install the tofupilot open-source Python client with:
+To enable TofuPilot integration, install the open-source Python client:
 
 ```sh
 pip install tofupilot
 ```
 
-And add the import function in your script:
+And add the `tofupilot.synch` callback before the test execution:
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
-from tofupilot import upload
+import tofupilot
 
-def power_on(test):
+def get_sn(test):
+    test.test_record.dut_id = 'SI051AB7B0001'
     return PhaseResult.CONTINUE
 
 def main():
-    test = Test(power_on)
-    test.execute(test_start=lambda: 'SI051AB7B0001')
-    tofupilot.upload(test) # activate upload
+    test = Test(get_sn)
+    test.add_output_callbacks(tofupilot.synch()) # Add synch callback before test execution
+    test.execute()
 
-if __name__ == '__main__':
+if **name** == '**main**':
     main()
 ```
+
+### Part number, revision, batch number
+
+Additionally, you can specify:
+
+- The `part_number` to differentiate components; TofuPilot creates the component when the first unit is added.
+- The `revision` for the version; TofuPilot defaults to revision "A" if none is provided.
+- The `batch_number` to track the production batch (optional).
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
+import tofupilot
 
-def get_pn_rev(test):
-    # Extract the part number and revision from the serial number
-    test.test_record.part_number = test.test_record.UUT_id[:5]
-    test.test_record.revision = test.test_record.UUT_id[5:7]
+def get_uut(test):
+    test.test_record.dut_id = 'SI051AB7B0001'
+    test.test_record.part_number = "SI051"  # Part number (required if > 1 components in TofuPilot)
+    test.test_record.revision = "AB"        # Revision (optional, defaults to "A")
+    test.test_record.batch_number = "09-24" # Batch number (optional)
     return PhaseResult.CONTINUE
 
 def main():
-    test = Test(
-        get_pn_rev,
-        procedure_id="FVT1", # Procedure ID in TofuPilot
-    )
-    # TofuPilot callback
-    # TODO Felix
+    test = Test(get_uut)
+    test.add_output_callbacks(tofupilot.synch())
+    test.execute()
 
-    # Serial number set at test start
-    test.execute(test_start=lambda: 'SI051AB7B0001')
-
-if __name__ == '__main__':
+if **name** == '**main**':
     main()
 ```
 
-- If the unit was created in a previous test, no action is needed. - If not,
-  specify the `part_number`. - Optionally, add the `revision`. If none is
-  provided, 'A' is used by default.
+### Sub-units
 
-This example extracts the part number and revision from the serial number, but you can also set them manually.
-
-### Component, revision and batch number
+You can track tests throughout assembly with TofuPilot's sub-unit feature. Just specify the serial number of an already tested unit, and it will be marked as a sub-unit of the current one. If a part is retested in a new UUT, it automatically changes parent.
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
+import tofupilot
 
-def get_pn_rev(test):
-    # Extract the part number and revision from the serial number
-    test.test_record.part_number = test.test_record.UUT_id[:5]
-    test.test_record.revision = test.test_record.UUT_id[5:7]
+def get_units(test):
+    test.test_record.dut_id = 'SI051AB7B0001' # UUT
+    test.test_record.sub_units = [            # Sub-units
+      'SI051AB7B0001',
+      'SI051AB7B0001'
+    ]
     return PhaseResult.CONTINUE
 
 def main():
-    test = Test(
-        get_pn_rev,
-        procedure_id="FVT1", # Procedure ID in TofuPilot
-    )
-    # TofuPilot callback
-    # TODO Felix
+    test = Test(get_unit_info)
+    test.add_output_callbacks(tofupilot.synch())
+    test.execute()
 
-    # Serial number set at test start
-    test.execute(test_start=lambda: 'SI051AB7B0001')
-
-if __name__ == '__main__':
+if **name** == '**main**':
     main()
 ```
 
-### Interface
+Dedicated [API functions](https://docs.tofupilot.com/a-page) are available to manage sub-units outside of tests. All unit activity is shown on their TofuPilot page.
+
+<Image
+  src="/UUT-page-unit-activity.png"
+  alt="Activity page for a Unit Under Test (UUT) showing sub-units and test history in TofuPilot."
+/>

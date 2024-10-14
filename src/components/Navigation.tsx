@@ -239,14 +239,14 @@ export const navigation: Array<NavGroup> = [
     title: 'Getting Started',
     links: [
       { title: 'Installation', href: '/first-test' },
-      { title: 'Templates', href: '/templates' },
-      { title: 'Community', href: '/templates' },
+      // { title: 'Templates', href: '/templates' },
+      // { title: 'Community', href: '/community' },
     ],
   },
   {
     title: 'Develop',
     links: [
-      { title: 'Device Under Test', href: '/dut' },
+      { title: 'Unit Under Test', href: '/uut' },
       {
         title: 'Phases',
         href: '/phases',
@@ -256,7 +256,11 @@ export const navigation: Array<NavGroup> = [
         title: 'Attachments',
         href: '/attachments',
       },
-      { title: 'Plugs', href: '/configuration' },
+      { title: 'Plugs', href: '/plugs' },
+      {
+        title: 'Outputs',
+        href: '/outputs',
+      },
       {
         title: 'Logging',
         href: '/logging',
@@ -275,24 +279,15 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Deploy',
     links: [
-      { title: 'Operator UI', href: '/tofupilot/introduction' },
-      {
-        title: 'Outputs',
-        href: '/outputs',
-      },
-      // {
-      //   title: 'Release',
-      //   href: '/outputs',
-      // },
-      { title: 'Database', href: '/tofupilot/introduction' },
-      { title: 'Analytics', href: '/tofupilot/first-pass-yield' },
+      { title: 'Operator UI', href: '/operator-ui' },
+      { title: 'Analytics', href: '/tofupilot' },
     ],
   },
   {
-    title: 'Advanced',
+    title: 'Reference',
     links: [
       // { title: 'Development Guidelines', href: '' },
-      { title: 'Units Reference', href: '' },
+      { title: 'Measurement Units', href: '' },
     ],
   },
 ]

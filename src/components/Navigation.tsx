@@ -280,24 +280,18 @@ export const navigation: Array<NavGroup> = [
         href: '/outputs',
       },
       { title: 'Operator UI', href: '/tofupilot/introduction' },
-      {
-        title: 'Release',
-        href: '/outputs',
-      },
-    ],
-  },
-  {
-    title: 'Monitor',
-    links: [
+      // {
+      //   title: 'Release',
+      //   href: '/outputs',
+      // },
       { title: 'Database', href: '/tofupilot/introduction' },
-      { title: 'Traceability', href: '/tofupilot/first-pass-yield' },
-      { title: 'Performances', href: '/tofupilot/first-pass-yield' },
+      { title: 'Analytics', href: '/tofupilot/first-pass-yield' },
     ],
   },
   {
     title: 'Advanced',
     links: [
-      { title: 'Development Guidelines', href: '' },
+      // { title: 'Development Guidelines', href: '' },
       { title: 'Units Reference', href: '' },
     ],
   },

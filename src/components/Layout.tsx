@@ -1,8 +1,8 @@
 'use client'
 
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
 
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
@@ -37,12 +37,12 @@ export function Layout({
             <Navigation className="hidden lg:mb-[144px] lg:mt-10 lg:block lg:overflow-y-auto" />
           </div>
         </motion.header>
-        <TofuPilotBanner />
         <div className="relative flex h-full flex-col px-4 pt-14 sm:px-6 lg:px-8">
           <main className="flex-auto">{children}</main>
           <Footer />
         </div>
       </div>
+      <TofuPilotBanner />
     </SectionProvider>
   )
 }

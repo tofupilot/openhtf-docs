@@ -4,9 +4,9 @@ export const metadata = {
     'Explore how to manage test settings with OpenHTF’s configuration module, allowing for adaptable, maintainable, and scalable test scripts using both in-code definitions and external configuration files.',
 }
 
-# Configuration
+# Configurations
 
-You can manage test settings with configuration files. {{ className: 'lead' }}
+You can control test settings with configuration variables or files. {{ className: 'lead' }}
 
 <Image
   src="/configuration-header.png"
@@ -19,7 +19,7 @@ It is sometimes necessary to change some parameters in a script without modifyin
 
 OpenHTF makes it easy to manage these parameters using configuration files.
 
-## Configuration variable
+## Variables
 
 You can set configuration variables directly in the script using the `conf` module.
 
@@ -58,9 +58,9 @@ You can set the following parameters for each configuration variable in OpenHTF:
   </Property>
 </Properties>
 
-## Configuration files
+## File
 
-You can load configurations from external files written in YAML format. For example:
+You can load configurations from an external file written in YAML or JSON format. For example:
 
 ```yaml {{ title: 'config.yaml' }}
 firmware_path: 'path/to/firmware_v1.0.0.bin'

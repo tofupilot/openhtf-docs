@@ -207,7 +207,7 @@ You can leverage advanced OpenHTF options to handle more complex phase execution
 
 ### Override phase name
 
-You can replace the default phase name or change the case formatting with these following `PhaseOptions`:
+You can replace the default phase name or change the case formatting:
 
 <Properties>
   <Property name="name" type="text (default=None)">
@@ -232,7 +232,26 @@ def main():
 
 if __name__ == '__main__':
   main()
+```
 
+### Document phase - TODO
+You can document your phase by using the phase descriptor `doc`
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf import PhaseNameCase
+
+@htf.PhaseDescriptor(doc="yo")
+def example_phase(test):
+    """This is a test"""
+    return htf.PhaseResult.CONTINUE
+
+def main():
+  test = htf.Test(example_phase)
+  test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == '__main__':
+  main()
 ```
 
 ### Change repeat behavior
@@ -348,3 +367,17 @@ if __name__ == '__main__':
     main()
 ```
 
+### Phase Groups - TODO
+
+- Use to defined Main, Setup and Teardown
+- Options: repeat, name, timeout, phases
+
+```
+test = htf.Test(
+      htf.PhaseGroup(
+          setup=[setup_phase],
+          main=[error_main_phase, main_phase],
+          teardown=[teardown_phase],
+      ))
+  test.execute()
+  ```

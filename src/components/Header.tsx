@@ -83,7 +83,7 @@ export const Header = forwardRef<
             <TopLevelNavItem href="https://github.com/google/openhtf">
               GitHub
             </TopLevelNavItem>
-            <TopLevelNavItem href="https://discord.gg/P7gEdEc7a6">
+            <TopLevelNavItem href="https://discord.gg/UVC5qeRR">
               Discord
             </TopLevelNavItem>
           </ul>

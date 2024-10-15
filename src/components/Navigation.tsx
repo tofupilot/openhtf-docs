@@ -247,7 +247,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Develop',
     links: [
-      { title: 'Unit Under Test', href: '/uut' },
+      { title: 'Unit Under Test (UUT)', href: '/uut' },
       {
         title: 'Phases',
         href: '/phases',
@@ -294,7 +294,7 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
         <TopLevelNavItem href="https://github.com/google/openhtf">
           GitHub
         </TopLevelNavItem>
-        <TopLevelNavItem href="https://discord.gg/P7gEdEc7a6">
+        <TopLevelNavItem href="https://discord.gg/UVC5qeRR">
           Discord
         </TopLevelNavItem>
         {navigation.map((group, groupIndex) => (

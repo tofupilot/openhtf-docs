@@ -23,7 +23,9 @@ By integrating <TofuPilotLink utmMedium="phases-overview"/>, you get precise ana
 
 ## Definition
 
-Phases are standard Python functions that take the `test` object as an input argument and return a `PhaseResult`.
+Phases are standard Python functions that take the `test` object as an input argument and can either return a `PhaseResult` or a measurement outcome.
+They must be individually added to the `Test` definition to be executed.
+
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -46,7 +48,6 @@ if __name__ == '__main__':
     main()
 ```
 
-To be executed, they must be individually added to the test definition.
 
 ## Results
 
@@ -98,15 +99,13 @@ if __name__ == '__main__':
     main()
 ```
 
-The console returns:
-
-```txt
+```txt {{ title: 'Terminal' }}
 ======================= test: openhtf_test  outcome: FAIL ======================
 ```
 
 ## Options
 
-You can use the `@openhtf.PhaseOptions` decorator to modify phase execution behavior.
+You can use the `@openhtf.PhaseOptions` decorator to modify phase execution behavior. 
 
 <Properties>
   <Property name="timeout_s" type="float (default=None)">

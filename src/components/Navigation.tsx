@@ -294,7 +294,7 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
         <TopLevelNavItem href="https://github.com/google/openhtf">
           GitHub
         </TopLevelNavItem>
-        <TopLevelNavItem href="https://discord.gg/UVC5qeRR">
+        <TopLevelNavItem href="https://discord.gg/T4pak7pk">
           Discord
         </TopLevelNavItem>
         {navigation.map((group, groupIndex) => (

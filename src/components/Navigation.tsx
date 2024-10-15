@@ -279,8 +279,9 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Reference',
     links: [
-      // { title: 'Development Guidelines', href: '' },
+      { title: 'Changelog', href: '/changelog' },
       { title: 'Measurement Units', href: '' },
+      { title: 'Development Guidelines', href: '' },
     ],
   },
 ]

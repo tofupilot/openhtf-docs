@@ -277,11 +277,11 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: 'Reference',
+    title: 'Resources',
     links: [
-      { title: 'Changelog', href: '/changelog' },
       { title: 'Measurement Units', href: '' },
-      { title: 'Development Guidelines', href: '' },
+      { title: 'Development Guidelines', href: '/developer-guidelines' },
+      { title: 'Documentation Changelog', href: '/changelog' },
     ],
   },
 ]

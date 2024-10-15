@@ -15,99 +15,80 @@ You can manage test settings with configuration files. {{ className: 'lead' }}
 
 ## Overview
 
-You can define configuration options directly in your code or load them from an external configuration file. Using external configuration files can make your tests more flexible and easier to manage.
+It is sometimes necessary to change some parameters in a script without modifying the script itself each time. For example, you might need to update the firmware version flashed on a PCB using a script, or adjust the connection port of an instrument between two stations running the same script.
 
-## Implementation
+OpenHTF makes it easy to manage these parameters using configuration files.
 
-To set configurations in your OpenHTF script, use the `conf` module to declare configuration options within your script. Here’s a simple example:
+## Configuration variable
+
+You can set configuration variables directly in the script using the `conf` module.
 
 ```python {{ title: 'main.py' }}
-import openhtf as htf
-import logging
-from openhtf.util import conf
+from openhtf import Test
+from openhtf.util import configuration
 
-# Define configuration options
-conf.declare('voltage_limit', default_value=5.0, description='Voltage limit for the test')
+# Define firmware_path configuration
+configuration.declare('firmware_path', default_value='path/to/firmware_v1.0.0.bin', description='Path to the firmware file')
 
-@htf.measures(htf.Measurement('voltage'))
-def voltage_measurement(test):
-    voltage_limit = conf.voltage_limit
-    test.logger.info('Voltage limit: %s', voltage_limit)
-
-    voltage = 4.5  # Example voltage within limit
-    test.measurements.voltage = voltage
-
-    test.logger.info('Completed voltage measurement phase.')
+def flash_firmware(test):
+    firmware_path = conf.firmware_path
+    print(f'Flashing firmware from: {firmware_path}')
 
 def main():
-    logging.basicConfig(level=logging.INFO)
-    test = htf.Test(voltage_measurement)
+    test = Test(flash_firmware)
     test.execute(test_start=lambda: 'DeviceUnderTest123')
 
 if __name__ == '__main__':
     main()
 ```
 
-## External configuration files
+You can set the following parameters for each configuration variable in OpenHTF:
 
-You can also load configurations from external files written in YAML or JSON format like:
+<Properties>
+  <Property name=".name">
+    The unique identifier for the configuration variable (must be in
+    snake_case).
+  </Property>
+  <Property name=".default_value">
+    An optional value that serves as the default if no other value is provided.
+  </Property>
+  <Property name=".description">
+    An optional description explaining the purpose of the configuration
+    variable.
+  </Property>
+</Properties>
+
+## Configuration files
+
+You can load configurations from external files written in YAML format. For example:
 
 ```yaml {{ title: 'config.yaml' }}
-voltage_limit: 10.0
+firmware_path: 'path/to/firmware_v1.0.0.bin'
 ```
 
-Load the configuration file in your script using `CONF.load_from_file()`.
+Load the configuration file during execution script:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 import logging
-from openhtf.util import configuration
-from openhtf.output.callbacks import json_factory
+from openhtf.util import conf
 
-CONF = configuration.CONF
+# Declare the firmware_path key
+conf.declare('firmware_path')
 
-# Declare the voltage_limit key
-CONF.declare('voltage_limit')
+# Load configuration from an external YAML file
+with open('config.yaml', 'r') as yamlfile:
+    conf.load_from_file(yamlfile)
 
-# Load from external file
-with open("config.yaml", "r") as yamlfile:
-    CONF.load_from_file(yamlfile)
-
-@htf.measures(htf.Measurement("voltage"))
-def voltage_measurement(test):
-    voltage_limit = CONF.voltage_limit
-    test.logger.info("Voltage limit: %s", voltage_limit)
-
-    voltage = 4.5  # Example voltage within limit
-    test.measurements.voltage = voltage
-
-    test.logger.info("Completed voltage measurement phase.")
+def flash_firmware(test):
+    firmware_path = conf.firmware_path  # Access the declared configuration key
+    print(f'Flashing firmware from: {firmware_path}')
 
 def main():
     logging.basicConfig(level=logging.INFO)
-    test = htf.Test(voltage_measurement)
-    test.add_output_callbacks(
-        json_factory.OutputToJSON("./test_results.json", indent=2)
-    )
-    test.execute(test_start=lambda: "DeviceUnderTest123")
+    test = htf.Test(flash_firmware)
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
-```
-
-When output is enabled, the configuratin will be included in the JSON output file.
-
-```javascript {{ title: 'test_results.json' }}
-{
-  "dut_id": "DeviceUnderTest123",
-  ...
-  "metadata": {
-    ...
-    "config": {
-      ...
-      "voltage_limit": 5.0,
-    }
-  },
-  ...
-}
 ```

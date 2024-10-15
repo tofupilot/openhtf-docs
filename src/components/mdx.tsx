@@ -111,10 +111,12 @@ function CustomImage({
   src,
   alt,
   withDarkMode = false,
+  link, // Optional link parameter
 }: {
   src: string
   alt: string
   withDarkMode?: boolean
+  link?: string // Define as optional string
 }) {
   const width = 1000
   const height = 800
@@ -124,7 +126,7 @@ function CustomImage({
   // Replace "-light" with "-dark" if dark mode option is enabled
   const srcDark = withDarkMode ? src.replace('-light', '-dark') : src
 
-  return (
+  const imageElement = (
     <>
       {/* Light */}
       <Image
@@ -145,6 +147,15 @@ function CustomImage({
         />
       )}
     </>
+  )
+
+  // Wrap the image in an anchor tag if a link is provided
+  return link ? (
+    <a href={link} className="block w-full">
+      {imageElement}
+    </a>
+  ) : (
+    imageElement
   )
 }
 

@@ -6,49 +6,57 @@ export const metadata = {
 
 # Create your first test
 
-Let's create a first test script and explore the main concepts of OpenHTF. {{ className: 'lead' }}
+Let's create a first test script in under five minutes. {{ className: 'lead' }}
+
+<Image
+  src="/first-test-header.png"
+  alt="Header of the OpenHTF documentation showing Attachments details and integration with TofuPilot."
+/>
 
 ## Installation
 
 Install OpenHTF and its dependencies using pip:
 
 ```sh
-pip install openhtf six
+pip install openhtf six setuptools
 ```
+
+We recommend setting up a [Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to better manage dependencies.
 
 ## First run
 
-Create a file called `main.py` in the folder where you installed OpenHTF and copy this code.
+Create a `main.py` file in your virtual environment and copy this code.
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
+import openhtf as htf
 
-# Define the test phase
-def power_on_test(test):
-    print('Power on.')
-    return PhaseResult.CONTINUE
+def hello_world(test):                      # Define "hello_world" phase
+    print('Hello world!')
+    return htf.PhaseResult.CONTINUE         # Continue to next phase
 
-# Create a test instance with the defined phase
-test = Test(power_on_test)
+def main():
+    test = htf.Test(hello_world)            # Define test with hello_world
+    test.execute(lambda: "SI051AB7B0001")   # Execute with DUT serial
 
 if __name__ == '__main__':
-    test.execute()
+    main()                                  # Run main function
 ```
 
-The `main.py` script includes a test phase and a test instance. The test phase is a function that performs a specific part of the test, while the test instance is created using the `Test` class and the defined phase.
-You can find more about the `PhaseResult` parameters in the following sections.
-
-Run it using the created virtual environment:
+Run it with:
 
 ```sh
 python main.py
 ```
 
-This testbench does not use the operator UI yet, so all interactions are made through the command line.
+The console will output:
 
 ```txt
 (venv) C:\tofupilot > python main.py
-Power on.
+Hello world!
 
 ======================= test: openhtf_test  outcome: PASS ======================
 ```
+
+🎉 **Congratulations**! You just ran your first OpenHTF test and it’s a `PASS`! Easy, right?
+
+This is the simplest OpenHTF test, running through the command line without the Operator UI. You'll learn to connect instruments, add measurements, and more in the next sections.

@@ -157,20 +157,26 @@ pip install tofupilot
 Import `tofupilot` package and add the `with TofuPilot:` wrapper before the test execution:
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
-from tofupilot import TofuPilot
+import openhtf as htf
+from openhtf.util import units
 
 def first_phase(test):
     return htf.PhaseResult.CONTINUE
 
-def second_phase(test):
-    return htf.PhaseResult.SKIP
+@htf.measures(
+    htf.Measurement("temperature")
+    .in_range(0, 100)
+    .with_units(units.DEGREE_CELSIUS)
+    .with_precision(1)
+)
+def temperature_phase(test):
+    test.measurements.temperature = 25
 
 def third_phase(test):
-    return htf.PhaseResult.STOP
+    return htf.PhaseResult.CONTINUE
 
 def main():
-    test = htf.Test(first_phase, second_phase, third_phase)
+    test = htf.Test(first_phase, temperature_phase, third_phase)
     with TofuPilot:
         test.execute(lambda: "SI051AB7B0001")
 

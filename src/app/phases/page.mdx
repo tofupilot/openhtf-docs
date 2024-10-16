@@ -154,11 +154,11 @@ To enable TofuPilot integration, install the open-source Python client:
 pip install tofupilot
 ```
 
-And add the `tofupilot.synch` callback before the test execution:
+Import `tofupilot` package and add the `with TofuPilot:` wrapper before the test execution:
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
-import tofupilot
+from tofupilot import TofuPilot
 
 def first_phase(test):
     return htf.PhaseResult.CONTINUE
@@ -171,8 +171,8 @@ def third_phase(test):
 
 def main():
     test = htf.Test(first_phase, second_phase, third_phase)
-    test.add_output_callbacks(tofupilot.synch()) # Add synch callback before test execution
-    test.execute(SI051AB7B0001)
+    with TofuPilot:
+        test.execute(lambda: "SI051AB7B0001")
 
 if __name__ == '__main__':
     main()

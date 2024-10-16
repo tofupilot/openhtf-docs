@@ -9,7 +9,12 @@ import openhtf as htf
 from openhtf.output.callbacks import json_factory
 
 
-@htf.measures("first_measurement", "second_measurement", "third", "fourth")
+@htf.measures(
+    htf.Measurement("first_measurement"),
+    htf.Measurement("second_measurement"),
+    htf.Measurement("third"),
+    htf.Measurement("fourth"),
+)
 def example_phase(test):
     test.measurements.first_measurement = "First!"
     test.measurements.second_measurement = "Second!"
@@ -22,12 +27,7 @@ def example_phase(test):
 
 def main():
     test = htf.Test(example_phase)
-    test.add_output_callbacks(
-        json_factory.OutputToJSON(
-            "test_result.json",
-            indent=2,  # Pretty-printing the JSON with an indentation of 2 spaces
-        )
-    )
+    test.add_output_callbacks(json_factory.OutputToJSON("test_result.json", indent=2))
     test.execute(lambda: "SI051AB7B0001")
 
 

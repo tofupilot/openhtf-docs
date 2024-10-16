@@ -22,7 +22,7 @@ With the <TofuPilotLink utmMedium="phases-overview"/> integration, you get preci
 ## Syntax
 
 Phases are Python functions that take the `test` object as an argument and must be added to the `Test` object to be executed.
-They have an outcome that is set manually with a `PhaseResult` or automatically via a measurement validation function, which we'll cover on the next page. 
+They have an outcome that is set manually with a `PhaseResult` or automatically via a measurement validation function, which we'll cover on the next page.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -172,18 +172,11 @@ You can visualize the test phases in the steps on each run page.
   alt="Run page showing the different steps performed for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
-You can click on a phase to compare its recent performance, like the duration between runs.
+You can click on a phase to compare its recent performance accross the latest runs, like the average step duration or first-pass yield.
 
 <Image
   src="/phases-page-procedure-duration.png"
   alt="Procedure page showing the durations for several Unit Under Test (UUT) in OpenHTF with TofuPilot."
-/>
-
-You can also compare the detailed first yield for each phase.
-
-<Image
-  src="/phases-page-procedure-fpy.png"
-  alt="Procedure page showing the first-pass yield for several Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
 ---

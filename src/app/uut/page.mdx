@@ -31,7 +31,7 @@ export const metadata = {
 
 # Unit Under Test (UUT)
 
-You can track the unit's serial number with each test run. {{ className: 'lead' }}
+Track the serial number of the unit under test with each run. {{ className: 'lead' }}
 
 <Image
   src="/UUT-header.png"
@@ -40,9 +40,9 @@ You can track the unit's serial number with each test run. {{ className: 'lead' 
 
 ## Overview
 
-When testing units, tracking their serial numbers is key for traceability. OpenHTF allows you to manually input the serial number at the start or set it programmatically at any point during the test.
+When running tests, tracking serial numbers is important for traceability. With OpenHTF, you can either manually enter the serial number at the start of the test or set it programmatically during the test.
 
-By integrating <TofuPilotLink utmMedium="uut-overview"/> in your test scripts, the UUT's serial number is automatically used to organize test results for each unit and and enables performance comparisons across part numbers, revisions, or batch numbers.
+With the <TofuPilotLink utmMedium="uut-overview"/> integration, a detailed page is automatically created for each unit, showing all tests performed and allowing performance comparisons between different component types, revisions, or batches.
 
 ## Prompt at start
 
@@ -66,9 +66,8 @@ if __name__ == '__main__':
 When executed, the script prompts the user to enter a serial number.
 
 ```sh
-(venv) C:\tofupilot > python3 main.py
 Enter a UUT ID in order to start the test.
---> SI051AB7B0001
+--> PCB001
 
 ======================= test: openhtf_test  outcome: PASS ======================
 ```
@@ -85,7 +84,7 @@ def power_on(test):
 
 def main():
     test = Test(power_on)
-    test.execute(test_start=lambda: 'SI051AB7B0001') # Set at start
+    test.execute(lambda: 'PCB001') # Set at start
 
 if __name__ == '__main__':
     main()
@@ -93,13 +92,13 @@ if __name__ == '__main__':
 
 ## Set during test
 
-You can also set the serial number during the test.
+You can set the serial number during the test.
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
 
 def get_sn(test):
-    test.test_record.dut_id = 'SI051AB7B0001' # Set during test
+    test.test_record.dut_id = 'PCB001' # Set during test
     return PhaseResult.CONTINUE
 
 def main():
@@ -112,107 +111,49 @@ if __name__ == '__main__':
 
 ## TofuPilot integration
 
-The <TofuPilotLink utmMedium="uut-integration" /> integration automatically uploads the OpenHTF report to a secure workspace and imports the UUT's serial number.
+The <TofuPilotLink utmMedium="uut-integration" /> integration automatically uploads the OpenHTF report to your TofuPilot workspace.
 
-A dedicated page is created for each test run, linking to the unit page.
+To integrate TofuPilot, install the open-source client:
+
+```sh
+pip install tofupilot
+```
+
+Add it to your test like this:
+
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+from tofupilot import TofuPilot
+
+def get_sn(test):
+    test.test_record.dut_id = 'PCB001'
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(get_sn)
+    with TofuPilot(): # it's that simple :)
+      test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+The first run will prompt for your API key if you're not signed up. A dedicated page is created for each test run:
 
 <Image
   src="/UUT-page-run.png"
   alt="Test run page for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
-On the unit page, you can view all test runs conducted on this unit across all procedures and its sub-units.
+On the unit page, you can view all runs conducted on this unit across all test procedures.
 
 <Image
   src="/UUT-page-unit.png"
   alt="Unit page showing all test runs for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
-### Simple integration
+You can extend OpenHTF to track part numbers, revisions, batch numbers, and sub-units in TofuPilot.
 
-To enable TofuPilot integration, install the open-source Python client:
-
-```sh
-pip install tofupilot
-```
-
-And add the `tofupilot.synch` callback before the test execution:
-
-```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
-import tofupilot
-
-def get_sn(test):
-    test.test_record.dut_id = 'SI051AB7B0001'
-    return PhaseResult.CONTINUE
-
-def main():
-    test = Test(get_sn)
-    test.add_output_callbacks(tofupilot.synch()) # Add synch callback before test execution
-    test.execute()
-
-if **name** == '**main**':
-    main()
-```
-
-what happened 
-
-### Part number, revision, batch number
-
-Additionally, you can specify:
-
-- The `part_number` to differentiate components; TofuPilot creates the component when the first unit is added.
-- The `revision` for the version; TofuPilot defaults to revision "A" if none is provided.
-- The `batch_number` to track the production batch (optional).
-
-```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
-import tofupilot
-
-def get_uut(test):
-    test.test_record.dut_id = 'SI051AB7B0001'
-    test.test_record.part_number = "SI051"  # Part number (required if > 1 components in TofuPilot)
-    test.test_record.revision = "AB"        # Revision (optional, defaults to "A")
-    test.test_record.batch_number = "09-24" # Batch number (optional)
-    return PhaseResult.CONTINUE
-
-def main():
-    test = Test(get_uut)
-    test.add_output_callbacks(tofupilot.synch())
-    test.execute()
-
-if **name** == '**main**':
-    main()
-```
-
-### Sub-units
-
-You can track tests throughout assembly with TofuPilot's sub-unit feature. Just specify the serial number of an already tested unit, and it will be marked as a sub-unit of the current one. If a part is retested in a new UUT, it automatically changes parent.
-
-```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
-import tofupilot
-
-def get_units(test):
-    test.test_record.dut_id = 'SI051AB7B0001' # UUT
-    test.test_record.sub_units = [            # Sub-units
-      'SI051AB7B0001',
-      'SI051AB7B0001'
-    ]
-    return PhaseResult.CONTINUE
-
-def main():
-    test = Test(get_unit_info)
-    test.add_output_callbacks(tofupilot.synch())
-    test.execute()
-
-if **name** == '**main**':
-    main()
-```
-
-Dedicated [API functions](https://docs.tofupilot.com/a-page) are available to manage sub-units outside of tests. All unit activity is shown on their TofuPilot page.
-
-<Image
-  src="/UUT-page-unit-activity.png"
-  alt="Activity page for a Unit Under Test (UUT) showing sub-units and test history in TofuPilot."
-/>
+<Button href="https//docs.tofupilot.com/uut" variant="text" arrow="right">
+  <>Learn in TofuPilot Docs</>
+</Button>

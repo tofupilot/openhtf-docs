@@ -150,25 +150,17 @@ Import `tofupilot` package and add the `with TofuPilot:` wrapper before the test
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-from openhtf.util import units
 
-def get_sn(test):
-    test.test_record.dut_id = 'PCB001'
-    return PhaseResult.CONTINUE
+def phase_one(test):
+    return htf.PhaseResult.CONTINUE
 
-@htf.measures(
-    htf.Measurement("temperature")
-    .in_range(0, 100)
-    .with_units(units.DEGREE_CELSIUS)
-    .with_precision(1)
-)
-def temperature_phase(test):
-    test.measurements.temperature = 25
+def phase_two(test):
+    return htf.PhaseResult.CONTINUE
 
 def main():
-    test = htf.Test(get_sn, temperature_phase)
+    test = htf.Test(phase_one, phase_two)
     with TofuPilot:
-        test.execute(lambda: "PCB001")
+      test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
     main()

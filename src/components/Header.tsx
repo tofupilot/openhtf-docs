@@ -11,6 +11,7 @@ import { MobileSearch, Search } from '@/components/Search'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import Link from 'next/link'
 import { forwardRef } from 'react'
+import { Button } from './Button'
 
 function TopLevelNavItem({
   href,
@@ -83,8 +84,8 @@ export const Header = forwardRef<
             <TopLevelNavItem href="https://github.com/google/openhtf">
               GitHub
             </TopLevelNavItem>
-            <TopLevelNavItem href="https://discord.gg/T4pak7pk">
-              Discord
+            <TopLevelNavItem href="https://tofupilot.com/">
+              TofuPilot
             </TopLevelNavItem>
           </ul>
         </nav>
@@ -94,9 +95,12 @@ export const Header = forwardRef<
           <ThemeToggle />
         </div>
         <div className="hidden min-[416px]:contents">
-          {/* <Button href="https://tofupilot.com/sigin/auth" arrow="right">
-            Sign In
-          </Button> */}
+          <Button
+            href="https://discord.gg/T4pak7pk"
+            variant="discord"
+          >
+            <>Join Discord</>
+          </Button>
         </div>
       </div>
     </motion.div>

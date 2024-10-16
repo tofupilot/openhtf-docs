@@ -10,6 +10,7 @@ import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
 import { remToPx } from '@/lib/remToPx'
+import { Button } from './Button'
 
 interface NavGroup {
   title: string
@@ -294,8 +295,8 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
         <TopLevelNavItem href="https://github.com/google/openhtf">
           GitHub
         </TopLevelNavItem>
-        <TopLevelNavItem href="https://discord.gg/T4pak7pk">
-          Discord
+        <TopLevelNavItem href="https://tofupilot.com">
+          TofuPilot
         </TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
@@ -305,9 +306,9 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
           />
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          {/* <Button href="#" variant="filled" className="w-full">
-            Sign in
-          </Button> */}
+          <Button href="https://discord.gg/T4pak7pk" variant="discord">
+            <>Join Discord</>
+          </Button>
         </li>
       </ul>
     </nav>

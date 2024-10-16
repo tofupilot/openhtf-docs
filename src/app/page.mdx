@@ -1,6 +1,7 @@
 import { Guides } from '@/components/Guides'
 import { Resources } from '@/components/Resources'
 import { HeroPattern } from '@/components/HeroPattern'
+import { LogoCloud } from '@/components/LogoCloud'
 
 export const metadata = {
   title: 'OpenHTF Documentation',
@@ -10,12 +11,84 @@ export const metadata = {
 
 <HeroPattern />
 
-# OpenHTF
+# Welcome to OpenHTF
 
-OpenHTF (Open Hardware Testing Framework) is the open-source Python hardware testing framework. {{ className: 'lead' }}
+OpenHTF (Open Hardware Testing Framework) is an open-source Python framework for hardware testing. {{ className: 'lead' }}
 
-Originally created at **Google**, OpenHTF is designed to streamline hardware testing. It offers out-of-the-box features for structuring tests, recording measurements, logging results and managing external resources with plugs.
+## Quick example
 
-OpenHTF is used by hundreds of teams worldwide, from labs to manufacturing floors.
+<Row>
+  <Col>
+    OpenHTF tests are Python scripts that perform a series of test steps on a Unit Under Test (UUT) involving data gathering or measurements.
+    
+    OpenHTF handles the setup, execution, and teardown of the test, keeps track of everything gathered and provides a pass/fail outcome.
 
-<Resources />
+    Here are the key concepts in OpenHTF:
+
+      <Properties>
+        <Property name="Phases">
+          Steps in the test sequence that perform actions or checks.
+        </Property>
+        <Property name="Measurements">
+          Values recorded during the test with optional pass/fail limits.
+        </Property>
+        <Property name="Plugs">
+          Reusable components that handle external hardware/software interactions.
+        </Property>
+      </Properties>
+
+    </Col>
+
+<Col>
+  <CodeGroup title="Example">
+    ```python {{ title: 'main.py' }}
+    import openhtf as htf
+    from openhtf.plugs import plug
+    from multimeter_plug import MultimeterPlug
+
+    @plug(multimeter=MultimeterPlug)
+    @htf.measures(
+      htf.Measurement('voltage')
+      .in_range(3.0, 3.5)
+      .with_units('V'))
+    def test_voltage(test, multimeter):
+      voltage = multimeter.measure_voltage()
+      test.measurements.voltage = voltage
+
+    def main():
+      test = htf.Test(test_voltage)
+      test.execute(lambda: "PCB0001") # UUT S/N
+
+    if __name__ == '__main__':
+        main()
+    ```
+
+    ```python {{ title: 'multimeter_plug.py' }}
+    from openhtf.plugs import plug, BasePlug
+
+    class MultimeterPlug(BasePlug):
+      def __init__(self, port):
+        self.port = port
+        self.connection = f"Connected on {self.port}"
+
+      def measure_voltage(self):
+        return 3.3
+
+      # Automatically called at test teardown
+      def tearDown(self):
+        self.connection = None
+    ```
+
+  </CodeGroup>
+</Col>
+</Row>
+
+## About
+
+Originally created at **Google** for hardware testing, OpenHTF is now used by teams worldwide, from small startups to large companies, across all stages of product development: **verification** in design, **validation** in prototyping, and **manufacturing**.
+
+<LogoCloud />
+
+## Documentation
+
+This documentation is maintained by the

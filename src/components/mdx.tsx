@@ -118,8 +118,8 @@ function CustomImage({
   withDarkMode?: boolean
   link?: string // Define as optional string
 }) {
-  const width = 1000
-  const height = 800
+  const width = 800
+  const height = 466
   const className =
     'w-full rounded-lg border-4 border-zinc-200 dark:border-zinc-600 shadow-sm ring-1 ring-zinc-300 dark:ring-zinc-700'
 

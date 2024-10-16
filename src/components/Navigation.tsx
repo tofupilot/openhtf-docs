@@ -239,7 +239,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Getting Started',
     links: [
-      { title: 'Installation', href: '/first-test' },
+      { title: 'Create your first test', href: '/first-test' },
       { title: 'Community', href: '/community' },
       // { title: 'Templates', href: '/templates' },
     ],

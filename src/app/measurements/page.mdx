@@ -16,7 +16,7 @@ Create measurements to capture and validate data within phases. {{ className: 'l
 ## Overview
 
 You can use measurements to capture and validate values during a test. 
-These values can be [numeric](#numeric), [boolean](#boolean), or [string](#string), and may be either simple or [multidimensional](#multidimensional). 
+These values can be [numeric](#numeric), [boolean](#boolean), or [string](#boolean), and may be either simple or [multidimensional](#multidimensional). 
 Use the built-in validations in the decorator: you can define measurements with predefined units, types and validation rules.
 
 Measurements are attached to Test Phases using `@openhtf.measures()` decorator.
@@ -61,117 +61,138 @@ Validators are a list of callable objects to perform pass/fail checks.
 You can parameter them in the decorator to provide unit, type, and validation infromation. 
 
 <Properties>
-  <Property name=".in_range(minimum, maximum)" type="Number">
-    Ensures the value is within the given range.
+  <Property name="name" type="string">
+    Configure name of the measurement.
   </Property>
-  <Property name=".with_units(units)" type="opehtf.util.units (default=None)">
-    Adds units to the measurement (e.g., Celsius, Volts).   
+  <Property name="in_range(minimum, maximum)" type="Number (default=None)">
+    Ensure the value is within the given range.
   </Property>
-  <Property name=".with_precision(precision)" type="int default=None">
-    Rounds the value to the specified precision before validation.
+  <Property name="in_range(marginal_minimum, marginal_maximum)" type="Number (default=None)">
+    Define a marginal measurement to obtain finer granularity of by how much a measurement is passing.
+  </Property>
+  <Property name="with_units(units)" type="UnitDescriptor (default=None)">
+    Define unit to the measurement (e.g., Celsius, Volts).   
+  </Property>
+  <Property name="with_precision(precision)" type="int default=None">
+    Round the value to the specified precision before validation.
   </Property>
 </Properties>
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.util import units
+
+@htf.measures(
+    htf.Measurement('resistance')
+    .with_units('ohm')
+    .in_range(minimum=5, maximum=17, marginal_minimum=9, marginal_maximum=11)
+)
+def temperature_phase_with_marginal_measurements(test):
+  test.measurements.resistance = 13
+
+def main():
+    test = htf.Test(temperature_phase_with_marginal_measurements)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+```
+
+```python {{ title: 'Terminal'}}
+================= test: openhtf_test  outcome: PASS (MARGINAL) =================
+```
 
 ### Options
 
 <Properties>
-   <Property name="name" type="string">
-    Configure name of the measurement.
+  <Property name="doc" type="string (default=None)">
+    Add string describing the measurement.
   </Property>
-  <Property name="units" type="openhtf.util.units (default=None)">
-    Adds units to the measurement (e.g., Celsius, Volts). 
-  </Property>
-  <Property name="docstring" type="string (Optional)">
-    Applies a transformation function to modify the value before validation.
-  </Property>
-  <Property name="marginal" type="bool ()">
-    Indicate if this measurement is marginal if the outcome is `PASS`.
-  </Property>
-  <Property name=".with_transform(fn)">
-    Applies a transformation function to modify the value before validation.
+  <Property name=".with_transform(fn)" type="function (default=None)">
+    Apply a transformation function to modify the value before validation.
   </Property>
 </Properties>
+
+```python {{ title: 'main.py'}}
+import openhtf as htf
+from openhtf.util import units
+
+@htf.measures(
+    htf.Measurement("validated_measurement")
+    .in_range(0, 10)
+    .doc("This measurement is validated.")
+    .with_units(htf.units.SECOND)
+)
+def measure_seconds(test):
+    test.measurements.validated_measurement = 5
+
+def main():
+    test = htf.Test(measure_seconds)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+```
 
 ## Boolean
 
-Boolean measurements represent pass/fail, true/false type data, commonly used to check test conditions.
-
-### Syntax
+You can use boolean measurements to validate a condition, which  can be a boolean value, a number or a string.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
 @htf.measures(
-    measurements.Measurement('is_device_connected')  # Declares a boolean measurement
-    .equals(True)  # Ensures the value is exactly True
+    htf.Measurement("is_led_switch_on")
+    .equals(True)
 )
-def is_device_connected_phase(test):
-    test.measurements.is_device_connected = True  # Sets the boolean value to True
+def check_green_led(test):
+    test.measurements.is_led_switch_on = True
 
 def main():
-    test = htf.Test(is_device_connected_phase)
+    test = htf.Test(check_green_led)
     test.execute(lambda: "SI051AB7B0001")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
 
 ### Validators
 
 <Properties>
-  <Property name=".equals(value)">
+  <Property name=".equals(value)" type="bool (default=None)">
     Ensures the measurement exactly matches the specified boolean value.
   </Property>
-  <Property name=".in_set({value1, value2})">
-    Ensures the string is one of the predefined valid values.
-  </Property>
-</Properties>
-
-### Options
-
-<Properties>
-  <Property name=".with_units(unit)">
+  <Property name=".with_units(unit)" type="UnitDescriptor (default=None)">
     Adds units to the measurement (e.g., Celsius, Volts).
   </Property>
-  <Property name=".with_transform(fn)">
-    Applies a transformation function to modify the value before validation.
-  </Property>
 </Properties>
-
-## String
-
-String measurements store text or labels, which are validated for exact matches or based on predefined sets of valid values.
-
-### Example
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
+from openhtf.util import units
 
 @htf.measures(
-    measurements.Measurement('device_status')  # Declares a string measurement 'device_status'
-    .equals('OK')  # Ensures the value is exactly 'OK'
+    htf.Measurement("firmware_version")
+    .equals("1.2.4")
 )
-def StatusCheckPhase(test):
-    test.measurements.device_status = 'OK'  # Set the status value to 'OK'
+def check_firmware_version(test):
+    test.measurements.firmware_version = "1.2.4"
+
+@htf.measures(
+    htf.Measurement("temperature")
+    .equals(10)
+    .with_units(units.DEGREE_CELSIUS)
+)
+def check_board_temperature(test):
+    test.measurements.temperature = 10
 
 def main():
-    test = htf.Test(StatusCheckPhase)
+    test = htf.Test(check_firmware_version, check_board_temperature)
     test.execute(lambda: "SI051AB7B0001")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
-
-### Validators
-
-<Properties>
-  <Property name=".equals(value)">
-    Ensures the string matches the expected value.
-  </Property>
-  <Property name=".in_set({value1, value2})">
-    Ensures the string is one of the predefined valid values.
-  </Property>
-</Properties>
 
 ## Multidimensional
 
@@ -371,8 +392,10 @@ For finer granularity in test results, use marginal measurements. They set stric
 import openhtf as htf
 
 @htf.measures(
-    htf.Measurement('resistance').with_units('ohm').in_range(
-        minimum=5, maximum=17, marginal_minimum=9, marginal_maximum=11))
+    htf.Measurement('resistance')
+    .with_units('ohm')
+    .in_range(minimum=5, maximum=17, marginal_minimum=9, marginal_maximum=11)
+)
 def measure_resistance(test):
     test.measurements.resistance = 13  # Ohms
 

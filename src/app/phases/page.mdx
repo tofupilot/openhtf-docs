@@ -46,7 +46,7 @@ if __name__ == '__main__':
 You can set the next phase's outcome by setting the `PhaseResult`:
 
 <Properties>
-  <Property name="PhaseResult.CONTINUE" type="default">
+  <Property name="PhaseResult.CONTINUE">
     Set the phase outcome to `PASS` and execute the next phase.
   </Property>
   <Property name="PhaseResult.STOP">
@@ -281,44 +281,56 @@ if __name__ == "__main__":
 
 ### Python Debugger
 
-<Properties>
-  <Property name="run_under_pdb" type="bool (default=False)">
-    Run the phase under the Python Debugger. When setting this option, increase
-    the phase `timeout_s` as well because the timeout will still apply when
-    under the debugger.
-  </Property>
-  <Property name="run_if" type="bool or callback">
-    Callback decides whether to run the phase or not. If it is not executed, the
-    phase will not be logged either.
-  </Property>
-</Properties>
+You can run the phase under the Python Debugger using `run_under_pdb`. When setting this option, increase the phase `timeout_s` as well because the timeout will still apply when under the debugger.
+
+```python {{ title: 'main.py ADD TIMEOUT!' }}
+import openhtf as htf
+
+@htf.PhaseOptions(run_under_pdb=True)
+def first_phase(test):
+    return htf.PhaseResult.CONTINUE
+
+def main():
+    test = htf.Test(first_phase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()  
+
+```
+
+### Run if
+You can use `run_if` callback to determine whether to execute the phase; if skipped, it won't be logged.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 import random
+
+def first_phase(test):
+    return htf.PhaseResult.CONTINUE
 
 # Will always fail, but only runs if a condition is met
 @htf.PhaseOptions(run_if=lambda: random.choice([True, False]))
 def conditional_fail_phase(test):
     return htf.PhaseResult.STOP
 
-def main():
-    test = htf.Test(conditional_fail_phase)
-    test.execute(lambda: "PCB001")
+# Will run if the conditional_fail_phase is not executed
+def last_phase(test):
+    return htf.PhaseResult.CONTINUE
 
-if __name__ == '__main__':
+def main():
+    test = htf.Test(first_phase, conditional_fail_phase, last_phase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
     main()
 ```
 
 ### Requires state
 
-You can use this `PhaseOptions` when a phase needs to manage internal test details, such as wrapping or controlling other phases.
+You can use `requires_state` when a phase needs to manage internal test details, such as wrapping or controlling other phases.
+The complete `TestState` object is passed instead of default `TestApi`.
 
-<Properties>
-  <Property name="requires_state" type="bool (default=False)">
-    Pass the complete `TestState` object instead of default `TestApi`.
-  </Property>
-</Properties>
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -338,18 +350,40 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+### Phase Groups
+You can use phase groups to bundle phases inside a setup, a main and a teardown group. 
+So it manage shortcutting during terminal errors to ensure proper execution of teardown phases.
 
-### Phase Groups - TODO
+``` python {{title:"main.py"}}
+import openhtf as htf
+from openhtf.util import units
 
-- Use to defined Main, Setup and Teardown
-- Options: repeat, name, timeout, phases
+def setup_phase(test):
+    return htf.PhaseResult.CONTINUE
 
-```
-test = htf.Test(
-      htf.PhaseGroup(
-          setup=[setup_phase],
-          main=[error_main_phase, main_phase],
-          teardown=[teardown_phase],
-      ))
-  test.execute()
-```
+@htf.measures(
+    htf.Measurement("temperature").in_range(20, 25).with_units(units.DEGREE_CELSIUS)
+)
+def first_measurement_phase(test):
+    test.measurements.temperature = 22.5
+
+@htf.measures(htf.Measurement("voltage").in_range(3.2, 3.5).with_units(units.VOLT))
+def second_measurement_phase(test):
+    test.measurements.voltage = 3.7
+
+def teardown_phase(test):
+    return htf.PhaseResult.CONTINUE
+
+def main():
+    test = htf.Test(
+        htf.PhaseGroup(
+            setup=[setup_phase],
+            main=[first_measurement_phase, second_measurement_phase],
+            teardown=[teardown_phase],
+        )
+    )
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+  ```

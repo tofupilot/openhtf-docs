@@ -268,12 +268,12 @@ def random_fail_phase(test):
         return htf.PhaseResult.STOP
 
 # This test won't be run if random_fail_phase is FAIL.
-def always_true(test):
+def always_true_phase(test):
     return htf.PhaseResult.CONTINUE
 
 def main():
-    test = htf.Test(repeat_phase, timeout_phase, random_fail_phase, always_true)
     test.execute(lambda: "PCB001")
+    test = htf.Test(repeat_phase, timeout_phase, random_fail_phase, always_true_phase)
 
 if __name__ == "__main__":
     main()

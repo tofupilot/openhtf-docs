@@ -37,7 +37,7 @@ def third_phase(test):
 
 if __name__ == '__main__':
     test = htf.Test(first_phase, second_phase, third_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 ```
 
 The console returns:
@@ -89,7 +89,7 @@ def fail_phase(test):
 
 if __name__ == '__main__':
     test = htf.Test(pass_phase, retry_phase, fail_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 ```
 
 The console returns:
@@ -165,7 +165,7 @@ def conditional_fail_phase(test):
 
 if __name__ == '__main__':
     test = htf.Test(pass_phase, retry_phase, conditional_fail_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 ```
 
 ---

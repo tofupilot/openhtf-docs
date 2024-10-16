@@ -30,7 +30,7 @@ from openhtf import Test, PhaseResult
 from openhtf.output.callbacks import json_factory
 
 def get_sn(test):
-    test.test_record.dut_id = 'SI051AB7B0001'
+    test.test_record.dut_id = 'PCB001'
     return PhaseResult.CONTINUE
 
 def main():
@@ -115,7 +115,7 @@ def custom_output_callback(test_record):
             f.write(f'Phase: {phase.name}\n')
 
 def get_sn(test):
-    test.test_record.dut_id = 'SI051AB7B0001'
+    test.test_record.dut_id = 'PCB001'
     return PhaseResult.CONTINUE
 
 def main():
@@ -131,7 +131,7 @@ The output file will then be:
 
 ```txt {{ title: 'custom_output.txt' }}
 Custom Output
-DUT ID: SI051AB7B0001
+DUT ID: PCB001
 Outcome: Outcome.PASS
 Phase: get_sn
 ```

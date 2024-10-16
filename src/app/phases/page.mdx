@@ -127,7 +127,7 @@ def phase_retry(test):
 
 def main():
     test = htf.Test(pass_phase, retry_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
     main()
@@ -215,7 +215,7 @@ def example_phase(test):
 
 def main():
   test = htf.Test(example_phase)
-  test.execute(lambda: "SI051AB7B0001")
+  test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
   main()
@@ -273,7 +273,7 @@ def always_true(test):
 
 def main():
     test = htf.Test(repeat_phase, timeout_phase, random_fail_phase, always_true)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -304,7 +304,7 @@ def conditional_fail_phase(test):
 
 def main():
     test = htf.Test(conditional_fail_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
     main()
@@ -338,7 +338,7 @@ def conditional_phase(test_state):
 def main():
     # Define the test with the conditional phase
     test = htf.Test(conditional_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
     main()

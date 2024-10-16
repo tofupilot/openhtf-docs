@@ -48,7 +48,7 @@ def temperature_phase(test):
 
 def main():
     test = htf.Test(temperature_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 
 if __name__ == "__main__":
@@ -106,7 +106,7 @@ def check_board_temperature(test):
 
 def main():
     test = htf.Test(measure_seconds, check_board_temperature)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -128,7 +128,7 @@ def check_green_led(test):
 
 def main():
     test = htf.Test(check_green_led)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -159,7 +159,7 @@ def check_firmware_version(test):
 
 def main():
     test = htf.Test(check_firmware_version)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -193,7 +193,7 @@ def multimeasurement_in_one_phase(test):
 
 def main():
     test = htf.Test(multimeasurement_in_one_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -232,7 +232,7 @@ def third_phase(test):
 def main():
     test = htf.Test(first_phase, temperature_phase, third_phase)
     with TofuPilot:
-        test.execute(lambda: "SI051AB7B0001")
+        test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -281,7 +281,7 @@ def voltage_measurement_phase(test):
 
 def main():
     test = htf.Test(voltage_measurement_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -322,7 +322,7 @@ def temperature_phase_with_marginal_measurements(test):
 
 def main():
     test = htf.Test(temperature_phase_with_marginal_measurements)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -351,7 +351,7 @@ def temperature_phase(test):
 
 def main():
     test = htf.Test(temperature_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 
 if __name__ == "__main__":
@@ -375,7 +375,7 @@ def test_phase(test):
 
 def main():
     test = htf.Test(test_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
@@ -399,7 +399,7 @@ def VoltagePhase(test):
 
 def main():
     test = htf.Test(VoltagePhase)
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 
 if __name__ == "__main__":

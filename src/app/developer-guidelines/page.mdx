@@ -33,7 +33,7 @@ def example_phase(test):
 def main():
     test = htf.Test(example_phase)
     test.add_output_callbacks(json_factory.OutputToJSON("test_result.json", indent=2))
-    test.execute(lambda: "SI051AB7B0001")
+    test.execute(lambda: "PCB001")
 
 
 if __name__ == "__main__":

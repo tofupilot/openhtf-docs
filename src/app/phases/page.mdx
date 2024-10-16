@@ -26,14 +26,14 @@ Phases have an outcome that is set manually with a `PhaseResult` or automaticall
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
-def one(test):
+def phase_one(test):
     return htf.PhaseResult.CONTINUE
 
-def two(test):
+def phase_two(test):
     return htf.PhaseResult.CONTINUE
 
 def main():
-    test = htf.Test(one, two)
+    test = htf.Test(phase_one, phase_two)
     test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':

@@ -21,7 +21,8 @@ With the <TofuPilotLink utmMedium="phases-overview"/> integration, you get preci
 
 ## Syntax
 
-Phases have an outcome that is set manually with a `PhaseResult` or automatically via a measurement validation function, which we'll cover on the next page. They are Python functions that take the `test` object as an argument and must be added to the `Test` object to be executed.
+Phases are Python functions that take the `test` object as an argument and must be added to the `Test` object to be executed.
+They have an outcome that is set manually with a `PhaseResult` or automatically via a measurement validation function, which we'll cover on the next page. 
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf

@@ -16,8 +16,10 @@ Create measurements to capture and validate data within phases. {{ className: 'l
 ## Overview
 
 You can use measurements to capture and validate values during a test. 
-These values can be numeric, boolean, or string, and may be either simple or multidimensional. 
+These values can be [numeric](#numeric), [boolean](#boolean), or [string](#string), and may be either simple or [multidimensional](#multidimensional). 
 Use the built-in validations in the decorator: you can define measurements with predefined units, types and validation rules.
+
+Measurements are attached to Test Phases using `@openhtf.measures()` decorator.
 
 
 <Note>
@@ -27,7 +29,7 @@ Use the built-in validations in the decorator: you can define measurements with 
 
 ## Numeric
 
-By using numeric measurements, you can test values against a defined range or specific validation criteria.
+By using numeric measurements, you can test values against a defined range or specific validation criteria. 
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -53,16 +55,19 @@ if __name__ == "__main__":
     main()
 ```
 
-### Validators
+### Validator decorators
+
+Validators are a list of callable objects to perform pass/fail checks.
+You can parameter them in the decorator to provide unit, type, and validation infromation. 
 
 <Properties>
-  <Property name=".in_range(min_value, max_value)">
+  <Property name=".in_range(minimum, maximum)" type="Number">
     Ensures the value is within the given range.
   </Property>
-  <Property name=".with_units(units)">
-    Rounds the value to the specified precision before validation.
+  <Property name=".with_units(units)" type="opehtf.util.units (default=None)">
+    Adds units to the measurement (e.g., Celsius, Volts).   
   </Property>
-  <Property name=".with_precision(precision)">
+  <Property name=".with_precision(precision)" type="int default=None">
     Rounds the value to the specified precision before validation.
   </Property>
 </Properties>
@@ -70,8 +75,17 @@ if __name__ == "__main__":
 ### Options
 
 <Properties>
-  <Property name=".with_units(unit)">
-    Adds units to the measurement (e.g., Celsius, Volts).
+   <Property name="name" type="string">
+    Configure name of the measurement.
+  </Property>
+  <Property name="units" type="openhtf.util.units (default=None)">
+    Adds units to the measurement (e.g., Celsius, Volts). 
+  </Property>
+  <Property name="docstring" type="string (Optional)">
+    Applies a transformation function to modify the value before validation.
+  </Property>
+  <Property name="marginal" type="bool ()">
+    Indicate if this measurement is marginal if the outcome is `PASS`.
   </Property>
   <Property name=".with_transform(fn)">
     Applies a transformation function to modify the value before validation.

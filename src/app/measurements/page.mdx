@@ -47,10 +47,13 @@ if __name__ == "__main__":
 ### Validators
 
 <Properties>
-  <Property name=".in_range(minimum, maximum)" type="Number, Number">
+  <Property name=".in_range(minimum, maximum)" type="number, number">
     Ensure the measurement is within the given range.
   </Property>
-  <Property name=".equals(value)" type="Number">
+  <Property name=".within_percent(value, percent)" type="number, number">
+    Ensure the measurement is within the given percentage range.
+  </Property>
+  <Property name=".equals(value)" type="number">
     Ensure the measurement exactly matches the specified value.
   </Property>
 </Properties>
@@ -59,9 +62,10 @@ if __name__ == "__main__":
 
 <Properties>
   <Property name=".with_units(units)" type="UnitDescriptor">
-    Define unit to the measurement (e.g. Ampere, Volts).
+    Define unit to the measurement (e.g. AMPERE, VOLT, full list
+    [here](https://github.com/google/openhtf/blob/master/openhtf/util/units.py)).
   </Property>
-  <Property name=".with_precision(precision)" type="int">
+  <Property name=".with_precision(precision)" type="integer">
     Round the value to the specified precision before validation.
   </Property>
 </Properties>
@@ -94,36 +98,6 @@ if __name__ == "__main__":
     main()
 ```
 
-## Boolean
-
-You can define and validate boolean measurements.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-
-@htf.measures(
-    htf.Measurement("is_led_switch_on")
-    .equals(True)
-)
-def phase_led(test):
-    test.measurements.is_led_switch_on = True
-
-def main():
-    test = htf.Test(phase_led)
-    test.execute(lambda: "PCB001")
-
-if __name__ == "__main__":
-    main()
-```
-
-### Validators
-
-<Properties>
-  <Property name=".equals(value)" type="bool">
-    Ensure the measurement exactly matches the specified value.
-  </Property>
-</Properties>
-
 ## String
 
 You can define and validate string measurements.
@@ -151,6 +125,39 @@ if __name__ == "__main__":
 
 <Properties>
   <Property name=".equals(value)" type="string">
+    Ensure the measurement exactly matches the specified value.
+  </Property>
+  <Property name=".matches_regex(pattern)" type="string">
+    Ensure the string matches the specified regex pattern.
+  </Property>
+</Properties>
+
+## Boolean
+
+You can define and validate boolean measurements.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    htf.Measurement("is_led_switch_on")
+    .equals(True)
+)
+def phase_led(test):
+    test.measurements.is_led_switch_on = True
+
+def main():
+    test = htf.Test(phase_led)
+    test.execute(lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
+
+### Validators
+
+<Properties>
+  <Property name=".equals(value)" type="bool">
     Ensure the measurement exactly matches the specified value.
   </Property>
 </Properties>
@@ -183,7 +190,7 @@ if __name__ == "__main__":
 
 ## TofuPilot integration
 
-You can use <TofuPilotLink utmMedium="phases-integration" /> to analyse the measurements taken during the various phases of your tests, referred as steps in TofuPilot.
+The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases and measurements.
 
 To integrate TofuPilot, install the open-source client:
 
@@ -210,28 +217,28 @@ def phase_temperature(test):
 
 def main():
     test = htf.Test(phase_one, phase_temperature)
-    with TofuPilot:
+    with TofuPilot(test):
         test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
 ```
 
-You can visualize the different measurements taken during a specific test.
+You can visualize the test measurements (referred to as steps) on each run page.
 
 <Image
   src="/measurements-header.png"
   alt="Run page showing the different steps performed for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
-You can visualize the control chart of a specific measure (e.g. temperature) during time for several Units Under Test (UUT).
+You can display control charts and histograms for a measurement to track its evolution across test runs.
 
 <Image
   src="/measurements-header.png"
   alt="Procedure page showing the control chart for a specific numeric measure for several Unit Under Test (UUT) in OpenHTF with TofuPilot"
 />
 
-You can get more phase performance indicators on TofuPilot and filter test runs by date, revision, and more.
+You can access more phase performance indicators on TofuPilot and filter test runs by date, revision, and other criteria.
 
 <Button href="https//docs.tofupilot.com/steps" variant="text" arrow="right">
   <>Learn more in the TofuPilot Docs</>
@@ -245,7 +252,7 @@ You can leverage advanced OpenHTF options to handle complex measurement use case
 
 ### Multidimensional
 
-Multidimensional measurements capture data in arrays, such as time-series or data across different categories.
+You can capture data in arrays, like time-series or across categories, with multidimensional measurements.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf

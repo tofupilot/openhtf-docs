@@ -32,23 +32,22 @@ export const metadata = {
 
 # Attachments
 
-You can attach files or raw data to a test record. {{ className: 'lead' }}
+Attach files collected during execution to the test record. {{ className: 'lead' }}
 
 <Image
   src="/attachments-header.png"
   alt="Header of the OpenHTF documentation showing Attachments details and integration with TofuPilot."
 />
 
-
 ## Overview
 
-When running hardware tests, you usually need to store additional data like pictures, which can't be captured as standard measurements. OpenHTF allows you to store these files as attachments.
+Hardware tests often generate extra data, such as images, that can't be captured as measurements. OpenHTF allows you to attach these files to the test record.
 
-With TofuPilot integration, attachments will automatically be uploaded, organized, and linked to your test runs.
+With the <TofuPilotLink utmMedium="attachments-overview"/> integration, attachments are uploaded automatically and you can access and download them directly from your TofuPilot workspace.
 
 ## Files
 
-You can attach binary data or files generated during the test using the `test.attach` function.
+You can attach binary data or files generated during the test.
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
@@ -68,7 +67,7 @@ if __name__ == "__main__":
 
 ## Files by path
 
-You can attach larger or pre-existing files from disk using `test.attach_file`.
+You can attach larger or pre-existing files from disk or URL.
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
@@ -86,13 +85,17 @@ if __name__ == "__main__":
     main()
 ```
 
-## Files by URL
-
-TODO Félix: are there a way to attach files URL?
-
 ## TofuPilot integration
 
-When using the TofuPilot integration, all OpenHTF attachment methods are fully supported. Your attachments are automatically uploaded, organized, and linked to your tests.
+The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases.
+
+To integrate TofuPilot, install the open-source client:
+
+```sh
+pip install tofupilot[openhtf]
+```
+
+Add it to your test like this:
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
@@ -103,13 +106,14 @@ def attachment_phase(test):
 
 def main():
     test = Test(attachment_phase)
-    test.execute(lambda: "PCB0001")
+    with TofuPilot(test):
+      test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
 ```
 
-Attachments are available in a dedicated section of the run page, where they can be opened directly in the browser or downloaded.
+You can access attachments in a dedicated section of the run page, where you can open them in the browser or download them.
 
 <Image
   src="/attachments-page-run.png"
@@ -122,7 +126,7 @@ Attachments are available in a dedicated section of the run page, where they can
 
 ### Access attachments during execution
 
-To load and access attached files during test execution, use the `test.get_attachment` function.
+You can load and access attached files during test execution.
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult

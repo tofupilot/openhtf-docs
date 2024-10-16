@@ -3,7 +3,7 @@ type IconProps = React.HTMLAttributes<SVGElement>
 export const Logos = {
   Google: (props: IconProps) => (
     <svg
-      width="112"
+      width="158"
       height="48"
       viewBox="0 0 1280.000000 420.000000"
       xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@ export const Logos = {
   ),
   Waymo: (props: IconProps) => (
     <svg
-      width="112"
+      width="158"
       height="48"
       viewBox="0 0 1190.549 841.891"
       xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@ export const Logos = {
   ),
   Sony: (props: IconProps) => (
     <svg
-      width="112"
+      width="148"
       height="48"
       viewBox="0 0 338.67 59.605"
       xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +123,7 @@ export const Logos = {
   ),
   ST: (props: IconProps) => (
     <svg
-      width="112"
+      width="148"
       height="48"
       viewBox="0 0 502 267"
       xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +138,7 @@ export const Logos = {
   ),
   Berkeley: (props: IconProps) => (
     <svg
-      width="112"
+      width="148"
       height="48"
       viewBox="0 0 215.125 67.591791"
       xmlns="http://www.w3.org/2000/svg"

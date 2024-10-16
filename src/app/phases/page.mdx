@@ -22,7 +22,7 @@ With the <TofuPilotLink utmMedium="phases-overview"/> integration, you get preci
 ## Syntax
 
 Phases are Python functions that take the `test` object as an argument and must be added to the `Test` object to be executed.
-They have an outcome that is set manually with a `PhaseResult` or automatically via a measurement validation function, which we'll cover on the next page.
+The phase outcome is set either manually with a `PhaseResult` or automatically through a measurement validation function, which we’ll cover on the next page.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
 ## Results
 
-You can set the next phase's outcome by setting the `PhaseResult`:
+You can choose the next phase's execution by setting the `PhaseResult` from the following options.
 
 <Properties>
   <Property name="PhaseResult.CONTINUE">
@@ -64,6 +64,8 @@ You can set the next phase's outcome by setting the `PhaseResult`:
     execute the next phase.
   </Property>
 </Properties>
+
+For example:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -105,7 +107,7 @@ You can use the `@openhtf.PhaseOptions` decorator to modify phase execution beha
     Timeout for the phase, in seconds.
   </Property>
   <Property name="repeat_limit" type="int or None">
-    Maximum number of repeats. `None` to repeated infinitely as long as
+    Maximum number of repeats. Set to `None` for infinite repeats, as long as
     `PhaseResult.REPEAT` is returned.
   </Property>
 </Properties>
@@ -133,16 +135,16 @@ if __name__ == '__main__':
     main()
 ```
 
-For more options, check the [advanced use cases](#advanced-use-case).
+For more options, check the [advanced use cases](#advanced-use-cases).
 
 ## TofuPilot integration
 
-The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases, referred to as steps in TofuPilot.
+The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases.
 
 To integrate TofuPilot, install the open-source client:
 
 ```sh
-pip install tofupilot
+pip install tofupilot[openhtf]
 ```
 
 Add it to your test like this:
@@ -158,14 +160,14 @@ def phase_two(test):
 
 def main():
     test = htf.Test(phase_one, phase_two)
-    with TofuPilot:
+    with TofuPilot(test):
       test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
     main()
 ```
 
-You can visualize the test phases in the steps on each run page.
+You can visualize the test phases (referred to as steps) on each run page.
 
 <Image
   src="/phases-page-run.png"
@@ -179,7 +181,7 @@ You can click on a phase to monitor its recent performance across the latest run
   alt="Procedure page showing the durations for several Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
-You can get more phase performance indicators on TofuPilot and filter test runs by date, revision, and more.
+You can access more phase performance indicators on TofuPilot and filter test runs by date, revision, and other criteria.
 
 <Button href="https//docs.tofupilot.com/steps" variant="text" arrow="right">
   <>Learn more in the TofuPilot Docs</>
@@ -292,6 +294,7 @@ if __name__ == "__main__":
 ```
 
 ### Run if
+
 You can use a callback to determine whether to execute the phase; if skipped, it won't be logged.
 
 ```python {{ title: 'main.py' }}
@@ -343,7 +346,8 @@ if __name__ == "__main__":
 ```
 
 ### Phase Groups
-You can use phase groups to bundle phases inside 3 groups: a setup, a main and a teardown group. 
+
+You can use phase groups to bundle phases inside 3 groups: a setup, a main and a teardown group.
 So it manage shortcutting during terminal errors to ensure proper execution of teardown phases.
 
 ```python {{title:"main.py"}}

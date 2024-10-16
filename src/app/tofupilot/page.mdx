@@ -56,7 +56,7 @@ TofuPilot integrates seamlessly with OpenHTF.
 1. Create your account on [TofuPilot](https://tofupilot.com) and install the TofuPilot open-source Python client:
 
 ```bash
-pip install tofupilot
+pip install tofupilot[openhtf]
 ```
 
 2. Retrieve your API key from [My Profile](/user-management#api-key) page and save it as an environment variable.
@@ -135,3 +135,94 @@ You could build your own analytics with Excel or custom solutions, but this opti
     | | | 7️⃣ Maintain and update | |
   </Col>
 </Row>
+
+# Monitoring Quality with First-Pass Yield
+
+Managing test results at scale often leads to missed failures and rework. **First-Pass Yield (FPY)** helps identify inefficiencies. [TofuPilot](https://tofupilot.com) automates FPY tracking and breaks it down by individual test steps. {{ className: 'lead' }}
+
+## Problem: managing test failures
+
+As production scales, tracking pass/fail rates becomes harder. Test failures cause:
+
+- 🛑 **Missed Issues**: Faulty products slip through.
+- 💸 **High Rework Rates**: More costs and delays.
+- 📉 **Inconsistent Quality**: Declining product standards.
+
+## Solution: First-Pass Yield
+
+FPY measures the percentage of units passing all tests on the first try, helping reduce failures and improve efficiency.
+
+_Here, we see the first procedure needs investigation due to low first-pass yield, while the second is fine:_
+
+<Image src="/fpy-procedures-light.png" withDarkMode alt="" />
+
+## Implementation in TofuPilot
+
+- ⚡️ **Real-time FPY Calculation**: Continuous tracking of FPY.
+- 🚨 **Threshold Alerts**: Alerts when FPY drops below set limits (e.g., 75%, 90%).
+- 🔍 **Detailed Breakdown**: FPY breakdown by individual test steps for deeper insights.
+
+With TofuPilot, teams can improve efficiency, reduce rework, and maintain high-quality production.
+
+<Image src="/fpy-analytics-light.png" withDarkMode alt="" />
+
+<Image src="/fpy-steps-light.png" withDarkMode alt="" />
+
+# Process Capability Index (Cpk)
+
+// this should be a summary
+The Process Capability Index (Cpk) is a key statistical tool used in production and manufacturing to measure how well a process is performing relative to its specification limits. It indicates the ability of a process to produce output within the desired specification limits consistently. {{ className: 'lead' }}
+
+// issue ->
+
+// solution -> track capability measurement
+
+// detail -> all indicators, cp, cpk, pp, ppk
+
+// result -> the most useful is cpk?
+
+// this is not a note
+
+<Note>
+  Cpk is only meaningful for test phases that include measurements with both
+  defined values and limits.
+</Note>
+
+## Definition
+
+Cpk is a measure of process capability that takes into account both the centering of the process and its variability. It shows how closely a process is running to its specification limits, considering the natural variability in the process.
+
+**Formula:**
+
+```jsx
+Cpk = min[(USL - μ) / (3σ), (μ - LSL) / (3σ)]
+```
+
+Where:
+
+- USL = Upper Specification Limit
+- LSL = Lower Specification Limit
+- μ = Process Mean
+- σ = Standard Deviation
+
+// illustrate now with tofupilot
+
+## Interpretation
+
+A Cpk value of 1.33 or higher is typically considered acceptable, indicating that the process is capable of producing output within specification limits. A Cpk value of less than 1 suggests that the process is not capable, and there is a need for process improvement or control measures.
+
+### Key Points:
+
+- Cpk > 1.33: Process is highly capable.
+- Cpk = 1: Process is marginally capable.
+- Cpk < 1: Process is not capable; improvements are needed.
+
+## Importance
+
+Improving Cpk is crucial for maintaining consistent product quality and reducing the number of defects. A higher Cpk value indicates a more capable process, with outputs that are more likely to meet the desired specifications. This leads to fewer defects, less waste, and lower production costs.
+
+## Calculation
+
+To visualize your process’s Cpk, simply import your data on TofuPilot, and it will automatically calculate the Cpk values, providing insights into the capability of your processes.
+
+<Image src="/cpk-light.png" alt="" withDarkMode />

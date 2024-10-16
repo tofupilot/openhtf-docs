@@ -6,7 +6,7 @@ export const metadata = {
 
 # Output Callbacks
 
-You can enable automatic test report generation in JSON and other formats. {{ className: 'lead' }}
+Enable automatic test report generation in JSON or other formats. {{ className: 'lead' }}
 
 <Image
   src="/output-callbacks-header.png"
@@ -21,9 +21,7 @@ When integrating with <TofuPilotLink utmMedium="output-callbacks-overview" />, t
 
 ## JSON
 
-You can enable automatic test result export in the default JSON format using `json_factory.OutputToJSON`.
-
-<Note>Output callbacks must be added before test execution</Note>
+You can enable automatic test result export in the default JSON format.
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
@@ -45,7 +43,7 @@ if __name__ == "__main__":
 
 A `test_result.json` file is created after execution and saved in the script folder. The file path can be changed if needed.
 
-<Button href="/test_result.json" variant="text" arrow="right">
+<Button href="/public/test_result.json" variant="text" arrow="right">
   <>Open example file</>
 </Button>
 

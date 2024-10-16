@@ -19,7 +19,7 @@ Originally created at **Google**, OpenHTF is now used by hundreds of teams world
 
 <LogoCloud />
 
-This documentation is provided by the team at <TofuPilotLink utmMedium="home" />, a database and analytics platform for hardware tests.
+This documentation is provided by the <TofuPilotLink utmMedium="home" /> team, a database and analytics solution compatible with OpenHTF tests.
 
 ## Quick example
 
@@ -73,16 +73,20 @@ This documentation is provided by the team at <TofuPilotLink utmMedium="home" />
     from openhtf.plugs import plug, BasePlug
 
     class MultimeterPlug(BasePlug):
-      def __init__(self, port):
-        self.port = port
-        self.connection = f"Connected on {self.port}"
+    # Initialize the multimeter plug with a port connection
+    def **init**(self, port):
+      self.port = port
+      self.connection = f"Connected on {self.port}"
 
-      def measure_voltage(self):
-        return 3.3
+    def measure_voltage(self):
+      # Logic to simulate a voltage measurement
+      return 3.3
 
-      # Automatically called at test teardown
-      def tearDown(self):
-        self.connection = None
+    # Automatically called at test teardown to clean up
+    def tearDown(self):
+      # Logic to close the connection or clean up resources
+      self.connection = None
+
     ```
 
   </CodeGroup>

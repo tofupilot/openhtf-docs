@@ -248,7 +248,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Develop',
     links: [
-      { title: 'Unit Under Test (UUT)', href: '/uut' },
+      { title: 'Unit Under Test (UUT)', href: '/dut' },
       {
         title: 'Phases',
         href: '/phases',
@@ -273,14 +273,13 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Deploy',
     links: [
-      { title: 'Operator UI', href: '/operator-ui' },
+      // { title: 'Operator UI', href: '/operator-ui' },
       { title: 'Analytics', href: '/tofupilot' },
     ],
   },
   {
     title: 'Resources',
     links: [
-      { title: 'Measurement Units', href: '' },
       { title: 'Development Guidelines', href: '/developer-guidelines' },
       { title: 'Documentation Changelog', href: '/changelog' },
     ],

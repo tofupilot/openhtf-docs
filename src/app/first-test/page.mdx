@@ -30,16 +30,16 @@ Create a `main.py` file in your virtual environment and copy this code.
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
-def hello_world(test):                      # Define "hello_world" phase
+def hello_world(test):              # Define "hello_world" phase
     print('Hello world!')
-    return htf.PhaseResult.CONTINUE         # Continue to next phase
+    return htf.PhaseResult.CONTINUE # Continue to next phase
 
 def main():
-    test = htf.Test(hello_world)            # Define test with hello_world
-    test.execute(lambda: "PCB001")          # Execute with DUT serial
+    test = htf.Test(hello_world)    # Define test with hello_world
+    test.execute(lambda: "PCB001")  # Execute with DUT serial
 
 if __name__ == '__main__':
-    main()                                  # Run main function
+    main()                          # Run main function
 ```
 
 Run it with:
@@ -48,9 +48,7 @@ Run it with:
 python main.py
 ```
 
-The console will output:
-
-```txt
+```txt {{ title: 'Terminal' }}
 (venv) C:\tofupilot > python main.py
 Hello world!
 
@@ -59,4 +57,4 @@ Hello world!
 
 🎉 **Congratulations**! You just ran your first OpenHTF test and it’s a `PASS`! Easy, right?
 
-This is the simplest OpenHTF test, running through the command line without the Operator UI. You'll learn to connect instruments, add measurements, and more in the next sections.
+This is a very simple OpenHTF test, running through the command line without the Operator UI yet. You'll learn to connect instruments, add measurements, and more in the next sections.

@@ -323,24 +323,19 @@ You can use this `PhaseOptions` when a phase needs to manage internal test detai
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
-# Simple test phase that checks a condition
 @htf.PhaseOptions()
 def check_condition(test):
-    test.logger.info("Condition checked")
     return htf.PhaseResult.CONTINUE
 
-# Phase that requires TestState to invoke other phase
 @htf.PhaseOptions(requires_state=True)
 def conditional_phase(test_state):
-    test_state.logger.info("Running check_condition phase")
     check_condition(test_state)  # Manually invoke another phase
 
 def main():
-    # Define the test with the conditional phase
     test = htf.Test(conditional_phase)
     test.execute(lambda: "PCB001")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
 

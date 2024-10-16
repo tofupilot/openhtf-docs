@@ -46,8 +46,6 @@ if __name__ == "__main__":
 
 ### Validators
 
-You can use these validators to check numeric measurements.
-
 <Properties>
   <Property name=".in_range(minimum, maximum)" type="Number, Number">
     Ensure the measurement is within the given range.
@@ -98,7 +96,7 @@ if __name__ == "__main__":
 
 ## Boolean
 
-You can use boolean measurements to validate a true/false condition.
+You can define and validate boolean measurements.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -107,11 +105,11 @@ import openhtf as htf
     htf.Measurement("is_led_switch_on")
     .equals(True)
 )
-def check_green_led(test):
+def phase_led(test):
     test.measurements.is_led_switch_on = True
 
 def main():
-    test = htf.Test(check_green_led)
+    test = htf.Test(phase_led)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -122,13 +120,13 @@ if __name__ == "__main__":
 
 <Properties>
   <Property name=".equals(value)" type="bool">
-    Ensures the measurement exactly matches the specified boolean value.
+    Ensure the measurement exactly matches the specified value.
   </Property>
 </Properties>
 
 ## String
 
-You can also validate a string.
+You can define and validate string measurements.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -138,11 +136,11 @@ from openhtf.util import units
     htf.Measurement("firmware_version")
     .equals("1.2.4")
 )
-def check_firmware_version(test):
+def phase_firmware(test):
     test.measurements.firmware_version = "1.2.4"
 
 def main():
-    test = htf.Test(check_firmware_version)
+    test = htf.Test(phase_firmware)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -153,13 +151,13 @@ if __name__ == "__main__":
 
 <Properties>
   <Property name=".equals(value)" type="string">
-    Ensures the measurement exactly matches the specified string.
+    Ensure the measurement exactly matches the specified value.
   </Property>
 </Properties>
 
 ## Multiple measurements
 
-You can also use multiple measurements in a single test phase.
+You can also use multiple measurements in a single phase.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -170,13 +168,13 @@ from openhtf.util import units
     htf.Measurement("firmware_version").equals("1.2.7"),
     htf.Measurement("temperature").in_range(0, 100).with_units(units.DEGREE_CELSIUS),
 )
-def multimeasurement_in_one_phase(test):
+def phase_multi_measurements(test):
     test.measurements.is_connected = True
     test.measurements.firmware_version = "1.2.7" if test.measurements.is_connected else "N/A"
     test.measurements.temperature = 22.5
 
 def main():
-    test = htf.Test(multimeasurement_in_one_phase)
+    test = htf.Test(phase_multi_measurements)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -187,19 +185,19 @@ if __name__ == "__main__":
 
 You can use <TofuPilotLink utmMedium="phases-integration" /> to analyse the measurements taken during the various phases of your tests, referred as steps in TofuPilot.
 
-To enable TofuPilot integration, install the open-source Python client:
+To integrate TofuPilot, install the open-source client:
 
 ```sh
-pip install tofupilot
+pip install tofupilot[openhtf]
 ```
 
-Import `tofupilot` package and add the `with TofuPilot:` wrapper before the test execution:
+Add it to your test like this:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 from openhtf.util import units
 
-def first_phase(test):
+def phase_one(test):
     return htf.PhaseResult.CONTINUE
 
 @htf.measures(
@@ -207,14 +205,11 @@ def first_phase(test):
     .in_range(0, 100)
     .with_units(units.DEGREE_CELSIUS)
 )
-def temperature_phase(test):
+def phase_temperature(test):
     test.measurements.temperature = 25
 
-def third_phase(test):
-    return htf.PhaseResult.CONTINUE
-
 def main():
-    test = htf.Test(first_phase, temperature_phase, third_phase)
+    test = htf.Test(phase_one, phase_temperature)
     with TofuPilot:
         test.execute(lambda: "PCB001")
 
@@ -236,6 +231,12 @@ You can visualize the control chart of a specific measure (e.g. temperature) dur
   alt="Procedure page showing the control chart for a specific numeric measure for several Unit Under Test (UUT) in OpenHTF with TofuPilot"
 />
 
+You can get more phase performance indicators on TofuPilot and filter test runs by date, revision, and more.
+
+<Button href="https//docs.tofupilot.com/steps" variant="text" arrow="right">
+  <>Learn more in the TofuPilot Docs</>
+</Button>
+
 ---
 
 ## Advanced use cases
@@ -244,7 +245,7 @@ You can leverage advanced OpenHTF options to handle complex measurement use case
 
 ### Multidimensional
 
-Multidimensional measurements allow for capturing data that spans multiple coordinates, such as time-series data or data across multiple levels or categories.
+Multidimensional measurements capture data in arrays, such as time-series or data across different categories.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -271,25 +272,17 @@ if __name__ == "__main__":
     main()
 ```
 
-### Validators
-
-<Properties>
-  <Property name=".in_range(minimum, maximum)" type="Number, Number">
-    Can be applied to each value in the multidimensional set.{' '}
-  </Property>
-</Properties>
-
 ### Options
 
 <Properties>
   <Property name=".with_dimensions(*dims)" type="UnitDescriptor">
-    Adds multiple units for multidimensional measurements.
+    Set multiple units for multidimensional measurements.
   </Property>
 </Properties>
 
-### Marginal Measurements
+### Marginal
 
-You can mark a measure as marginal, indicating that even if it passes validation, it is close to the limit of failure.
+You can mark a measure as marginal to show it’s close to failing, even if it passes.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -300,11 +293,11 @@ from openhtf.util import units
     .with_units('ohm')
     .in_range(minimum=5, maximum=17, marginal_minimum=9, marginal_maximum=11)
 )
-def temperature_phase_with_marginal_measurements(test):
+def phase_marginal(test):
   test.measurements.resistance = 13
 
 def main():
-    test = htf.Test(temperature_phase_with_marginal_measurements)
+    test = htf.Test(phase_marginal)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -338,9 +331,9 @@ if __name__ == "__main__":
     main()
 ```
 
-### Argument Substitution
+### Dynamic labeling
 
-You can add a description to your measurements.
+You can customize measurement names dynamically at execution.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -361,9 +354,9 @@ if __name__ == "__main__":
     main()
 ```
 
-### Transformation Function
+### Transformation function
 
-You can modify measurement values before validation.
+You can apply measurement transformation functions before validation.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -375,7 +368,7 @@ import openhtf as htf
     .with_units("V")
 )
 def VoltagePhase(test):
-    test.measurements.voltage = 5  # Value will be transformed to 5.5 before range validation
+    test.measurements.voltage = 5  # Value will be transformed to 5.5 before validation
 
 def main():
     test = htf.Test(VoltagePhase)

@@ -21,23 +21,23 @@ With the <TofuPilotLink utmMedium="phases-overview"/> integration, you get contr
 
 ## Numeric
 
-By using numeric measurements, you can test values against a defined range or specific validation criteria.
+You can define and validate numeric measurements.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 from openhtf.util import units
 
 @htf.measures(
-    htf.Measurement("temperature")     # Declares a measurement 'temperature'
-    .in_range(0, 100)                  # Define limits between 0 and 100
-    .with_units(units.DEGREE_CELSIUS)  # Specifies the unit as Celsius
+    htf.Measurement("temperature")     # Declares the measurement name
+    .in_range(0, 100)                  # Defines the validator
+    .with_units(units.DEGREE_CELSIUS)  # Specifies the unit
     .with_precision(1)                 # Rounds to 1 decimal place
 )
-def temperature_phase(test):
+def phase_temperature(test):
     test.measurements.temperature = 25 # Set the temperature value to 25°C
 
 def main():
-    test = htf.Test(temperature_phase)
+    test = htf.Test(phase_temperature)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -46,28 +46,24 @@ if __name__ == "__main__":
 
 ### Validators
 
-Validators are a list of callable objects to perform pass/fail checks.
-You can parameter them in the decorator to provide unit, type, and validation infromation.
+You can use these validators to check numeric measurements.
 
 <Properties>
-  <Property name="name" type="string">
-    Configure name of the measurement.
-  </Property>
-  <Property name="in_range(minimum, maximum)" type="Number, Number">
-    Ensure the value is within the given range.
+  <Property name=".in_range(minimum, maximum)" type="Number, Number">
+    Ensure the measurement is within the given range.
   </Property>
   <Property name=".equals(value)" type="Number">
-    Ensures the measurement exactly matches the specified numerical value.
+    Ensure the measurement exactly matches the specified value.
   </Property>
 </Properties>
 
 ### Options
 
 <Properties>
-  <Property name="with_units(units)" type="UnitDescriptor">
-    Define unit to the measurement (e.g., Celsius, Volts).
+  <Property name=".with_units(units)" type="UnitDescriptor">
+    Define unit to the measurement (e.g. Ampere, Volts).
   </Property>
-  <Property name="with_precision(precision)" type="int">
+  <Property name=".with_precision(precision)" type="int">
     Round the value to the specified precision before validation.
   </Property>
 </Properties>
@@ -77,23 +73,23 @@ import openhtf as htf
 from openhtf.util import units
 
 @htf.measures(
-    htf.Measurement("validated_measurement")
-    .in_range(0, 10)
-    .with_units(units.SECOND)
+    htf.Measurement("voltage")
+    .in_range(maximum=10)
+    .with_units(units.VOLT)
 )
-def measure_seconds(test):
-    test.measurements.validated_measurement = 5
+def phase_voltage(test):
+    test.measurements.voltage = 5.3
 
 @htf.measures(
-    htf.Measurement("temperature")
-    .equals(10)
-    .with_units(units.DEGREE_CELSIUS)
+    htf.Measurement("memory")
+    .equals(8)
+    .with_units(units.GIGABYTE)
 )
-def check_board_temperature(test):
-    test.measurements.temperature = 10
+def phase_memory(test):
+    test.measurements.memory = 8
 
 def main():
-    test = htf.Test(measure_seconds, check_board_temperature)
+    test = htf.Test(phase_voltage, phase_memory)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":

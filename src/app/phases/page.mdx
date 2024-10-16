@@ -41,7 +41,7 @@ def teardown_phase(test):
 
 def main():
     # Run the test on serial number SI051AB7B0001 with the 3 phases to be executed
-    test = htf.Test(setup_first_phase, test_voltage_phase, teardown_phase) 
+    test = htf.Test(setup_phase, test_voltage_phase, teardown_phase) 
     test.execute(lambda: "SI051AB7B0001")
 
 if __name__ == '__main__':
@@ -108,10 +108,10 @@ if __name__ == '__main__':
 You can use the `@openhtf.PhaseOptions` decorator to modify phase execution behavior. 
 
 <Properties>
-  <Property name="timeout_s" type="float (default=None)">
+  <Property name="timeout_s" type="float">
     Timeout for the phase, in seconds.
   </Property>
-  <Property name="repeat_limit" type="int (default=None)">
+  <Property name="repeat_limit" type="int">
       Maximum number of repeats.  None indicates a phase will be repeated infinitely as long as `PhaseResult.REPEAT` is returned.
   </Property>
 </Properties>
@@ -216,10 +216,10 @@ You can leverage advanced OpenHTF options to handle more complex phase execution
 You can replace the default phase name or change the case formatting:
 
 <Properties>
-  <Property name="name" type="text (default=None)">
+  <Property name="name" type="text">
     Override for the name of the phase.
   </Property>
-  <Property name="phase_name_case" type="PhaseNameCase (default=KEEP)">
+  <Property name="phase_name_case" type="PhaseNameCase">
     Change phase name case to CamelCase using `CAMEL`.
   </Property>
 </Properties>
@@ -240,44 +240,22 @@ if __name__ == '__main__':
   main()
 ```
 
-### Document phase - TODO
-You can document your phase by using the phase descriptor `doc`
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-from openhtf import PhaseNameCase
-
-@htf.PhaseDescriptor(doc="yo")
-def example_phase(test):
-    """This is a test"""
-    return htf.PhaseResult.CONTINUE
-
-def main():
-  test = htf.Test(example_phase)
-  test.execute(lambda: "SI051AB7B0001")
-
-if __name__ == '__main__':
-  main()
-```
 
 ### Change repeat behavior
 
 You can repeat or stop phases under specific conditions with these following `PhaseOptions`:
 
 <Properties>
-  <Property name="repeat_limit" type="int (default=None)">
+  <Property name="repeat_limit" type="int">
       Define a maximum number of repeats. None indicates that a phase will be repeated infinitely as long as `PhaseResult.REPEAT` is returned.
   </Property>
-  <Property name="force_repeat" type="bool (default=False)">
+  <Property name="force_repeat" type="bool">
     Force the phase to repeat up to `repeat_limit` times.
   </Property>
-  <Property name="repeat_on_timeout" type="bool (default=False)">
+  <Property name="repeat_on_timeout" type="bool">
      Repeat phase on timeout.
   </Property>
-  <Property name="repeat_on_measurement_fail" type="bool (default=False)">
-    Force phase with failed measurements to repeat up to `repeat_limit` times.
-  </Property>
-  <Property name="stop_on_measurement_fail" type="bool (default=False) ">
+  <Property name="stop_on_measurement_fail" type="bool ">
    Stop the test if any measurements fail.
   </Property>
 </Properties>
@@ -288,37 +266,38 @@ import random
 
 @htf.PhaseOptions(force_repeat=True, repeat_limit=3)
 def repeat_phase(test):
-    test.logger.info('This phase always repeats 3 times.')
-    return PhaseResult.CONTINUE
+    return htf.PhaseResult.CONTINUE
 
 @htf.PhaseOptions(repeat_on_timeout=True)
 def timeout_phase(test):
-    test.logger.info('This phase may repeat on timeout.')
-    return PhaseResult.CONTINUE
+    return htf.PhaseResult.CONTINUE
 
-@htf.PhaseOptions(repeat_on_measurement_fail=True, repeat_limit=4)
-def timeout_phase(test):
-    test.logger.info('This phase will repeat until success or limit reached.')
+@htf.PhaseOptions(stop_on_measurement_fail=True)
+def random_fail_phase(test):
     if random.choice([True, False]):
         return htf.PhaseResult.CONTINUE
     else:
-        return htf.PhaseResult.FAIL
+        return htf.PhaseResult.STOP
+
+# This test won't be run if random_fail_phase is FAIL.
+def always_true(test):
+    return htf.PhaseResult.CONTINUE
 
 def main():
-    test = htf.Test(repeat_phase, timeout_phase)
+    test = htf.Test(repeat_phase, timeout_phase, random_fail_phase, always_true)
     test.execute(lambda: "SI051AB7B0001")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
 ### Python Debugger
 <Properties>
-  <Property name="run_under_pdb" type="bool (default=False)">
+  <Property name="run_under_pdb" type="bool">
     Run the phase under the Python Debugger. When
       setting this option, increase the phase `timeout_s` as well because the
       timeout will still apply when under the debugger.
   </Property>
-  <Property name="run_if" type="bool or callback (default=None)">
+  <Property name="run_if" type="bool or callback">
     Callback decides whether to run the phase or not. If it is not executed, the phase will not be logged either.  
   </Property>
 </Properties>
@@ -344,7 +323,7 @@ if __name__ == '__main__':
 You can use this `PhaseOptions` when a phase needs to manage internal test details, such as wrapping or controlling other phases.
 
 <Properties>
-  <Property name="requires_state" type="bool (default=False)">
+  <Property name="requires_state" type="bool">
     Pass the complete `TestState` object instead of default `TestApi`. 
   </Property>
 </Properties>

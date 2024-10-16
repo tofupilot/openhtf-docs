@@ -15,25 +15,31 @@ export const metadata = {
 
 OpenHTF (Open Hardware Testing Framework) is an open-source Python framework for hardware testing. {{ className: 'lead' }}
 
+Originally created at **Google**, OpenHTF is now used by hundreds of teams worldwide, from startups to large companies, across all stages of product development: **verification** in design, **validation** in prototyping, and **manufacturing**.
+
+<LogoCloud />
+
+This documentation is provided by the team at <TofuPilotLink utmMedium="home" />, a database and analytics platform for hardware tests.
+
 ## Quick example
 
 <Row>
   <Col>
-    OpenHTF tests are Python scripts that perform a series of test steps on a Unit Under Test (UUT) involving data gathering or measurements.
-    
+    OpenHTF tests are Python scripts that run a series of test steps on a Unit Under Test (UUT), usually involving data and performing measurements.
+
     OpenHTF handles the setup, execution, and teardown of the test, keeps track of everything gathered and provides a pass/fail outcome.
 
     Here are the key concepts in OpenHTF:
 
       <Properties>
         <Property name="Phases">
-          Steps in the test sequence that perform actions or checks.
+          Test steps perform actions and return pass, fail, or skip result.
         </Property>
         <Property name="Measurements">
-          Values recorded during the test with optional pass/fail limits.
+          Capture specific values during phases with optional pass/fail validators.
         </Property>
         <Property name="Plugs">
-          Reusable components that handle external hardware/software interactions.
+          Handle external hardware/software interactions with reusable components.
         </Property>
       </Properties>
 
@@ -82,13 +88,3 @@ OpenHTF (Open Hardware Testing Framework) is an open-source Python framework for
   </CodeGroup>
 </Col>
 </Row>
-
-## About
-
-Originally created at **Google** for hardware testing, OpenHTF is now used by teams worldwide, from small startups to large companies, across all stages of product development: **verification** in design, **validation** in prototyping, and **manufacturing**.
-
-<LogoCloud />
-
-## Documentation
-
-This documentation is maintained by the

@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
 ## Results
 
-You can choose the execution of the next phase by defining the following `PhaseResult`:
+You can set the next phase's outcome by setting the `PhaseResult`:
 
 <Properties>
   <Property name="PhaseResult.CONTINUE" type="default">
@@ -70,23 +70,23 @@ import openhtf as htf
 import random
 
 # Always pass
-def pass_phase(test):
+def phase_pass(test):
     return htf.PhaseResult.CONTINUE
 
 # Retries on failure
-def retry_phase(test):
+def phase_retry(test):
     if random.choice([True, False]):
         return htf.PhaseResult.CONTINUE
     else:
         return htf.PhaseResult.REPEAT
 
 # Fail and stop the test
-def fail_phase(test):
+def phase_fail(test):
     return htf.PhaseResult.STOP
 
 def main():
-    test = htf.Test(pass_phase, retry_phase, fail_phase)
-    test.execute(lambda: "SI051AB7B0001")
+    test = htf.Test(phase_pass, phase_repeat, phase_fail)
+    test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
     main()
@@ -115,12 +115,11 @@ import openhtf as htf
 import random
 
 @htf.PhaseOptions(timeout_s=5)
-def pass_phase(test):
+def phase_pass(test):
     return htf.PhaseResult.CONTINUE
 
-# Retries on failure with a maximum repeat limit
-@htf.PhaseOptions(repeat_limit=3)
-def retry_phase(test):
+@htf.PhaseOptions(repeat_limit=3) # Retries up to 3 times in case of failure
+def phase_retry(test):
     if random.choice([True, False]):
         return htf.PhaseResult.CONTINUE
     else:
@@ -146,7 +145,7 @@ To integrate TofuPilot, install the open-source client:
 pip install tofupilot
 ```
 
-Import `tofupilot` package and add the `with TofuPilot:` wrapper before the test execution:
+Add it to your test like this:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf

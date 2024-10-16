@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
 ## TofuPilot integration
 
-The <TofuPilotLink utmMedium="uut-integration" /> integration automatically uploads the OpenHTF report to your TofuPilot workspace.
+The <TofuPilotLink utmMedium="uut-integration" /> integration automatically uploads the OpenHTF report to your TofuPilot using the `dut_id`.
 
 To integrate TofuPilot, install the open-source client:
 
@@ -131,7 +131,7 @@ def get_sn(test):
 
 def main():
     test = Test(get_sn)
-    with TofuPilot(): # it's that simple :)
+    with TofuPilot(): # just works™️
       test.execute()
 
 if __name__ == '__main__':

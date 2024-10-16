@@ -59,8 +59,8 @@ You can set the next phase's outcome using the following `PhaseResult`:
     Set the phase outcome to `FAIL` and execute the next phase.
   </Property>
   <Property name="PhaseResult.SKIP">
-    Set the phase outcome to `SKIP`, ignore measurement outcomes, and execute
-    the next phase.
+    Set the phase outcome to `SKIP`, ignore current measurement outcomes, and
+    execute the next phase.
   </Property>
 </Properties>
 
@@ -103,9 +103,9 @@ You can use the `@openhtf.PhaseOptions` decorator to modify phase execution beha
   <Property name="timeout_s" type="float">
     Timeout for the phase, in seconds.
   </Property>
-  <Property name="repeat_limit" type="int (default=None)">
-    Maximum number of repeats. None indicates a phase will be repeated
-    infinitely as long as `PhaseResult.REPEAT` is returned.
+  <Property name="repeat_limit" type="int or None">
+    Maximum number of repeats. `None` to repeated infinitely as long as
+    `PhaseResult.REPEAT` is returned.
   </Property>
 </Properties>
 
@@ -133,13 +133,13 @@ if __name__ == '__main__':
     main()
 ```
 
-Find more advanced options in [Advanced use cases](#advanced-use-cases).
+For more options, check the [advanced use cases](#advanced-use-case).
 
 ## TofuPilot integration
 
-The <TofuPilotLink utmMedium="phases-integration" /> integration provides immediate compatibility with OpenHTF phases, referred to as steps in TofuPilot.
+The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases, referred to as steps in TofuPilot.
 
-To enable TofuPilot integration, install the open-source Python client:
+To integrate TofuPilot, install the open-source client:
 
 ```sh
 pip install tofupilot
@@ -151,8 +151,9 @@ Import `tofupilot` package and add the `with TofuPilot:` wrapper before the test
 import openhtf as htf
 from openhtf.util import units
 
-def first_phase(test):
-    return htf.PhaseResult.CONTINUE
+def get_sn(test):
+    test.test_record.dut_id = 'PCB001'
+    return PhaseResult.CONTINUE
 
 @htf.measures(
     htf.Measurement("temperature")
@@ -163,13 +164,10 @@ def first_phase(test):
 def temperature_phase(test):
     test.measurements.temperature = 25
 
-def third_phase(test):
-    return htf.PhaseResult.CONTINUE
-
 def main():
-    test = htf.Test(first_phase, temperature_phase, third_phase)
+    test = htf.Test(get_sn, temperature_phase)
     with TofuPilot:
-        test.execute(lambda: "SI051AB7B0001")
+        test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
     main()
@@ -240,7 +238,7 @@ You can document your phase by using the phase descriptor `doc`
 You can repeat or stop phases under specific conditions with these following `PhaseOptions`:
 
 <Properties>
-  <Property name="repeat_limit" type="int (default=None)">
+  <Property name="repeat_limit" type="int">
     Define a maximum number of repeats. None indicates that a phase will be
     repeated infinitely as long as `PhaseResult.REPEAT` is returned.
   </Property>
@@ -297,7 +295,7 @@ if __name__ == "__main__":
     the phase `timeout_s` as well because the timeout will still apply when
     under the debugger.
   </Property>
-  <Property name="run_if" type="bool or callback (default=None)">
+  <Property name="run_if" type="bool or callback">
     Callback decides whether to run the phase or not. If it is not executed, the
     phase will not be logged either.
   </Property>

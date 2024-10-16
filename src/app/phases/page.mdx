@@ -6,7 +6,7 @@ export const metadata = {
 
 # Phases
 
-You can organize your test flow by breaking it down into multiple phases. {{ className: 'lead' }}
+Organize test flows by breaking it down into multiple phases. {{ className: 'lead' }}
 
 <Image
   src="/phases-header.png"
@@ -15,9 +15,9 @@ You can organize your test flow by breaking it down into multiple phases. {{ cla
 
 ## Overview
 
-Hardware tests typically consist of multiple test steps, which OpenHTF refers to as phases. Phases usually are setup, teardown or measurements steps.
-
-We recommend performing a single read or write operation on the unit under test per phase. One or several [measurements](/measurements) will be added per phase, depending on the number of controls to perform on the data collected.
+Hardware tests typically consist of multiple test steps, which OpenHTF refers to as phases. 
+In most cases, the phases are [measurements](/measurements) phases and setup or teardown phases with measurement equipments. 
+We recommend performing a single read or write operation on the unit under test (uut) per phase. 
 
 By integrating <TofuPilotLink utmMedium="phases-overview"/>, you get precise analytics on failure rates and phase durations.
 

@@ -6,7 +6,7 @@ export const metadata = {
 
 # Measurements
 
-You can use measurements to capture and validate data within phases. {{ className: 'lead' }}
+Create measurements to capture and validate data within phases. {{ className: 'lead' }}
 
 <Image
   src="/measurements-header.png"
@@ -15,7 +15,10 @@ You can use measurements to capture and validate data within phases. {{ classNam
 
 ## Overview
 
-You can use measurements in OpenHTF to capture and validate values during a test. These values can be numeric, boolean, or string, and may be either simple or multidimensional. The framework offers built-in validation, and test authors can declare measurements with units, types, and validation rules using the `@openhtf.measures()` decorator.
+You can use measurements to capture and validate values during a test. 
+These values can be numeric, boolean, or string, and may be either simple or multidimensional. 
+Use the built-in validations in the decorator: you can define measurements with predefined units, types and validation rules.
+
 
 <Note>
   Measurements should not be used for large data, such as binary files, which

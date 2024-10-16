@@ -287,11 +287,12 @@ def main():
     test.execute(lambda: "SI051AB7B0001")
 
 if __name__ == "__main__":
-    main()  
+    main()
 
 ```
 
 ### Run if
+
 You can use `run_if` callback to determine whether to execute the phase; if skipped, it won't be logged.
 
 ```python {{ title: 'main.py' }}
@@ -323,7 +324,6 @@ if __name__ == "__main__":
 You can use `requires_state` when a phase needs to manage internal test details, such as wrapping or controlling other phases.
 The complete `TestState` object is passed instead of default `TestApi`.
 
-
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
@@ -342,11 +342,13 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
 ### Phase Groups
-You can use phase groups to bundle phases inside a setup, a main and a teardown group. 
+
+You can use phase groups to bundle phases inside a setup, a main and a teardown group.
 So it manage shortcutting during terminal errors to ensure proper execution of teardown phases.
 
-``` python {{title:"main.py"}}
+```python {{title:"main.py"}}
 import openhtf as htf
 from openhtf.util import units
 
@@ -378,4 +380,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-  ```
+```

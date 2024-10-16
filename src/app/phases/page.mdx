@@ -275,10 +275,10 @@ if __name__ == "__main__":
 
 You can run the phase under the Python Debugger using `run_under_pdb`. When setting this option, increase the phase `timeout_s` as well because the timeout will still apply when under the debugger.
 
-```python {{ title: 'main.py ADD TIMEOUT!' }}
+```python {{ title: 'main.py' }}
 import openhtf as htf
 
-@htf.PhaseOptions(run_under_pdb=True)
+@htf.PhaseOptions(run_under_pdb=True, timeout_s=20)
 def first_phase(test):
     return htf.PhaseResult.CONTINUE
 

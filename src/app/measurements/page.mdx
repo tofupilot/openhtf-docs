@@ -15,26 +15,17 @@ Create measurements to capture and validate data within phases. {{ className: 'l
 
 ## Overview
 
-You can use measurements to capture and validate values during a test. 
-These values can be [numeric](#numeric), [boolean](#boolean), or [string](#string), and may be either simple or [multidimensional](#multidimensional). 
-Use the built-in validations in the decorator: you can define measurements with predefined units, types and validation rules.
+Hardware tests are more complex than simple pass/fail checks like in software testing. They often require measuring physical values and comparing them to limits. OpenHTF simplifies logging and validating numeric, string, and boolean values, either individually or in arrays, using built-in decorators.
 
-Measurements are attached to Test Phases using `@openhtf.measures()` decorator.
-
-
-<Note>
-  Measurements should not be used for large data, such as binary files, which
-  should be stored as [attachments](/attachments).
-</Note>
+With the <TofuPilotLink utmMedium="phases-overview"/> integration, you get control charts and histograms to compare measurements across test runs.
 
 ## Numeric
 
-By using numeric measurements, you can test values against a defined range or specific validation criteria. 
+By using numeric measurements, you can test values against a defined range or specific validation criteria.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 from openhtf.util import units
-
 
 @htf.measures(
     htf.Measurement("temperature")     # Declares a measurement 'temperature'
@@ -45,11 +36,9 @@ from openhtf.util import units
 def temperature_phase(test):
     test.measurements.temperature = 25 # Set the temperature value to 25°C
 
-
 def main():
     test = htf.Test(temperature_phase)
     test.execute(lambda: "PCB001")
-
 
 if __name__ == "__main__":
     main()
@@ -58,7 +47,7 @@ if __name__ == "__main__":
 ### Validators
 
 Validators are a list of callable objects to perform pass/fail checks.
-You can parameter them in the decorator to provide unit, type, and validation infromation. 
+You can parameter them in the decorator to provide unit, type, and validation infromation.
 
 <Properties>
   <Property name="name" type="string">
@@ -72,12 +61,11 @@ You can parameter them in the decorator to provide unit, type, and validation in
   </Property>
 </Properties>
 
-
 ### Options
 
 <Properties>
   <Property name="with_units(units)" type="UnitDescriptor">
-    Define unit to the measurement (e.g., Celsius, Volts).   
+    Define unit to the measurement (e.g., Celsius, Volts).
   </Property>
   <Property name="with_precision(precision)" type="int">
     Round the value to the specified precision before validation.
@@ -142,8 +130,8 @@ if __name__ == "__main__":
   </Property>
 </Properties>
 
-
 ## String
+
 You can also validate a string.
 
 ```python {{ title: 'main.py' }}
@@ -165,8 +153,8 @@ if __name__ == "__main__":
     main()
 ```
 
-
 ### Validators
+
 <Properties>
   <Property name=".equals(value)" type="string">
     Ensures the measurement exactly matches the specified string.
@@ -305,8 +293,7 @@ if __name__ == "__main__":
 
 ### Marginal Measurements
 
-You can mark a measure as marginal, indicating that even if it passes validation, it is close to the limit of failure. 
-
+You can mark a measure as marginal, indicating that even if it passes validation, it is close to the limit of failure.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -339,7 +326,6 @@ You can add a description to your measurements.
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
-
 @htf.measures(
     htf.Measurement("temperature")
     .in_range(0, 100)
@@ -348,11 +334,9 @@ import openhtf as htf
 def temperature_phase(test):
     test.measurements.temperature = 25
 
-
 def main():
     test = htf.Test(temperature_phase)
     test.execute(lambda: "PCB001")
-
 
 if __name__ == "__main__":
     main()
@@ -395,12 +379,11 @@ import openhtf as htf
     .with_units("V")
 )
 def VoltagePhase(test):
-    test.measurements.voltage = 5  # Value will be transformed to 5.5 before range validation 
+    test.measurements.voltage = 5  # Value will be transformed to 5.5 before range validation
 
 def main():
     test = htf.Test(VoltagePhase)
     test.execute(lambda: "PCB001")
-
 
 if __name__ == "__main__":
     main()

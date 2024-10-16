@@ -258,156 +258,6 @@ You can visualize the control chart of a specific measure (e.g. temperature) dur
 
 You can leverage advanced OpenHTF options to handle complex measurement use cases.
 
-### Documentation
-
-You can add a description to your measurements.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-
-@htf.measures(
-    measurements.Measurement('temperature')
-    .in_range(0, 100)
-    .with_units('C')
-    .doc('This measurement tracks the ambient temperature during the test.')
-)
-def temperature_phase(test):
-    test.measurements.temperature = 25
-
-def main():
-    test = htf.Test(temperature_phase)
-    test.execute(lambda: "SI051AB7B0001")
-
-if __name__ == "__main__":
-    main()
-```
-
-### Argument Substitution
-
-You can add a description to your measurements.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-
-@htf.measures(
-    measurements.Measurement('test_result_{level}').with_args(level='high').equals('PASS')
-)
-def TestPhase(test):
-    test.measurements.test_result_high = 'PASS'
-
-def main():
-    test = htf.Test(TemperaturePhase)
-    test.execute(lambda: "SI051AB7B0001")
-
-if __name__ == "__main__":
-    main()
-```
-
-### Notification Callback
-
-You can set a callback to trigger when a measurement is set.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-
-def my_callback():
-    print("Measurement set!")
-
-@htf.measures(
-    measurements.Measurement('temperature').in_range(0, 100).with_units('C')
-    .set_notification_callback(my_callback)
-)
-def TemperaturePhase(test):
-    test.measurements.temperature = 25
-
-def main():
-    test = htf.Test(TemperaturePhase)
-    test.execute(lambda: "SI051AB7B0001")
-
-if __name__ == "__main__":
-    main()
-```
-
-### Marginal Measurements
-
-You can mark a measurement as marginal, indicating that while it passes validation, it is near the boundary of failure.
-
-<Properties>
-  <Property name="in_range(marginal_minimum, marginal_maximum)" type="Number, Number">
-    Define a marginal measurement to obtain finer granularity of by how much a measurement is passing.
-  </Property>
-</Properties>
-
-For finer granularity in test results, use marginal measurements. They set stricter limits within the acceptable range, giving detailed information about test performance. **This allows distinguishing between fully passing results and those close to failing, without affecting the overall phase outcome**, helping identify potential issues early.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-from openhtf.util import units
-
-@htf.measures(
-    htf.Measurement('resistance')
-    .with_units('ohm')
-    .in_range(minimum=5, maximum=17, marginal_minimum=9, marginal_maximum=11)
-)
-def temperature_phase_with_marginal_measurements(test):
-  test.measurements.resistance = 13
-
-def main():
-    test = htf.Test(temperature_phase_with_marginal_measurements)
-    test.execute(lambda: "SI051AB7B0001")
-
-if __name__ == "__main__":
-    main()
-```
-
-```python {{ title: 'Terminal'}}
-================= test: openhtf_test  outcome: PASS (MARGINAL) =================
-```
-
-### Conditional Validation
-
-You can apply conditional validation based on outcomes.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-
-@htf.measures(
-    measurements.Measurement('power_output').in_range(0, 100)
-    .validate_on({'PASS': lambda x: x > 50})
-)
-def PowerTestPhase(test):
-    test.measurements.power_output = 75
-
-def main():
-    test = htf.Test(PowerTestPhase)
-    test.execute(lambda: "SI051AB7B0001")
-
-if __name__ == "__main__":
-    main()
-```
-
-### Transformation Function
-
-You can modify measurement values before validation.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-
-@htf.measures(
-    measurements.Measurement('voltage').in_range(0, 10)
-    .with_transform(lambda x: x * 1.1).with_units('V')
-)
-def VoltagePhase(test):
-    test.measurements.voltage = 5
-
-def main():
-    test = htf.Test(VoltagePhase)
-    test.execute(lambda: "SI051AB7B0001")
-
-if __name__ == "__main__":
-    main()
-```
-
 ### Multidimensional
 
 Multidimensional measurements allow for capturing data that spans multiple coordinates, such as time-series data or data across multiple levels or categories.
@@ -440,7 +290,7 @@ if __name__ == "__main__":
 ### Validators
 
 <Properties>
-  <Property name=".in_range(min_value, max_value)">
+  <Property name=".in_range(minimum, maximum)" type="Number, Number">
     Can be applied to each value in the multidimensional set.{' '}
   </Property>
 </Properties>
@@ -448,8 +298,110 @@ if __name__ == "__main__":
 ### Options
 
 <Properties>
-  <Property name=".with_dimensions(*dims)">
-    Adds multiple units for multidimensional measurements (e.g., time,
-    frequency).
+  <Property name=".with_dimensions(*dims)" type="UnitDescriptor">
+    Adds multiple units for multidimensional measurements.
   </Property>
 </Properties>
+
+### Marginal Measurements
+
+You can mark a measure as marginal, indicating that even if it passes validation, it is close to the limit of failure. 
+
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.util import units
+
+@htf.measures(
+    htf.Measurement('resistance')
+    .with_units('ohm')
+    .in_range(minimum=5, maximum=17, marginal_minimum=9, marginal_maximum=11)
+)
+def temperature_phase_with_marginal_measurements(test):
+  test.measurements.resistance = 13
+
+def main():
+    test = htf.Test(temperature_phase_with_marginal_measurements)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+```
+
+```python {{ title: 'Terminal'}}
+================= test: openhtf_test  outcome: PASS (MARGINAL) =================
+```
+
+### Documentation
+
+You can add a description to your measurements.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+
+@htf.measures(
+    htf.Measurement("temperature")
+    .in_range(0, 100)
+    .doc("This measurement tracks the ambient temperature during the test.")
+)
+def temperature_phase(test):
+    test.measurements.temperature = 25
+
+
+def main():
+    test = htf.Test(temperature_phase)
+    test.execute(lambda: "SI051AB7B0001")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### Argument Substitution
+
+You can add a description to your measurements.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    htf.Measurement("test_result_{level}")
+    .with_args(level="high")
+    .equals(True)
+)
+def test_phase(test):
+    test.measurements.test_result_high = True
+
+def main():
+    test = htf.Test(test_phase)
+    test.execute(lambda: "SI051AB7B0001")
+
+if __name__ == "__main__":
+    main()
+```
+
+### Transformation Function
+
+You can modify measurement values before validation.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    htf.Measurement("voltage")
+    .in_range(0, 10)
+    .with_transform(lambda x: x * 1.1)
+    .with_units("V")
+)
+def VoltagePhase(test):
+    test.measurements.voltage = 5  # Value will be transformed to 5.5 before range validation 
+
+def main():
+    test = htf.Test(VoltagePhase)
+    test.execute(lambda: "SI051AB7B0001")
+
+
+if __name__ == "__main__":
+    main()
+```

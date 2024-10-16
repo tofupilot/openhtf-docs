@@ -27,28 +27,29 @@ Use the built-in validations in the decorator: you can define measurements with 
 
 ## Numeric
 
-Numeric measurements represent values that need to be within a defined range or pass specific numeric validation criteria.
-
-### Example
+By using numeric measurements, you can test values against a defined range or specific validation criteria.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-from openhtf.util import measurements
+from openhtf.util import units
+
 
 @htf.measures(
-    measurements.Measurement('temperature')  # Declares a measurement 'temperature'
-    .in_range(0, 100)  # Ensures the value is between 0 and 100
-    .with_units('C')   # Specifies the unit as Celsius
-    .with_precision(1)  # Rounds to 1 decimal place
+    htf.Measurement("temperature")     # Declares a measurement 'temperature'
+    .in_range(0, 100)                  # Define limits between 0 and 100
+    .with_units(units.DEGREE_CELSIUS)  # Specifies the unit as Celsius
+    .with_precision(1)                 # Rounds to 1 decimal place
 )
 def temperature_phase(test):
-    test.measurements.temperature = 25  # Set the temperature value to 25°C
+    test.measurements.temperature = 25 # Set the temperature value to 25°C
 
-    def main():
+
+def main():
     test = htf.Test(temperature_phase)
     test.execute(lambda: "SI051AB7B0001")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 ```
 

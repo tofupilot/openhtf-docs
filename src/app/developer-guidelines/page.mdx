@@ -1,3 +1,33 @@
+
+# OpenHTF Guidelines
+## Decorators syntax
+You can have two different syntaxes. Technically, these syntaxes can be mixed, but as a matter of convention you should always use one or the other within a single decorator call. 
+
+``` python {{title: 'Example'}}
+# Multiple measurements can be specified in a single decorator, using either of
+# the above syntaxes.  Technically, these syntaxes can be mixed and matched, but
+# as a matter of convention you should always use one or the other within a
+# single decorator call.  You'll also note that you can stack multiple
+# decorations on a single phase.  This is useful if you have a handful of simple
+# measurements, and then one or two with more complex declarations (see below).
+@htf.measures('first_measurement', 'second_measurement')
+@htf.measures(htf.Measurement('third'), htf.Measurement('fourth'))
+def lots_of_measurements(test):
+  test.measurements.first_measurement = 'First!'
+  # Measurements can also be access via indexing rather than attributes.
+  test.measurements['second_measurement'] = 'Second :('
+  # This can be handy for iterating over measurements.
+  for measurement in ('third', 'fourth'):
+    test.measurements[measurement] = measurement + ' is the best!'
+```
+
+## Import openhtf
+
+In this documentation we will rely on the examples provided in the main repository. The `openhtf` syntax will be the same in all examples.
+
+``` python {{title: 'Import'}}
+import openhtf as htf
+```
 ## Example 1: CSV File
 
 In this example, we generate a CSV file containing measurement data and attach it to the test output.

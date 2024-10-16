@@ -6,7 +6,7 @@ export const metadata = {
 
 # Phases
 
-Organize test flows by breaking it down into multiple phases. {{ className: 'lead' }}
+Organize your test flow by breaking it down into multiple phases. {{ className: 'lead' }}
 
 <Image
   src="/phases-header.png"
@@ -15,43 +15,34 @@ Organize test flows by breaking it down into multiple phases. {{ className: 'lea
 
 ## Overview
 
-Hardware tests typically consist of multiple test steps, which OpenHTF refers to as phases. 
-In most cases, the phases are [measurements](/measurements) phases and setup or teardown phases with measurement equipments. 
-We recommend performing a single read or write operation on the unit under test (uut) per phase. 
+A hardware test typically consists of several steps that perform measurements and validation. OpenHTF refers to these steps as phases and allows for precise management of their execution based on the results obtained.
 
-By integrating <TofuPilotLink utmMedium="phases-overview"/>, you get precise analytics on failure rates and phase durations.
+With the <TofuPilotLink utmMedium="phases-overview"/> integration, you get precise analytics on phase failure rates and durations across test runs.
 
-## Definition
+## Syntax
 
-Phases are standard Python functions that take the `test` object as an input argument and can either return a `PhaseResult` or a measurement outcome.
-They must be individually added to the `Test` definition to be executed.
-
+Phases have an outcome that is set manually with a `PhaseResult` or automatically via a measurement validation function, which we'll cover on the next page. They are Python functions that take the `test` object as an argument and must be added to the `Test` object to be executed.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
-def setup_phase(test):
+def one(test):
     return htf.PhaseResult.CONTINUE
 
-def test_voltage_phase(test):
-    return htf.PhaseResult.CONTINUE
-
-def teardown_phase(test):
+def two(test):
     return htf.PhaseResult.CONTINUE
 
 def main():
-    # Run the test on serial number SI051AB7B0001 with the 3 phases to be executed
-    test = htf.Test(setup_phase, test_voltage_phase, teardown_phase) 
-    test.execute(lambda: "SI051AB7B0001")
+    test = htf.Test(one, two)
+    test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
     main()
 ```
 
-
 ## Results
 
-You can choose the execution of the next phase by defining the following `PhaseResult`:
+You can set the next phase's outcome using the following `PhaseResult`:
 
 <Properties>
   <Property name="PhaseResult.CONTINUE" type="default">
@@ -61,16 +52,17 @@ You can choose the execution of the next phase by defining the following `PhaseR
     Set the phase outcome to `FAIL` and stop executing the test.
   </Property>
   <Property name="PhaseResult.REPEAT">
-    Repeat the phase, ignoring current measurement outcomes. If exceeded the `repeat_limit`, it triggers a `PhaseResult.STOP`.
+    Repeat the phase, ignoring current measurement outcomes. If exceeded the
+    `repeat_limit`, it triggers a `PhaseResult.STOP`.
   </Property>
   <Property name="PhaseResult.FAIL_AND_CONTINUE">
     Set the phase outcome to `FAIL` and execute the next phase.
   </Property>
   <Property name="PhaseResult.SKIP">
-    Set the phase outcome to `SKIP`, ignore measurement outcomes, and execute the next phase. 
+    Set the phase outcome to `SKIP`, ignore measurement outcomes, and execute
+    the next phase.
   </Property>
 </Properties>
-
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -105,17 +97,17 @@ if __name__ == '__main__':
 
 ## Options
 
-You can use the `@openhtf.PhaseOptions` decorator to modify phase execution behavior. 
+You can use the `@openhtf.PhaseOptions` decorator to modify phase execution behavior.
 
 <Properties>
   <Property name="timeout_s" type="float">
     Timeout for the phase, in seconds.
   </Property>
-  <Property name="repeat_limit" type="int">
-      Maximum number of repeats.  None indicates a phase will be repeated infinitely as long as `PhaseResult.REPEAT` is returned.
+  <Property name="repeat_limit" type="int (default=None)">
+    Maximum number of repeats. None indicates a phase will be repeated
+    infinitely as long as `PhaseResult.REPEAT` is returned.
   </Property>
 </Properties>
-
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -142,7 +134,6 @@ if __name__ == '__main__':
 ```
 
 Find more advanced options in [Advanced use cases](#advanced-use-cases).
-
 
 ## TofuPilot integration
 
@@ -240,23 +231,30 @@ if __name__ == '__main__':
   main()
 ```
 
+### Document phase - TODO
+
+You can document your phase by using the phase descriptor `doc`
 
 ### Change repeat behavior
 
 You can repeat or stop phases under specific conditions with these following `PhaseOptions`:
 
 <Properties>
-  <Property name="repeat_limit" type="int">
-      Define a maximum number of repeats. None indicates that a phase will be repeated infinitely as long as `PhaseResult.REPEAT` is returned.
+  <Property name="repeat_limit" type="int (default=None)">
+    Define a maximum number of repeats. None indicates that a phase will be
+    repeated infinitely as long as `PhaseResult.REPEAT` is returned.
   </Property>
   <Property name="force_repeat" type="bool">
     Force the phase to repeat up to `repeat_limit` times.
   </Property>
-  <Property name="repeat_on_timeout" type="bool">
-     Repeat phase on timeout.
+  <Property name="repeat_on_timeout" type="bool (default=False)">
+    Repeat phase on timeout.
   </Property>
-  <Property name="stop_on_measurement_fail" type="bool ">
-   Stop the test if any measurements fail.
+  <Property name="repeat_on_measurement_fail" type="bool (default=False)">
+    Force phase with failed measurements to repeat up to `repeat_limit` times.
+  </Property>
+  <Property name="stop_on_measurement_fail" type="bool (default=False) ">
+    Stop the test if any measurements fail.
   </Property>
 </Properties>
 
@@ -290,15 +288,18 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
 ### Python Debugger
+
 <Properties>
-  <Property name="run_under_pdb" type="bool">
-    Run the phase under the Python Debugger. When
-      setting this option, increase the phase `timeout_s` as well because the
-      timeout will still apply when under the debugger.
+  <Property name="run_under_pdb" type="bool (default=False)">
+    Run the phase under the Python Debugger. When setting this option, increase
+    the phase `timeout_s` as well because the timeout will still apply when
+    under the debugger.
   </Property>
-  <Property name="run_if" type="bool or callback">
-    Callback decides whether to run the phase or not. If it is not executed, the phase will not be logged either.  
+  <Property name="run_if" type="bool or callback (default=None)">
+    Callback decides whether to run the phase or not. If it is not executed, the
+    phase will not be logged either.
   </Property>
 </Properties>
 
@@ -320,15 +321,16 @@ if __name__ == '__main__':
 ```
 
 ### Requires state
+
 You can use this `PhaseOptions` when a phase needs to manage internal test details, such as wrapping or controlling other phases.
 
 <Properties>
-  <Property name="requires_state" type="bool">
-    Pass the complete `TestState` object instead of default `TestApi`. 
+  <Property name="requires_state" type="bool (default=False)">
+    Pass the complete `TestState` object instead of default `TestApi`.
   </Property>
 </Properties>
 
-``` python {{ title: 'main.py' }}
+```python {{ title: 'main.py' }}
 import openhtf as htf
 
 # Simple test phase that checks a condition
@@ -365,4 +367,4 @@ test = htf.Test(
           teardown=[teardown_phase],
       ))
   test.execute()
-  ```
+```

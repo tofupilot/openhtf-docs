@@ -53,10 +53,8 @@ You can attach binary data or files generated during the test.
 import openhtf as htf
 
 def phase_attachment(test):
-    # Attach a binary log with the identifier "log_data"
-    test.attach("log_data", "This is test log data.".encode("utf-8"))
-    test_attachment = test.get_attachment("log_data")
-    print(test_attachment.data)
+    # Attach a binary log with the identifier "test_attachment"
+    test.attach("test_attachment", "This is test log data.".encode("utf-8"))
     return htf.PhaseResult.CONTINUE
 
 def main():
@@ -100,14 +98,15 @@ pip install tofupilot[openhtf]
 Add it to your test like this:
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
+import openhtf as htf
+from tofupilot.openhtf import TofuPilot
 
-def attachment_phase(test):
+def phase_attachment(test):
     test.attach("test_attachment", "Attachment data".encode("utf-8"))
-    return PhaseResult.CONTINUE
+    return htf.PhaseResult.CONTINUE
 
 def main():
-    test = Test(attachment_phase)
+    test = htf.Test(phase_attachment)
     with TofuPilot(test):
       test.execute(lambda: "PCB001")
 
@@ -131,20 +130,20 @@ You can access attachments in a dedicated section of the run page, where you can
 You can load and access attached files during test execution.
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
+import openhtf as htf
 
-def attachment_phase(test):
+def phase_attachment(test):
     # Attach some data
     test.attach("test_attachment", "Attachment data".encode("utf-8"))
 
     # Retrieve and print the attached data
     test_attachment = test.get_attachment("test_attachment")
-    print(test_attachment)
+    print(test_attachment.data)
 
-    return PhaseResult.CONTINUE
+    return htf.PhaseResult.CONTINUE
 
 def main():
-    test = Test(attachment_phase)
+    test = htf.Test(phase_attachment)
     test.execute(lambda: "PCB0001")
 
 if __name__ == "__main__":

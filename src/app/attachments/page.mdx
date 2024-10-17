@@ -50,15 +50,17 @@ With the <TofuPilotLink utmMedium="attachments-overview"/> integration, attachme
 You can attach binary data or files generated during the test.
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
+import openhtf as htf
 
-def attachment_phase(test):
+def phase_attachment(test):
     # Attach a binary log with the identifier "log_data"
     test.attach("log_data", "This is test log data.".encode("utf-8"))
-    return PhaseResult.CONTINUE
+    test_attachment = test.get_attachment("log_data")
+    print(test_attachment.data)
+    return htf.PhaseResult.CONTINUE
 
 def main():
-    test = Test(attachment_phase)
+    test = htf.Test(phase_attachment)
     test.execute(lambda: "PCB0001")
 
 if __name__ == "__main__":
@@ -70,15 +72,15 @@ if __name__ == "__main__":
 You can attach larger or pre-existing files from disk or URL.
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
+import openhtf as htf
 
-def file_attachment_phase(test):
-    # Attach a file from the specified path with the identifier "log_file"
-    test.attach_file("log_file", "/path/to/your/logfile.txt")
-    return PhaseResult.CONTINUE
+
+def phase_file_attachment(test):
+    test.attach_from_file("/path/to/your/logfile.txt")
+    return htf.PhaseResult.CONTINUE
 
 def main():
-    test = Test(attachment_phase)
+    test = htf.Test(phase_file_attachment)
     test.execute(lambda: "PCB0001")
 
 if __name__ == "__main__":

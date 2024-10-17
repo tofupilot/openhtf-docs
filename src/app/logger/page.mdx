@@ -6,16 +6,22 @@ export const metadata = {
 
 # Logger
 
-OpenHTF provides various logger options to capture and manage log output during test execution. This guide explains how to configure these logger options, including examples of adding log handlers to your script and sample log outputs. {{ className: 'lead' }}
+Capture structured log output during test execution. {{ className: 'lead' }}
 
 <Image
   src="/console-header.png"
   alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
 />
 
-## Standard logger
+## Overview
 
-To configure logger options in your OpenHTF script, you need to specify the log level and log handlers. Here’s how to configure the logger.
+Logging is essential for debugging and monitoring test execution. OpenHTF provides a flexible logger with extended features to capture detailed test outputs, including custom messages and error traces.
+
+{/* When integrating with <TofuPilotLink utmMedium="logger-overview" />, logs are automatically synced to TofuPilot, providing real-time access to test execution details. This helps ensure that critical information is always available for analysis. You can also configure additional logging options if you need to store logs locally for further investigation. */}
+
+## Syntax
+
+You can configure logger options by specifying the log level and log handlers.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -72,7 +78,13 @@ Here’s what the log output will look like.
 }
 ```
 
-## Custom log handlers
+---
+
+## Advanced use cases
+
+You can use the logger extended features for advanced use cases.
+
+### Custom log handlers
 
 If the built-in log handlers do not meet your requirements, you can implement custom log handlers. This involves creating a handler function and adding it to the logger.
 

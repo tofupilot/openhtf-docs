@@ -104,15 +104,15 @@ OpenHTF organizes its loggers hierarchically, with different categories managing
 ```txt
 openhtf/
 │
-├── openhtf.core.test_executor
-├── openhtf.core.threads
-│
-├── openhtf.test_record.<test_uid>
-│   ├── openhtf.test_record.<test_uid>.phase.<phase_name>
-│   └── openhtf.test_record.<test_uid>.plug.<plug_name>
+├── .core.test_descriptor
+├── .util.threads
+|
+├── .test_record.<test_uid>
+│   ├── .test_record.<test_uid>.phase.<phase_name>
+│   └── .test_record.<test_uid>.plug.<plug_name>
 ```
 
-- **Framework logs**: Manage internal logs for core OpenHTF operations (e.g., `test_executor`, `threads`).
+- **Framework logs**: Manage internal logs for core OpenHTF operations (e.g. `openhtf.core.test_descriptor`, `openhtf.util.threads`).
 - **Test record logs**: Specific to each test, prefixed by `openhtf.test_record.<test_uid>`, capturing test details.
 - **Test subsystem logs**: Handle logs for individual test phases and plugs, identified by `openhtf.test_record.<test_uid>.phase.<phase_name>` or `openhtf.test_record.<test_uid>.plug.<plug_name>`.
 
@@ -167,6 +167,5 @@ if __name__ == '__main__':
 Sample output:
 
 ```txt {{ title: 'Terminal' }}
-729164561420.phase_executor | [DEBUG] | Line: 307 | Executing phase temperature_measurement
-2024-10-17 13:29:21,423 | openhtf.test_record.29452:<test_uid>.phase.temperature_measurement | [INFO] | Line: 7 | Temperature measurement started.
+2024-10-17 16:30:01,689 | openhtf.test_record.37182:0bdc84d5174c4d8f:2f76fe3a078146f2:1729175401689.phase_executor | [DEBUG] | Line: 307 | Executing phase trigger_phase
 ```

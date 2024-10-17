@@ -280,7 +280,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Resources',
     links: [
-      { title: 'Development Guidelines', href: '/developer-guidelines' },
+      // { title: 'Coding Guidelines', href: '/coding-guidelines' },
       { title: 'Documentation Changelog', href: '/changelog' },
     ],
   },

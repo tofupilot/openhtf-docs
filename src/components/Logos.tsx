@@ -123,8 +123,8 @@ export const Logos = {
   ),
   ST: (props: IconProps) => (
     <svg
-      width="148"
-      height="48"
+      width="90"
+      height="30"
       viewBox="0 0 502 267"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"

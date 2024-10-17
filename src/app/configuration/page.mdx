@@ -15,9 +15,7 @@ Control test execution parameters with configuration variables or files. {{ clas
 
 ## Overview
 
-It is sometimes necessary to change some parameters in a script without modifying the script itself each time. For example, you might need to update the firmware version flashed on a PCB using a script, or adjust the connection port of an instrument between two stations running the same script.
-
-OpenHTF makes it easy to manage these parameters using configuration files.
+Sometimes you need to change script parameters without modifying the script itself, like updating firmware versions or adjusting instrument ports between stations. OpenHTF simplifies this by using configuration files to manage these parameters.
 
 ## Variables
 
@@ -28,7 +26,11 @@ from openhtf import Test
 from openhtf.util import configuration
 
 # Define firmware_path configuration
-configuration.declare('firmware_path', default_value='path/to/firmware_v1.0.0.bin', description='Path to the firmware file')
+configuration.declare(
+    'firmware_path',
+    default_value='path/to/firmware_v1.0.0.bin',
+    description='Path to the firmware file'
+)
 
 def flash_firmware(test):
     firmware_path = conf.firmware_path

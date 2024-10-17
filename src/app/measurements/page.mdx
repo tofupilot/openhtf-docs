@@ -265,7 +265,7 @@ import time
     htf.Measurement("voltage_over_time")
     .with_dimensions(units.SECOND, units.VOLT)
 )
-def voltage_measurement_phase(test):
+def phase_voltage_measurement(test):
     for t in range(10):
         timestamp = t
         voltage = round(random.uniform(3.3, 3.5), 2)
@@ -273,7 +273,7 @@ def voltage_measurement_phase(test):
         time.sleep(0.1)
 
 def main():
-    test = htf.Test(voltage_measurement_phase)
+    test = htf.Test(phase_voltage_measurement)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -328,11 +328,11 @@ import openhtf as htf
     .in_range(0, 100)
     .doc("This measurement tracks the ambient temperature during the test.")
 )
-def temperature_phase(test):
+def phase_temperature(test):
     test.measurements.temperature = 25
 
 def main():
-    test = htf.Test(temperature_phase)
+    test = htf.Test(phase_temperature)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -351,11 +351,11 @@ import openhtf as htf
     .with_args(level="high")
     .equals(True)
 )
-def test_phase(test):
+def phase_test(test):
     test.measurements.test_result_high = True
 
 def main():
-    test = htf.Test(test_phase)
+    test = htf.Test(phase_test)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -375,11 +375,11 @@ import openhtf as htf
     .with_transform(lambda x: x * 1.1)
     .with_units("V")
 )
-def VoltagePhase(test):
+def phase_voltage(test):
     test.measurements.voltage = 5  # Value will be transformed to 5.5 before validation
 
 def main():
-    test = htf.Test(VoltagePhase)
+    test = htf.Test(phase_voltage)
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":

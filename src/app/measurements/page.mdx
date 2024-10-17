@@ -56,6 +56,9 @@ if __name__ == "__main__":
   <Property name=".equals(value)" type="number">
     Ensure the measurement exactly matches the specified value.
   </Property>
+  <Property name=".with_validator(lambda)" type="function → boolean">
+    Apply a custom validator function to the measurement.
+  </Property>
 </Properties>
 
 ### Options
@@ -130,6 +133,9 @@ if __name__ == "__main__":
   <Property name=".matches_regex(pattern)" type="string">
     Ensure the string matches the specified regex pattern.
   </Property>
+  <Property name=".with_validator(lambda)" type="function → boolean">
+    Apply a custom validator function to the measurement.
+  </Property>
 </Properties>
 
 ## Boolean
@@ -159,6 +165,9 @@ if __name__ == "__main__":
 <Properties>
   <Property name=".equals(value)" type="bool">
     Ensure the measurement exactly matches the specified value.
+  </Property>
+  <Property name=".with_validator(lambda)" type="function → boolean">
+    Apply a custom validator function to the measurement.
   </Property>
 </Properties>
 

@@ -44,6 +44,8 @@ if __name__ == "__main__":
     main()
 ```
 
+### Parameters
+
 You can set the following parameters for each configuration variable in OpenHTF:
 
 <Properties>
@@ -59,6 +61,34 @@ You can set the following parameters for each configuration variable in OpenHTF:
     variable.
   </Property>
 </Properties>
+
+### Decorator
+You can use the `save_and_restore` decorator to temporarily change a value during the function call, which is then restored. 
+In this example, you can also configure the variable after its declaration.
+
+``` python {{title: "main.py"}}
+import openhtf as htf
+from openhtf.util import configuration
+
+configuration.CONF.declare("phase_variance")
+configuration.CONF.load(phase_variance=4)
+
+@configuration.CONF.save_and_restore(phase_variance=55) # Decorator
+def phase_one(test):
+    phase_variance_to_print = configuration.CONF.phase_variance
+    print(f"Value during phase one: {phase_variance_to_print}")
+
+def phase_two(test):
+    phase_variance_to_print = configuration.CONF.phase_variance
+    print(f"Value during phase two: {phase_variance_to_print}")
+
+def main():
+    test = htf.Test(phase_one, phase_two)
+    test.execute(test_start=lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
 
 ## File
 

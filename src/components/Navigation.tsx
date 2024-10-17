@@ -262,11 +262,11 @@ export const navigation: Array<NavGroup> = [
         title: 'Output Callbacks',
         href: '/output-callbacks',
       },
+      { title: 'Plugs', href: '/plugs' },
       {
         title: 'Logger',
         href: '/logger',
       },
-      { title: 'Plugs', href: '/plugs' },
       { title: 'Configurations', href: '/configuration' },
     ],
   },

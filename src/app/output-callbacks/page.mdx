@@ -72,23 +72,52 @@ The general structure of an OpenHTF JSON log is as follows:
 
 ## TofuPilot integration
 
-The <TofuPilotLink utmMedium="output-callbacks-integration" /> integration provides an output callback that automatically syncs test runs with TofuPilot.
+The <TofuPilotLink utmMedium="output-callbacks-integration" /> automatically uploads OpenHTF test reports using an output callback.
 
-Test runs are securely uploaded using either your or the test station's API key. They are immediately available on the "Runs" page of your workspace. Import warnings or errors can be found on the dedicated "Import Error" page.
+To integrate TofuPilot, install the open-source client:
+
+```sh
+pip install tofupilot[openhtf]
+```
+
+Add it to your test like this:
+
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+from tofupilot import TofuPilot
+
+def get_sn(test):
+    test.test_record.dut_id = 'PCB001'
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(get_sn)
+    with TofuPilot(test):
+      test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+Test runs are securely uploaded using your or the test station's API key. They appear right away on the "Runs" page in your workspace. Any import warnings or errors are listed on the "Import Error" page.
 
 <Image
   src="/output-callbacks-page-run.png"
   alt="outputs section on the OpenHTF run page, showing options to open files in the browser or download them with TofuPilot integration."
 />
 
-The callback generates a default JSON OpenHTF log and attached it to the test run, capturing the full output, including custom fields. You don't need `json_factory.OutputToJSON` anymore, except if you want to store local results.
+The callback generates a default JSON OpenHTF log and attached it to the test run, capturing the full output, including custom fields. You don't need an output callback anymore, except if you want to keep storing local results.
 
 <Image
   src="/output-callbacks-page-attachment.png"
   alt="Attachments section on the OpenHTF run page, showing options to open files in the browser or download them with TofuPilot integration."
 />
 
-offline upload -> how to openhtf logs already available, how to manage disconnection cases
+You can learn more on TofuPilot in the documentation.
+
+<Button href="https//docs.tofupilot.com/uut" variant="text" arrow="right">
+  <>Learn more in the TofuPilot Docs</>
+</Button>
 
 ---
 

@@ -65,8 +65,6 @@ You can choose the next phase's execution by setting the `PhaseResult` from the 
   </Property>
 </Properties>
 
-For example:
-
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 import random
@@ -87,7 +85,7 @@ def phase_fail(test):
     return htf.PhaseResult.STOP
 
 def main():
-    test = htf.Test(phase_pass, phase_repeat, phase_fail)
+    test = htf.Test(phase_pass, phase_retry, phase_fail)
     test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
@@ -128,7 +126,7 @@ def phase_retry(test):
         return htf.PhaseResult.REPEAT
 
 def main():
-    test = htf.Test(pass_phase, retry_phase)
+    test = htf.Test(phase_pass, phase_retry)
     test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':
@@ -151,6 +149,7 @@ Add it to your test like this:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
+from tofupilot.openhtf import TofuPilot
 
 def phase_one(test):
     return htf.PhaseResult.CONTINUE

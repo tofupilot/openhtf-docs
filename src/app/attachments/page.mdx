@@ -100,12 +100,12 @@ Add it to your test like this:
 import openhtf as htf
 from tofupilot.openhtf import TofuPilot
 
-def phase_attachment(test):
-    test.attach("test_attachment", "Attachment data".encode("utf-8"))
+def phase_file_attachment(test):
+    test.attach_from_file("/path/to/your/logfile.txt")
     return htf.PhaseResult.CONTINUE
 
 def main():
-    test = htf.Test(phase_attachment)
+    test = htf.Test(phase_file_attachment)
     with TofuPilot(test):
       test.execute(lambda: "PCB001")
 

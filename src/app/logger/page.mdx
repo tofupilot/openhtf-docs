@@ -24,30 +24,37 @@ Logging is crucial for debugging and tracking test execution. OpenHTF offers a l
 You can log events in phases and plugs with four different levels depending on the severity: `debug` for detailed troubleshooting, `info` for general information, `warning` for potential issues, and `error` for failures.
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test, plugs
+import openhtf as htf
 from openhtf.output.callbacks import json_factory
 
-class MyPlug(plugs.BasePlug):
-    def do_something(self):
-        self.logger.debug('Plug debugging details...')
+class ExamplePlug(htf.plugs.BasePlug):
+    def __int__(self):
+        self.logger.info("Initialization")
 
-@plugs.plug(my_plug=MyPlug)
+    def tearDown(self):
+        self.logger.info("Teardown phase")
+
+    def do_something(self):
+        self.logger.debug("Plug debugging details...")
+
+@htf.plugs.plug(my_plug=ExamplePlug)
 def phase_test(test, my_plug):
-    test.logger.info('Test phase started.')
-    test.logger.warning('Warning in test phase: Potential issue.')
+    test.logger.info("Test phase started.")
+    test.logger.warning("Warning in test phase: Potential issue.")
     try:
-        raise ValueError('Error occurred in test phase.')
+        raise ValueError("Error occurred in test phase.")
     except ValueError as e:
-        test.logger.error(f'Test phase error: {e}')
+        test.logger.error(f"Test phase error: {e}")
     my_plug.do_something()
 
 def main():
-    test = Test(phase_test)
+    test = htf.Test(phase_test)
     test.add_output_callbacks(json_factory.OutputToJSON("test_result.json", indent=2))
     test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
+
 ```
 
 You can print the logs to the console, using the `-v` flag to control verbosity.
@@ -61,9 +68,11 @@ python main.py -v
 - `-vv`: Logs at the `debug` level and above are printed.
 
 ```txt {{ title: 'Terminal' }}
-I 08:19:08 <phase: phase_test> - Test phase started.
-W 08:19:08 <phase: phase_test> - Warning in test phase: Potential issue.
-E 08:19:08 <phase: phase_test> - Test phase error: Error occurred in test phase.
+I 15:11:48 test_descriptor - Executing test: 
+I 15:11:48 <phase: phase_test> - Test phase started.
+W 15:11:48 <phase: phase_test> - Warning in test phase: Potential issue.
+E 15:11:48 <phase: phase_test> - Test phase error: Error occurred in test phase.
+I 15:11:48 <plug: ExamplePlug> - Teardown phase
 ```
 
 All logs are saved to the report file via output callbacks if enabled.

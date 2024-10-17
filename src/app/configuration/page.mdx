@@ -22,25 +22,25 @@ Sometimes you need to change script parameters without modifying the script itse
 You can set configuration variables directly in the script using the `conf` module.
 
 ```python {{ title: 'main.py' }}
-from openhtf import Test
+import openhtf as htf
 from openhtf.util import configuration
 
 # Define firmware_path configuration
-configuration.declare(
-    'firmware_path',
-    default_value='path/to/firmware_v1.0.0.bin',
-    description='Path to the firmware file'
+configuration.CONF.declare(
+    "firmware_path",
+    default_value="path/to/firmware_v1.0.0.bin",
+    description="Path to the firmware file",
 )
 
 def flash_firmware(test):
-    firmware_path = conf.firmware_path
-    print(f'Flashing firmware from: {firmware_path}')
+    firmware_path = configuration.CONF.firmware_path
+    print(f"Flashing firmware from: {firmware_path}")
 
 def main():
-    test = Test(flash_firmware)
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
+    test = htf.Test(flash_firmware)
+    test.execute(test_start=lambda: "PCB001")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
 
@@ -72,25 +72,23 @@ Load the configuration file during execution script:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-import logging
-from openhtf.util import conf
+from openhtf.util import configuration
 
 # Declare the firmware_path key
-conf.declare('firmware_path')
+configuration.CONF.declare("firmware_path")
 
 # Load configuration from an external YAML file
-with open('config.yaml', 'r') as yamlfile:
-    conf.load_from_file(yamlfile)
+with open("config.yaml", "r") as yamlfile:
+    configuration.CONF.load_from_file(yamlfile)
 
 def flash_firmware(test):
-    firmware_path = conf.firmware_path  # Access the declared configuration key
-    print(f'Flashing firmware from: {firmware_path}')
+    firmware_path = configuration.CONF.firmware_path
+    print(f"Flashing firmware from: {firmware_path}")
 
 def main():
-    logging.basicConfig(level=logging.INFO)
     test = htf.Test(flash_firmware)
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
+    test.execute(test_start=lambda: "PCB001")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```

@@ -274,8 +274,8 @@ export const navigation: Array<NavGroup> = [
     title: 'Deploy',
     links: [
       // { title: 'Operator UI', href: '/operator-ui' },
-      { title: 'Traceability', href: '/tofupilot-traceability' },
       { title: 'Analytics', href: '/tofupilot-analytics' },
+      { title: 'Traceability', href: '/tofupilot-traceability' },
     ],
     new: true,
   },

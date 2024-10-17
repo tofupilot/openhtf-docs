@@ -45,13 +45,13 @@ class MultimeterPlug(plugs.BasePlug):
 
 ## Usage
 
-You can then use the `@htf.plug` decorator in your test phases to inject the plug.
+You can then use the `plug` decorator in your test phases to inject the plug.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-from openhtf.core import base_plugs
+from multimeter_plug import MultimeterPlug
 
-@htf.plug(my_plug=MultimeterPlug)
+@htf.plug(multimeter=MultimeterPlug)
 def phase_test(test, multimeter):
     # Use the plug to measure voltage and current
     voltage = multimeter.measure_voltage()
@@ -123,16 +123,16 @@ from openhtf.util import configuration
 import random
 
 # Define firmware_path configuration
-configuration.declare(
-    'com_port',
-    default_value='COM1',
-    description='COM port to connect to the multimeter'
+configuration.CONF.declare(
+    "com_port",
+    default_value="COM1",
+    description="COM port to connect to the multimeter",
 )
 
 class MultimeterPlug(plugs.BasePlug):
     def __init__(self):
         # Simulate connecting to the multimeter
-        self.com_port = configuration.load('com_port')
+        self.com_port = configuration.CONF.load("com_port")
         self.connected = True
 
     def tearDown(self):
@@ -146,22 +146,4 @@ class MultimeterPlug(plugs.BasePlug):
     def measure_current(self):
         # Simulate current measurement
         return random.uniform(0, 2)
-```
-
-### Plug output
-
-You can find plug logs in the output record.
-
-```javascript {{ title: 'test_results.json' }}
-"log_records": [
-{
-    "level": 20,
-    "logger_name": "openhtf.test_record.<plug_uid>.phase.my_test_phase",
-    "source": "main.py",
-    "lineno": 28,
-    "timestamp_millis": 1720169754060,
-    "message": "Plug incremented value to: 1"
-},
-...
-]
 ```

@@ -41,7 +41,7 @@ if __name__ == "__main__":
     main()
 ```
 
-A `test_result.json` file is created after execution and saved in the script folder. The file path can be changed if needed.
+A `test_result.json` file is created after execution and saved in the execution directory. The file path can be changed if needed.
 
 <Button href="/public/test_result.json" variant="text" arrow="right">
   <>Open example file</>
@@ -84,7 +84,7 @@ Add it to your test like this:
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
-from tofupilot import TofuPilot
+from tofupilot.openhtf import TofuPilot
 
 def get_sn(test):
     test.test_record.dut_id = 'PCB001'
@@ -130,23 +130,22 @@ You can use output callbacks extended features for advanced use cases.
 You can implement a custom output format by creating a function to handle the test record and adding it as an output callback if the built-in format doesn’t meet your needs.
 
 ```python {{ title: 'main.py' }}
-from openhtf import PhaseResult
-from openhtf.output import callbacks
+import openhtf as htf
 
 def custom_output_callback(test_record):
-    with open('./custom_output.txt', 'w') as f:
-        f.write('Custom Output\n')
-        f.write(f'DUT ID: {test_record.dut_id}\n')
-        f.write(f'Outcome: {test_record.outcome}\n')
+    with open("./custom_output.txt", "w") as f:
+        f.write("Custom Output\n")
+        f.write(f"DUT ID: {test_record.dut_id}\n")
+        f.write(f"Outcome: {test_record.outcome}\n")
         for phase in test_record.phases:
-            f.write(f'Phase: {phase.name}\n')
+            f.write(f"Phase: {phase.name}\n")
 
 def get_sn(test):
-    test.test_record.dut_id = 'PCB001'
-    return PhaseResult.CONTINUE
+    test.test_record.dut_id = "PCB001"
+    return htf.PhaseResult.CONTINUE
 
 def main():
-    test = Test(get_sn)
+    test = htf.Test(get_sn)
     test.add_output_callbacks(custom_output_callback)
     test.execute()
 

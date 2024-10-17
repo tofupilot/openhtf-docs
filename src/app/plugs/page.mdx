@@ -17,7 +17,7 @@ A plug is a class that inherits from `plugs.BasePlug` and can implement a `tearD
 
 ## Simple plug
 
-This example demonstrates a simple plug that maintains a value and increments it. The plug supports a teardown process and maintains state across test phases. Plugs can be injected into test phases using the `@htf.plug` decorator.
+This example demonstrates a simple plug that maintains a value and increments it. The plug supports a teardown process and maintains state across test phases. Plugs can be injected into test phases using the `@openhtf.plug` decorator.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -29,22 +29,22 @@ class ExamplePlug(base_plugs.BasePlug):
         self.value = 0
 
     def tearDown(self):
-        self.logger.info('Tearing down %s', self)
+        self.logger.info("Tearing down %s", self)
 
     def increment(self):
         self.value += self.increment_size
-        return self.value - self.increment_size
+        return self.value
 
 @htf.plug(my_plug=ExamplePlug)
-def my_test_phase(test, my_plug):
+def phase_plug(test, my_plug):
     result = my_plug.increment()
-    test.logger.info('Plug incremented value to: %s', result)
+    test.logger.info("Plug incremented value to: %s", result)
 
 def main():
-    test = htf.Test(my_test_phase)
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
+    test = htf.Test(phase_plug)
+    test.execute(test_start=lambda: "DeviceUnderTest123")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
 
@@ -60,7 +60,11 @@ from openhtf.util import conf
 from openhtf.output.callbacks import json_factory
 
 # Define configuration options
-conf.declare('example_plug_increment_size', default_value=1, description='Increment constant for example plug.')
+conf.declare(
+    'example_plug_increment_size', 
+    default_value=1, 
+    description='Increment constant for example plug.'
+)
 
 class ExamplePlug(base_plugs.BasePlug):
     def __init__(self):
@@ -75,7 +79,7 @@ class ExamplePlug(base_plugs.BasePlug):
 
     def increment(self):
         self.value += self.increment_size
-        return self.value - self.increment_size
+        return self.value
 
 @htf.plug(my_plug=ExamplePlug)
 def my_test_phase(test, my_plug):
@@ -103,10 +107,10 @@ When output is enabled, the plug's activity will be included in the JSON output 
     {
       "level": 20,
       "logger_name": "openhtf.test_record.24946:4e82dcd8bf194e23:f0e1c9eaadd04447:1720169754059.phase.my_test_phase",
-      "source": "first-testbench-ui.py",
+      "source": "main.py",
       "lineno": 28,
       "timestamp_millis": 1720169754060,
-      "message": "Plug incremented value to: 0"
+      "message": "Plug incremented value to: 1"
     },
     ...
     {
@@ -120,7 +124,7 @@ When output is enabled, the plug's activity will be included in the JSON output 
     {
       "level": 20,
       "logger_name": "openhtf.test_record.24946:4e82dcd8bf194e23:f0e1c9eaadd04447:1720169754059.plug.ExamplePlug",
-      "source": "first-testbench-ui.py",
+      "source": "main.py",
       "lineno": 19,
       "timestamp_millis": 1720169754060,
       "message": "Tearing down <ExamplePlug: 1>"
@@ -163,56 +167,65 @@ import openhtf as htf
 from openhtf.plugs.user_input import UserInput
 from openhtf.output.callbacks import json_factory
 
+
 # Define the test phases
-@htf.measures(htf.Measurement('operator_name').doc('Name of the operator'))
+@htf.measures(htf.Measurement("operator_name").doc("Name of the operator"))
 @htf.plug(user_input=UserInput)
 def ask_operator_name(test, user_input):
-    operator_name = user_input.prompt(message='Please enter your name:')
+    operator_name = user_input.prompt(message="Please enter your name:")
     test.measurements.operator_name = operator_name
 
-@htf.measures(htf.Measurement('test_voltage').doc('Voltage to test (in volts)').in_range(0, 240))
+@htf.measures(
+    htf.Measurement("test_voltage")
+    .doc("Voltage to test (in volts)")
+    .in_range(0, 240)
+)
 @htf.plug(user_input=UserInput)
 def ask_test_voltage(test, user_input):
-    test_voltage = user_input.prompt(message='Please enter the test voltage (in volts):', text_input=False)
+    test_voltage = user_input.prompt(
+        message="Please enter the test voltage (in volts):", text_input=False
+    )
     try:
         test_voltage = float(test_voltage)
         test.measurements.test_voltage = test_voltage
     except ValueError:
-        test.logger.error('Invalid voltage entered, must be a number.')
+        test.logger.error("Invalid voltage entered, must be a number.")
         return htf.PhaseResult.FAIL_AND_CONTINUE
 
-@htf.measures(htf.Measurement('led_color').doc('LED color to test'))
+@htf.measures(htf.Measurement("led_color").doc("LED color to test"))
 @htf.plug(user_input=UserInput)
 def ask_led_color(test, user_input):
-    led_color = user_input.prompt(message='Please select the LED color to test (Red/Green/Blue):')
-    if (led_color not in ['Red', 'Green', 'Blue']):
-        test.logger.error('Invalid color selected.')
+    led_color = user_input.prompt(
+        message="Please select the LED color to test (Red/Green/Blue):"
+    )
+    if led_color not in ["Red", "Green", "Blue"]:
+        test.logger.error("Invalid color selected.")
         return htf.PhaseResult.FAIL_AND_CONTINUE
     test.measurements.led_color = led_color
 
-@htf.measures(htf.Measurement('confirmation').doc('Operator confirmation'))
+@htf.measures(htf.Measurement("confirmation").doc("Operator confirmation"))
 @htf.plug(user_input=UserInput)
 def ask_confirmation(test, user_input):
-    confirmation = user_input.prompt(message='Type "CONFIRM" to confirm the above information:')
-    if (confirmation != "CONFIRM"):
-        test.logger.error('Operator did not confirm the information.')
+    confirmation = user_input.prompt(
+        message='Type "CONFIRM" to confirm the above information:'
+    )
+    if confirmation != "CONFIRM":
+        test.logger.error("Operator did not confirm the information.")
         test.measurements.confirmation = False
         return htf.PhaseResult.FAIL_AND_CONTINUE
     test.measurements.confirmation = True
 
-# Define the test
 def user_input_test():
-    return htf.Test(
-        ask_operator_name,
-        ask_test_voltage,
-        ask_led_color,
-        ask_confirmation
-    )
+    return htf.Test(ask_operator_name, ask_test_voltage, ask_led_color, ask_confirmation)
 
-if __name__ == '__main__':
+def main():
     test = user_input_test()
-    test.add_output_callbacks(json_factory.OutputToJSON('./test_output.json'))
-    test.execute(test_start=lambda: 'test-uid-1234')
+    test.add_output_callbacks(json_factory.OutputToJSON("./test_result.json", indent=2))
+    test.execute(test_start=lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+
 ```
 
 Here's the console output:

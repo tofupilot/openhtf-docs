@@ -72,7 +72,6 @@ You can attach larger or pre-existing files from disk or URL.
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 
-
 def phase_file_attachment(test):
     test.attach_from_file("/path/to/your/logfile.txt")
     return htf.PhaseResult.CONTINUE
@@ -124,6 +123,8 @@ You can access attachments in a dedicated section of the run page, where you can
 ---
 
 ## Advanced use cases
+
+You can use extended features for attachements advanced use cases.
 
 ### Access attachments during execution
 

@@ -6,397 +6,162 @@ export const metadata = {
 
 # Plugs
 
-OpenHTF provides a powerful plugin system, known as "plugs" which allows to abstract hardware interactions. They can be used to encapsulate reusable test logic, hardware interfaces, or any other functionality you need. {{ className: 'lead' }}
+Manage external hardware and resources with reusable logic. {{ className: 'lead' }}
 
 <Image
   src="/plugs-header.png"
   alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
 />
 
-A plug is a class that inherits from `plugs.BasePlug` and can implement a `tearDown`. They can wrap existing Python objects for seamless integration​.
+## Overview
 
-## Simple plug
+Hardware tests often require connections to external resources like instruments, UUTs, or other softwares. OpenHTF manages these connections through **Plugs**, reusable **classes** that handle resource **initialization**, **control**, and **cleanup**, separating test logic from resource management for easier maintenance and better logging.
 
-This example demonstrates a simple plug that maintains a value and increments it. The plug supports a teardown process and maintains state across test phases. Plugs can be injected into test phases using the `@openhtf.plug` decorator.
+## Syntax
+
+A plug is a standard Python class that inherits from `BasePlug`.
+
+```python {{ title: 'multimeter_plug.py' }}
+from openhtf import plugs
+import random
+
+class MultimeterPlug(plugs.BasePlug):
+    def __init__(self):
+        # Simulate connecting to the multimeter
+        self.connected = True
+
+    def tearDown(self):
+        # Automatically called by OpenHTF after the test to clean up
+        self.connected = False
+
+    def measure_voltage(self):
+        # Simulate voltage measurement
+        return random.uniform(0, 10)
+
+    def measure_current(self):
+        # Simulate current measurement
+        return random.uniform(0, 2)
+```
+
+## Usage
+
+You can then use the `@htf.plug` decorator in your test phases to inject the plug.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 from openhtf.core import base_plugs
 
-class ExamplePlug(base_plugs.BasePlug):
-    def __init__(self, increment_size=1):
-        self.increment_size = increment_size
-        self.value = 0
-
-    def tearDown(self):
-        self.logger.info("Tearing down %s", self)
-
-    def increment(self):
-        self.value += self.increment_size
-        return self.value
-
-@htf.plug(my_plug=ExamplePlug)
-def phase_plug(test, my_plug):
-    result = my_plug.increment()
-    test.logger.info("Plug incremented value to: %s", result)
+@htf.plug(my_plug=MultimeterPlug)
+def phase_test(test, multimeter):
+    # Use the plug to measure voltage and current
+    voltage = multimeter.measure_voltage()
+    current = multimeter.measure_current()
 
 def main():
-    test = htf.Test(phase_plug)
-    test.execute(test_start=lambda: "DeviceUnderTest123")
+    test = htf.Test(phase_test)
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
 ```
 
-## Plug configuration and output
+OpenHTF manages the plug's lifecycle automatically:
 
-Plugs can also have their own configurations. You can declare configuration options and load them similarly to how you do it for tests.
+1. **Instantiation**: At the start of the test, OpenHTF instantiates the plug by calling its `__init__()` method.
 
-```python {{ title: 'main.py' }}
-import openhtf as htf
-import logging
-from openhtf.core import base_plugs
-from openhtf.util import conf
-from openhtf.output.callbacks import json_factory
+2. **Logging**: During the test, the plug can log important actions or events using `self.logger`.
 
-# Define configuration options
-conf.declare(
-    'example_plug_increment_size', 
-    default_value=1, 
-    description='Increment constant for example plug.'
-)
+3. **Teardown**: After the test concludes, OpenHTF automatically calls the `tearDown()` method to clean up resources. This ensures reliable cleanup since Python's destructors `__del__()` aren't always called.
 
-class ExamplePlug(base_plugs.BasePlug):
-    def __init__(self):
-        self.increment_size = conf.example_plug_increment_size
-        self.value = 0
+## User Input Plug
 
-    def __str__(self):
-        return '<%s: %s>' % (type(self).__name__, self.value)
-
-    def tearDown(self):
-        self.logger.info('Tearing down %s', self)
-
-    def increment(self):
-        self.value += self.increment_size
-        return self.value
-
-@htf.plug(my_plug=ExamplePlug)
-def my_test_phase(test, my_plug):
-    result = my_plug.increment()
-    test.logger.info('Plug incremented value to: %s', result)
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    test = htf.Test(my_test_phase)
-    test.add_output_callbacks(json_factory.OutputToJSON('./test_results.json', indent=2))
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
-
-if __name__ == '__main__':
-    main()
-```
-
-When output is enabled, the plug's activity will be included in the JSON output file.
-
-```javascript {{ title: 'test_results.json' }}
-{
-  "dut_id": "DeviceUnderTest123",
-  ...
-  "log_records": [
-    ...
-    {
-      "level": 20,
-      "logger_name": "openhtf.test_record.24946:4e82dcd8bf194e23:f0e1c9eaadd04447:1720169754059.phase.my_test_phase",
-      "source": "main.py",
-      "lineno": 28,
-      "timestamp_millis": 1720169754060,
-      "message": "Plug incremented value to: 1"
-    },
-    ...
-    {
-      "level": 10,
-      "logger_name": "openhtf.plugs",
-      "source": "__init__.py",
-      "lineno": 334,
-      "timestamp_millis": 1720169754060,
-      "message": "Tearing down all plugs."
-    },
-    {
-      "level": 20,
-      "logger_name": "openhtf.test_record.24946:4e82dcd8bf194e23:f0e1c9eaadd04447:1720169754059.plug.ExamplePlug",
-      "source": "main.py",
-      "lineno": 19,
-      "timestamp_millis": 1720169754060,
-      "message": "Tearing down <ExamplePlug: 1>"
-    },
-    ...
-  ],
-}
-```
-
-# User Input Plug
-
-The User Input Plug in OpenHTF allows for interaction with test operators by requesting and validating input. This can be useful in various test scenarios where manual intervention or decision-making is required.
-
-<Note>
-  If you are looking for instructions on how to enable Device Under Test (DUT)
-  ID input by the operator, please refer to [this
-  section](https://www.openhtf.com/dut).
-</Note>
-
-## Usage
-
-To integrate the User Input Plug in your OpenHTF test script, follow these steps:
-
-1. Import the Plug:
-
-```python
-from openhtf.plugs import user_input
-```
-
-2. Define the Plug in a Test Phase: Use the `@openhtf.plug` decorator to specify the `UserInput` plug in your test phase.
-
-3. Prompt for Input: Use the `prompt` method of the `user_input` plug to request input from the operator.
-
-## Example
-
-Here's a complete example of an OpenHTF test using the User Input Plug:
+You can use the `UserInput` plug to prompt the operator during the test.
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 from openhtf.plugs.user_input import UserInput
-from openhtf.output.callbacks import json_factory
-
-
-# Define the test phases
-@htf.measures(htf.Measurement("operator_name").doc("Name of the operator"))
-@htf.plug(user_input=UserInput)
-def ask_operator_name(test, user_input):
-    operator_name = user_input.prompt(message="Please enter your name:")
-    test.measurements.operator_name = operator_name
 
 @htf.measures(
-    htf.Measurement("test_voltage")
-    .doc("Voltage to test (in volts)")
-    .in_range(0, 240)
+    htf.Measurement("led_color")
+    .with_validator(lambda color: color in ["Red", "Green", "Blue"])
 )
 @htf.plug(user_input=UserInput)
-def ask_test_voltage(test, user_input):
-    test_voltage = user_input.prompt(
-        message="Please enter the test voltage (in volts):", text_input=False
-    )
-    try:
-        test_voltage = float(test_voltage)
-        test.measurements.test_voltage = test_voltage
-    except ValueError:
-        test.logger.error("Invalid voltage entered, must be a number.")
-        return htf.PhaseResult.FAIL_AND_CONTINUE
-
-@htf.measures(htf.Measurement("led_color").doc("LED color to test"))
-@htf.plug(user_input=UserInput)
-def ask_led_color(test, user_input):
+def prompt_operator_led_color(test, user_input):
     led_color = user_input.prompt(
-        message="Please select the LED color to test (Red/Green/Blue):"
+        message="What is the LED color? (Red/Green/Blue)"
     )
-    if led_color not in ["Red", "Green", "Blue"]:
-        test.logger.error("Invalid color selected.")
-        return htf.PhaseResult.FAIL_AND_CONTINUE
     test.measurements.led_color = led_color
 
-@htf.measures(htf.Measurement("confirmation").doc("Operator confirmation"))
-@htf.plug(user_input=UserInput)
-def ask_confirmation(test, user_input):
-    confirmation = user_input.prompt(
-        message='Type "CONFIRM" to confirm the above information:'
-    )
-    if confirmation != "CONFIRM":
-        test.logger.error("Operator did not confirm the information.")
-        test.measurements.confirmation = False
-        return htf.PhaseResult.FAIL_AND_CONTINUE
-    test.measurements.confirmation = True
-
-def user_input_test():
-    return htf.Test(ask_operator_name, ask_test_voltage, ask_led_color, ask_confirmation)
-
 def main():
-    test = user_input_test()
-    test.add_output_callbacks(json_factory.OutputToJSON("./test_result.json", indent=2))
-    test.execute(test_start=lambda: "PCB001")
+    test = htf.Test(prompt_operator_led_color)
+    test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
-
 ```
 
-Here's the console output:
-
-```txt
-Please enter your name:
---> Jon
-Please enter the test voltage (in volts):
---> 12
-Please select the LED color to test (Red/Green/Blue):
+```txt {{ title: 'Terminal' }}
+What is the LED color? (Red/Green/Blue):
 --> Red
-Type "CONFIRM" to confirm the above information:
---> CONFIRM
 
 ======================= test: openhtf_test  outcome: PASS ======================
 ```
 
-# Instrument Plugs
+---
 
-OpenHTF provides a powerful plugin system, known as "plugs" which allows to abstract hardware interactions. They can be used to encapsulate reusable test logic, hardware interfaces, or any other functionality you need. {{ className: 'lead' }}
+## Advanced use cases
 
-## Pre-made instrument plugs
+You can use output callbacks extended features for advanced use cases.
 
-OpenHTF includes a collection of pre-made, useful plugs and also allows you to create custom plugs tailored to your needs.
+### Plug configuration
 
-<Note>
-  You can find a comprehensive list of the built-in hardware plugs
-  [here](https://github.com/google/openhtf/tree/master/openhtf/plugs).
-</Note>
+You can define and load configurations specific to each plug, similar to test configurations.
 
-## Custom instrument plugs
+```python {{ title: 'multimeter_plug.py' }}
+from openhtf import plugs
+from openhtf.util import configuration
+import random
 
-Below are implementation examples of user-defined plugs
+# Define firmware_path configuration
+configuration.declare(
+    'com_port',
+    default_value='COM1',
+    description='COM port to connect to the multimeter'
+)
 
-### YKUSH USB Hub
-
-[YKUSH USB](https://www.yepkit.com/products/ykush) hubs are programmable USB hubs that allow users to control the power state of individual USB ports programmatically. These hubs are typically used in test benches for automated testing and development environments, where devices need to be power-cycled or reset remotely without manual intervention.
-
-<Image src="/ykush.png" alt="YKUSH USB hub" />
-
-This plug design for the YKUSH USB hub allows programmatic control of USB port power states. Configuration settings specify the port number, initialization sets up the plug, and the teardown method is empty since no cleanup is needed. The plug uses the `ykushcmd` utility to switch the USB ports on and off.
-
-<Note>
-  You need to have the hardware connected for this code example to work.
-</Note>
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-import logging
-from openhtf.core import base_plugs
-from openhtf.util import conf
-from openhtf.output.callbacks import json_factory
-import subprocess
-
-# Define configuration options
-conf.declare('ykush_port', default_value=0, description='Port number on the YKUSH hub to control.')
-
-class YKUSHPlug(base_plugs.BasePlug):
+class MultimeterPlug(plugs.BasePlug):
     def __init__(self):
-        # Initialize the port from configuration
-        self.port = conf.ykush_port
-
-    def power_on(self):
-        # Power on the specified port
-        subprocess.run(['ykushcmd', '-u', str(self.port)], check=True)
-        self.logger.info('Powered on port %d', self.port)
-
-    def power_off(self):
-        # Power off the specified port
-        subprocess.run(['ykushcmd', '-d', str(self.port)], check=True)
-        self.logger.info('Powered off port %d', self.port)
+        # Simulate connecting to the multimeter
+        self.com_port = configuration.load('com_port')
+        self.connected = True
 
     def tearDown(self):
-        # Log teardown process
-        self.logger.info('Tearing down YKUSH plug for port %d', self.port)
+        # Automatically called by OpenHTF after the test to clean up
+        self.connected = False
 
-@htf.plug(ykush_plug=YKUSHPlug)
-def control_usb_port(test, ykush_plug):
-    # Power on the USB port and log the action
-    ykush_plug.power_on()
-    test.logger.info('USB port powered on.')
-    # Simulate some test operations
-    ykush_plug.power_off()
-    test.logger.info('USB port powered off.')
+    def measure_voltage(self):
+        # Simulate voltage measurement
+        return random.uniform(0, 10)
 
-def main():
-    logging.basicConfig(level=logging.INFO)
-    # Create an OpenHTF test with the control_usb_port phase
-    test = htf.Test(control_usb_port)
-    # Add JSON output callback to log test results in test_results.json
-    test.add_output_callbacks(json_factory.OutputToJSON('./test_results.json', indent=2))
-    # Execute the test, providing a lambda function to return the device ID
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
-
-if __name__ == '__main__':
-    main()
+    def measure_current(self):
+        # Simulate current measurement
+        return random.uniform(0, 2)
 ```
 
-### Firmata
+### Plug output
 
-This plug design for a Firmata-based device allows for programmatic control and monitoring of pin states on a microcontroller like Arduino or Teensy. Using Firmata, you can abstract away the serial communication protocol, simplifying the interaction between the microcontroller and OpenHTF.
+You can find plug logs in the output record.
 
-The plug uses the PyMata library to interface with the Firmata firmware on the device. Configuration settings specify the serial port, and the plug methods handle setting pin modes and reading digital values.
-
-```sh
-pip install PyMata
-```
-
-### How to install Firmata on a board
-
-1. **Install the Arduino IDE**: Download from the [official Arduino website](https://www.arduino.cc/en/software).
-
-2. **Open the Firmata Example**: Launch Arduino IDE and navigate to `File` > `Examples` > `Firmata` > `StandardFirmata`.
-
-3. **Connect Your Board**: Connect your Arduino or Teensy board via USB.
-
-4. **Select Your Board and Port**: Go to `Tools` > `Board` and select your model. Then, go to `Tools` > `Port` and select the correct port.
-
-5. **Upload the Firmata Firmware**: Click the upload button to upload the StandardFirmata sketch to your board.
-
-### OpenHTF plug example
-
-<Note>
-  You need to have the hardware connected for this code example to work.
-</Note>
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-import logging
-from openhtf.core import base_plugs
-from openhtf.util import conf
-from openhtf.output.callbacks import json_factory
-from PyMata.pymata import PyMata
-import time
-
-# Define configuration options
-conf.declare('firmata_com_port', default_value='/dev/ttyACM0', description='COM Port of Firmata Board')
-
-class FirmataPlug(base_plugs.BasePlug):
-
-    @conf.inject_positional_args
-    def __init__(self, firmata_com_port):
-        self._board = PyMata(firmata_com_port, verbose=False)
-
-    def set_digital_input(self, pin):
-        self._board.set_pin_mode(pin, self._board.INPUT, self._board.DIGITAL)
-        time.sleep(1)
-
-    def digital_read(self, pin):
-        return self._board.digital_read(pin)
-
-    def tearDown(self):
-        self._board.close()
-        self.logger.info('Closed connection to Firmata board.')
-
-@htf.plug(board=FirmataPlug)
-def digital_read_phase(test, board):
-    board.set_digital_input(4)
-    board.set_digital_input(5)
-    board.set_digital_input(6)
-    test.measurements.P4_digital = board.digital_read(4)
-    test.measurements.P5_digital = board.digital_read(5)
-    test.measurements.P6_digital = board.digital_read(6)
-    test.logger.info('Completed digital read phase.')
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    test = htf.Test(digital_read_phase)
-    test.add_output_callbacks(json_factory.OutputToJSON('./test_results.json', indent=2))
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
-
-if __name__ == '__main__':
-    main()
+```javascript {{ title: 'test_results.json' }}
+"log_records": [
+{
+    "level": 20,
+    "logger_name": "openhtf.test_record.<plug_uid>.phase.my_test_phase",
+    "source": "main.py",
+    "lineno": 28,
+    "timestamp_millis": 1720169754060,
+    "message": "Plug incremented value to: 1"
+},
+...
+]
 ```

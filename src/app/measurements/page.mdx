@@ -203,6 +203,7 @@ Add it to your test like this:
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 from openhtf.util import units
+from tofupilot.openhtf import TofuPilot
 
 def phase_one(test):
     return htf.PhaseResult.CONTINUE
@@ -338,7 +339,7 @@ if __name__ == "__main__":
     main()
 ```
 
-### Dynamic labeling
+### Dynamic naming
 
 You can customize measurement names dynamically at execution.
 

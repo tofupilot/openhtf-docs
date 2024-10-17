@@ -17,78 +17,6 @@ Control test execution parameters with configuration variables or files. {{ clas
 
 Sometimes you need to change script parameters without modifying the script itself, like updating firmware versions or adjusting instrument ports between stations. OpenHTF simplifies this by using configuration files to manage these parameters.
 
-## Variables
-
-You can set configuration variables directly in the script using the `conf` module.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-from openhtf.util import configuration
-
-# Define firmware_path configuration
-configuration.CONF.declare(
-    "firmware_path",
-    default_value="path/to/firmware_v1.0.0.bin",
-    description="Path to the firmware file",
-)
-
-def flash_firmware(test):
-    firmware_path = configuration.CONF.firmware_path
-    print(f"Flashing firmware from: {firmware_path}")
-
-def main():
-    test = htf.Test(flash_firmware)
-    test.execute(test_start=lambda: "PCB001")
-
-if __name__ == "__main__":
-    main()
-```
-
-### Parameters
-
-You can set the following parameters for each configuration variable in OpenHTF:
-
-<Properties>
-  <Property name=".name">
-    The unique identifier for the configuration variable (must be in
-    snake_case).
-  </Property>
-  <Property name=".default_value">
-    An optional value that serves as the default if no other value is provided.
-  </Property>
-  <Property name=".description">
-    An optional description explaining the purpose of the configuration
-    variable.
-  </Property>
-</Properties>
-
-### Decorator
-You can use the `save_and_restore` decorator to temporarily change a value during the function call, which is then restored. 
-In this example, you can also configure the variable after its declaration.
-
-``` python {{title: "main.py"}}
-import openhtf as htf
-from openhtf.util import configuration
-
-configuration.CONF.declare("phase_variance")
-configuration.CONF.load(phase_variance=4)
-
-@configuration.CONF.save_and_restore(phase_variance=55) # Decorator
-def phase_one(test):
-    phase_variance_to_print = configuration.CONF.phase_variance
-    print(f"Value during phase one: {phase_variance_to_print}")
-
-def phase_two(test):
-    phase_variance_to_print = configuration.CONF.phase_variance
-    print(f"Value during phase two: {phase_variance_to_print}")
-
-def main():
-    test = htf.Test(phase_one, phase_two)
-    test.execute(test_start=lambda: "PCB001")
-
-if __name__ == "__main__":
-    main()
-```
 
 ## File
 
@@ -117,6 +45,82 @@ def flash_firmware(test):
 
 def main():
     test = htf.Test(flash_firmware)
+    test.execute(test_start=lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## Advanced use cases
+
+### Variables
+
+You can set configuration variables directly in the script.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.util import configuration
+
+# Define firmware_path configuration
+configuration.CONF.declare(
+    "firmware_path",
+    default_value="path/to/firmware_v1.0.0.bin",
+    description="Path to the firmware file",
+)
+
+def flash_firmware(test):
+    firmware_path = configuration.CONF.firmware_path
+    print(f"Flashing firmware from: {firmware_path}")
+
+def main():
+    test = htf.Test(flash_firmware)
+    test.execute(test_start=lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
+
+You can set the following parameters for each configuration variable in OpenHTF:
+
+<Properties>
+  <Property name=".name">
+    The unique identifier for the configuration variable (must be in
+    snake_case).
+  </Property>
+  <Property name=".default_value">
+    An optional value that serves as the default if no other value is provided.
+  </Property>
+  <Property name=".description">
+    An optional description explaining the purpose of the configuration
+    variable.
+  </Property>
+</Properties>
+
+
+### Decorator
+You can use the `save_and_restore` decorator to temporarily change a value during the function call, which is then restored. 
+In this example, you can also configure the variable after its declaration.
+
+``` python {{title: "main.py"}}
+import openhtf as htf
+from openhtf.util import configuration
+
+configuration.CONF.declare("phase_variance")
+configuration.CONF.load(phase_variance=4)
+
+@configuration.CONF.save_and_restore(phase_variance=55) # Decorator
+def phase_one(test):
+    phase_variance_to_print = configuration.CONF.phase_variance
+    print(f"Value during phase one: {phase_variance_to_print}")
+
+def phase_two(test):
+    phase_variance_to_print = configuration.CONF.phase_variance
+    print(f"Value during phase two: {phase_variance_to_print}")
+
+def main():
+    test = htf.Test(phase_one, phase_two)
     test.execute(test_start=lambda: "PCB001")
 
 if __name__ == "__main__":

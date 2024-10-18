@@ -293,7 +293,6 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props}>
       <ul role="list">
-        {/* <TopLevelNavItem href="#">Documentation</TopLevelNavItem> */}
         <TopLevelNavItem href="https://github.com/google/openhtf">
           GitHub
         </TopLevelNavItem>

@@ -17,7 +17,6 @@ Control test execution parameters with configuration variables or files. {{ clas
 
 Sometimes you need to change script parameters without modifying the script itself, like updating firmware versions or adjusting instrument ports between stations. OpenHTF simplifies this by using configuration files to manage these parameters.
 
-
 ## File
 
 You can load configurations from an external file written in YAML or JSON format. For example:
@@ -85,25 +84,25 @@ if __name__ == "__main__":
 You can set the following parameters for each configuration variable in OpenHTF:
 
 <Properties>
-  <Property name=".name">
+  <Property name=".name" type="str">
     The unique identifier for the configuration variable (must be in
     snake_case).
   </Property>
   <Property name=".default_value">
     An optional value that serves as the default if no other value is provided.
   </Property>
-  <Property name=".description">
+  <Property name=".description" type="str">
     An optional description explaining the purpose of the configuration
     variable.
   </Property>
 </Properties>
 
-
 ### Decorator
-You can use the `save_and_restore` decorator to temporarily change a value during the function call, which is then restored. 
+
+You can use the `save_and_restore` decorator to temporarily change a value during the function call, which is then restored.
 In this example, you can also configure the variable after its declaration.
 
-``` python {{title: "main.py"}}
+```python {{title: "main.py"}}
 import openhtf as htf
 from openhtf.util import configuration
 

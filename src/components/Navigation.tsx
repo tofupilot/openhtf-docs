@@ -240,6 +240,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Getting Started',
     links: [
+      { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
       { title: 'Community', href: '/community' },
       // { title: 'Templates', href: '/templates' },

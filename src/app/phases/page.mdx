@@ -346,8 +346,7 @@ if __name__ == "__main__":
 
 ### Phase Groups
 
-You can use phase groups to bundle phases inside 3 groups: a setup, a main and a teardown group.
-So it manage shortcutting during terminal errors to ensure proper execution of teardown phases.
+You can group phases into `setup`, `main`, and `teardown`. If a failure occurs during the `setup` or `main` phases, the system will automatically ensure that the `teardown` phase is always executed.
 
 ```python {{title:"main.py"}}
 import openhtf as htf

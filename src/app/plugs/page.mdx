@@ -1,0 +1,149 @@
+export const metadata = {
+  title: 'Plugs',
+  description:
+    'Discover how to use OpenHTF’s powerful plugin system, known as "plugs" to abstract hardware interactions and encapsulate reusable test logic. Includes examples of simple plug implementation and configuration.',
+}
+
+# Plugs
+
+Manage external hardware and resources with reusable logic. {{ className: 'lead' }}
+
+<Image
+  src="/plugs-header.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+## Overview
+
+Hardware tests often require connections to external resources like instruments, UUTs, or other softwares. OpenHTF manages these connections through **Plugs**, reusable **classes** that handle resource **initialization**, **control**, and **cleanup**, separating test logic from resource management for easier maintenance and better logging.
+
+## Syntax
+
+A plug is a standard Python class that inherits from `BasePlug`.
+
+```python {{ title: 'multimeter_plug.py' }}
+from openhtf import plugs
+import random
+
+class MultimeterPlug(plugs.BasePlug):
+    def __init__(self):
+        # Simulate connecting to the multimeter
+        self.connected = True
+
+    def tearDown(self):
+        # Automatically called by OpenHTF after the test to clean up
+        self.connected = False
+
+    def measure_voltage(self):
+        # Simulate voltage measurement
+        return random.uniform(0, 10)
+
+    def measure_current(self):
+        # Simulate current measurement
+        return random.uniform(0, 2)
+```
+
+## Usage
+
+You can then use the `plug` decorator in your test phases to inject the plug.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from multimeter_plug import MultimeterPlug
+
+@htf.plug(multimeter=MultimeterPlug)
+def phase_test(test, multimeter):
+    # Use the plug to measure voltage and current
+    voltage = multimeter.measure_voltage()
+    current = multimeter.measure_current()
+
+def main():
+    test = htf.Test(phase_test)
+    test.execute(lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
+
+OpenHTF manages the plug's lifecycle automatically:
+
+1. **Instantiation**: At the start of the test, OpenHTF instantiates the plug by calling its `__init__()` method.
+
+2. **Logging**: During the test, the plug can log important actions or events using `self.logger`.
+
+3. **Teardown**: After the test concludes, OpenHTF automatically calls the `tearDown()` method to clean up resources. This ensures reliable cleanup since Python's destructors `__del__()` aren't always called.
+
+## User Input Plug
+
+You can use the `UserInput` plug to prompt the operator during the test.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.plugs.user_input import UserInput
+
+@htf.measures(
+    htf.Measurement("led_color")
+    .with_validator(lambda color: color in ["Red", "Green", "Blue"])
+)
+@htf.plug(user_input=UserInput)
+def prompt_operator_led_color(test, user_input):
+    led_color = user_input.prompt(
+        message="What is the LED color? (Red/Green/Blue)"
+    )
+    test.measurements.led_color = led_color
+
+def main():
+    test = htf.Test(prompt_operator_led_color)
+    test.execute(lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
+
+```txt {{ title: 'Terminal' }}
+What is the LED color? (Red/Green/Blue):
+--> Red
+
+======================= test: openhtf_test  outcome: PASS ======================
+```
+
+---
+
+## Advanced use cases
+
+You can use output callbacks extended features for advanced use cases.
+
+### Plug configuration
+
+You can define and load configurations specific to each plug, similar to test configurations.
+
+```python {{ title: 'multimeter_plug.py' }}
+from openhtf import plugs
+from openhtf.util import configuration
+import random
+
+# Define firmware_path configuration
+configuration.CONF.declare(
+    "com_port",
+    default_value="COM1",
+    description="COM port to connect to the multimeter",
+)
+
+class MultimeterPlug(plugs.BasePlug):
+    def __init__(self):
+        # Simulate connecting to the multimeter
+        self.com_port = configuration.CONF.load("com_port")
+        self.connected = True
+
+    def tearDown(self):
+        # Automatically called by OpenHTF after the test to clean up
+        self.connected = False
+
+    def measure_voltage(self):
+        # Simulate voltage measurement
+        return random.uniform(0, 10)
+
+    def measure_current(self):
+        # Simulate current measurement
+        return random.uniform(0, 2)
+```

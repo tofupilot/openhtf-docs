@@ -4,103 +4,125 @@ export const metadata = {
     'Explore how to manage test settings with OpenHTF’s configuration module, allowing for adaptable, maintainable, and scalable test scripts using both in-code definitions and external configuration files.',
 }
 
-# Configuration
+# Configurations
 
-The configuration module in OpenHTF offers a centralized, flexible, and scalable way to manage settings for your testing environment. It allows you to adapt tests to various hardware setups, environments, and requirements without hardcoding parameters, resulting in more maintainable, reusable, and adaptable test scripts. {{ className: 'lead' }}
+Control test execution parameters with configuration variables or files. {{ className: 'lead' }}
 
-You can define configuration options directly in your code or load them from an external configuration file. Using external configuration files can make your tests more flexible and easier to manage.
+<Image
+  src="/configuration-header.png"
+  alt="Header of the OpenHTF documentation showing Configuration details and integration with TofuPilot."
+/>
 
-## Implementation
+## Overview
 
-To set configurations in your OpenHTF script, use the `conf` module to declare configuration options within your script. Here’s a simple example:
+Sometimes you need to change script parameters without modifying the script itself, like updating firmware versions or adjusting instrument ports between stations. OpenHTF simplifies this by using configuration files to manage these parameters.
 
-```python {{ title: 'main.py' }}
-import openhtf as htf
-import logging
-from openhtf.util import conf
 
-# Define configuration options
-conf.declare('voltage_limit', default_value=5.0, description='Voltage limit for the test')
+## File
 
-@htf.measures(htf.Measurement('voltage'))
-def voltage_measurement(test):
-    voltage_limit = conf.voltage_limit
-    test.logger.info('Voltage limit: %s', voltage_limit)
-
-    voltage = 4.5  # Example voltage within limit
-    test.measurements.voltage = voltage
-
-    test.logger.info('Completed voltage measurement phase.')
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    test = htf.Test(voltage_measurement)
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
-
-if __name__ == '__main__':
-    main()
-```
-
-## External configuration files
-
-You can also load configurations from external files written in YAML or JSON format like:
+You can load configurations from an external file written in YAML or JSON format. For example:
 
 ```yaml {{ title: 'config.yaml' }}
-voltage_limit: 10.0
+firmware_path: 'path/to/firmware_v1.0.0.bin'
 ```
 
-Load the configuration file in your script using `CONF.load_from_file()`.
+Load the configuration file during execution script:
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
-import logging
 from openhtf.util import configuration
-from openhtf.output.callbacks import json_factory
 
-CONF = configuration.CONF
+# Declare the firmware_path key
+configuration.CONF.declare("firmware_path")
 
-# Declare the voltage_limit key
-CONF.declare('voltage_limit')
-
-# Load from external file
+# Load configuration from an external YAML file
 with open("config.yaml", "r") as yamlfile:
-    CONF.load_from_file(yamlfile)
+    configuration.CONF.load_from_file(yamlfile)
 
-@htf.measures(htf.Measurement("voltage"))
-def voltage_measurement(test):
-    voltage_limit = CONF.voltage_limit
-    test.logger.info("Voltage limit: %s", voltage_limit)
-
-    voltage = 4.5  # Example voltage within limit
-    test.measurements.voltage = voltage
-
-    test.logger.info("Completed voltage measurement phase.")
+def flash_firmware(test):
+    firmware_path = configuration.CONF.firmware_path
+    print(f"Flashing firmware from: {firmware_path}")
 
 def main():
-    logging.basicConfig(level=logging.INFO)
-    test = htf.Test(voltage_measurement)
-    test.add_output_callbacks(
-        json_factory.OutputToJSON("./test_results.json", indent=2)
-    )
-    test.execute(test_start=lambda: "DeviceUnderTest123")
+    test = htf.Test(flash_firmware)
+    test.execute(test_start=lambda: "PCB001")
 
 if __name__ == "__main__":
     main()
 ```
 
-When output is enabled, the configuratin will be included in the JSON output file.
+---
 
-```javascript {{ title: 'test_results.json' }}
-{
-  "dut_id": "DeviceUnderTest123",
-  ...
-  "metadata": {
-    ...
-    "config": {
-      ...
-      "voltage_limit": 5.0,
-    }
-  },
-  ...
-}
+## Advanced use cases
+
+### Variables
+
+You can set configuration variables directly in the script.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.util import configuration
+
+# Define firmware_path configuration
+configuration.CONF.declare(
+    "firmware_path",
+    default_value="path/to/firmware_v1.0.0.bin",
+    description="Path to the firmware file",
+)
+
+def flash_firmware(test):
+    firmware_path = configuration.CONF.firmware_path
+    print(f"Flashing firmware from: {firmware_path}")
+
+def main():
+    test = htf.Test(flash_firmware)
+    test.execute(test_start=lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
+
+You can set the following parameters for each configuration variable in OpenHTF:
+
+<Properties>
+  <Property name=".name">
+    The unique identifier for the configuration variable (must be in
+    snake_case).
+  </Property>
+  <Property name=".default_value">
+    An optional value that serves as the default if no other value is provided.
+  </Property>
+  <Property name=".description">
+    An optional description explaining the purpose of the configuration
+    variable.
+  </Property>
+</Properties>
+
+
+### Decorator
+You can use the `save_and_restore` decorator to temporarily change a value during the function call, which is then restored. 
+In this example, you can also configure the variable after its declaration.
+
+``` python {{title: "main.py"}}
+import openhtf as htf
+from openhtf.util import configuration
+
+configuration.CONF.declare("phase_variance")
+configuration.CONF.load(phase_variance=4)
+
+@configuration.CONF.save_and_restore(phase_variance=55) # Decorator
+def phase_one(test):
+    phase_variance_to_print = configuration.CONF.phase_variance
+    print(f"Value during phase one: {phase_variance_to_print}")
+
+def phase_two(test):
+    phase_variance_to_print = configuration.CONF.phase_variance
+    print(f"Value during phase two: {phase_variance_to_print}")
+
+def main():
+    test = htf.Test(phase_one, phase_two)
+    test.execute(test_start=lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
 ```

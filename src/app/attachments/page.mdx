@@ -1,266 +1,152 @@
 export const metadata = {
-  title: 'Attachments',
+  title: 'OpenHTF Attachments Guide',
   description:
-    'Learn how to capture and attach various types of data files, such as CSV and image files, to your OpenHTF test records for comprehensive hardware testing.',
+    'A comprehensive guide to attaching files, binary data, and URLs to your OpenHTF test records. Learn how to manage and retrieve attachments, including integration with TofuPilot for secure file handling and automated uploads.',
+  keywords: [
+    'OpenHTF',
+    'attachments',
+    'binary data',
+    'file attachment',
+    'test records',
+    'TofuPilot integration',
+    'hardware testing',
+    'logs',
+    'automation',
+  ],
+  author: 'TofuPilot',
+  og: {
+    title: 'OpenHTF Attachments Guide',
+    description:
+      'Learn how to capture, manage, and retrieve attachments in OpenHTF, with full TofuPilot integration for secure file handling.',
+    image: '/attachments-header.png',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@YourTwitterHandle',
+    title: 'OpenHTF Attachments Guide',
+    description:
+      'This guide covers how to attach files and data to your OpenHTF test records, including TofuPilot integration.',
+    image: '/attachments-header.png',
+  },
 }
 
 # Attachments
 
-Hardware testing often involves capturing data such as pictures or measurement files. OpenHTF makes it easy to link these files to the test records using its attachment features. {{ className: 'lead' }}
-
-To add attachments in your OpenHTF script, you can use the `test.attach` method. Below are examples of adding different types of attachments to your script and sample output files.
-
-## Attaching content
-
-You can create and attach content directly to the test record using the `test.attach` function.
-
-```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
-
-def attachment_phase(test):
-    print("Attaching file...")
-    test.attach("test_attachment", "This is test attachment data.".encode("utf-8"))
-    print("Attached file...")
-    return PhaseResult.CONTINUE
-
-def main():
-    # Create a test instance with the defined phase
-    test = Test(attachment_phase)
-    test.execute(lambda: "DeviceUnderTest123")
-
-if __name__ == "__main__":
-    main()
-```
-
-## Attaching file
-
-You can also attach an existing file to the test output using the `test.attach_from_file` function.
-
-```python {{ title: 'main.py' }}
-import os
-from openhtf import Test, PhaseResult
-
-def attachment_phase(test):
-    with open("example_attachment.txt", "w") as f:
-        f.write("This is example attachment content.")
-
-    # Attach the file to the test record
-    test.attach_from_file(
-        os.path.join(os.path.dirname(__file__), "example_attachment.txt")
-    )
-    return PhaseResult.CONTINUE
-
-def main():
-    # Create a test instance with the defined phase
-    test = Test(attachment_phase)
-    test.execute(lambda: "DeviceUnderTest123")
-
-if __name__ == "__main__":
-    main()
-```
-
-## Loading attachment
-
-To load and access attached files during test execution, use the `test.get_attachment` function.
-
-```python {{ title: 'main.py' }}
-import os
-from openhtf import Test, PhaseResult
-
-def attachment_phase(test):
-    test.attach("test_attachment", "This is test attachment data.".encode("utf-8"))
-    return PhaseResult.CONTINUE
-
-def load_attachment_phase(test):
-    test_attachment = test.get_attachment("test_attachment")
-    print(test_attachment)
-    return PhaseResult.CONTINUE
-
-def main():
-    # Create a test instance with the defined phase
-    test = Test(attachment_phase, load_attachment_phase)
-    test.execute(lambda: "DeviceUnderTest123")
-
-if __name__ == "__main__":
-    main()
-```
-
-## Example 1: CSV File
-
-In this example, we generate a CSV file containing measurement data and attach it to the test output.
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-import logging
-import os
-from openhtf.output.callbacks import json_factory
-
-@htf.measures(htf.Measurement("voltage"), htf.Measurement("current"))
-def electrical_measurements(test):
-    # Simulated electrical measurements
-    voltage = 12.0  # Volts
-    current = 1.5  # Amperes
-    test.measurements.voltage = voltage
-    test.measurements.current = current
-
-    # Create the output directory if it doesn't exist
-    os.makedirs("output_files", exist_ok=True)
-
-    # Save the data to a CSV file
-    csv_file_path = "output_files/measurement_data.csv"
-    with open(csv_file_path, "w") as csv_file:
-        csv_file.write("Voltage,Current\n")
-        csv_file.write(f"{voltage},{current}\n")
-
-    # Attach the CSV file to the test
-    with open(csv_file_path, "rb") as f:
-        test.attach("measurement_data_csv", f.read(), mimetype="text/csv")
-
-def load_attachment_phase(test):
-    # Load and print the attached CSV content
-    attachment = test.get_attachment("measurement_data_csv")
-    if attachment:
-        attachment_content = attachment.data.decode("utf-8")
-        print(attachment_content)
-        test.logger.info(
-            "Loaded and printed the attachment content:\n%s", attachment_content
-        )
-    else:
-        test.logger.error("Attachment not found.")
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    test = htf.Test(electrical_measurements, load_attachment_phase)
-    test.add_output_callbacks(
-        json_factory.OutputToJSON("output_files/test_results.json", indent=2)
-    )
-    test.execute(test_start=lambda: "DeviceUnderTest123")
-
-if __name__ == "__main__":
-    main()
-```
-
-Test log and attachments are stored next to each other in the output_files directory:
-
-```txt
-output_files/
-├── measurement_data.csv
-└── test_results.json
-```
-
-And the CSV file is added directly to the test output file:
-
-```javascript {{ title: 'test_results.json' }}
-{
-  "dut_id": "DeviceUnderTest123",
-    ...
-  "phases": [
-    ...
-    {
-     ...
-      "attachments": {
-        "measurement_data_csv": {
-          "mimetype": "text/csv",
-          "sha1": "c85da4ff90e4feb5f7b4ca02a61cc193170dbfaa",
-          "data": "Vm9sdGFnZSxDdXJyZW50CjEyLjAsMS41"
-        }
-      },
-    }
-  ]
-}
-```
-
-## Example 2: Image
-
-In this example, we generate a PNG image of a curve using a library like Matplotlib and attach it to the test record as a pre-existing file.
-
-```sh
-pip install matplotlib
-```
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-import logging
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-from openhtf.output.callbacks import json_factory
-
-# Use a non-interactive backend for Matplotlib
-plt.switch_backend('Agg')
-
-@htf.measures(
-    htf.Measurement('temperature').with_units('C').in_range(20, 30)
-)
-def temperature_measurement(test):
-    test.logger.info('Starting temperature measurement phase.')
-    temperature = 25  # Initial temperature in Celsius
-    test.measurements.temperature = temperature
-
-    # Create a folder for output files
-    os.makedirs('output_files', exist_ok=True)
-
-    # Generate a realistic temperature curve within limits
-    time = np.linspace(0, 10, 100)
-    temperature_curve = temperature + 3 * np.sin(time) + np.random.normal(0, 0.5, size=time.shape)
-    temperature_curve = np.clip(temperature_curve, 20, 30)  # Ensure values stay within limits
-
-    # Plot the temperature curve
-    plt.figure()
-    plt.plot(time, temperature_curve, label='Temperature')
-    plt.axhline(y=30, color='r', linestyle='--', label='Upper Limit')
-    plt.axhline(y=20, color='r', linestyle='--', label='Lower Limit')
-    plt.title('Temperature Measurement Over Time')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Temperature (C)')
-    plt.legend()
-    plt.ylim(15, 35)  # Add some margin around the limits
-    image_file_path = 'output_files/temperature_curve.png'
-    plt.savefig(image_file_path)
-    plt.close()
-
-    # Attach the image file
-    with open(image_file_path, 'rb') as f:
-        test.attach('temperature_curve_image', f.read(), mimetype='image/png')
-
-    test.logger.info('Completed temperature measurement phase.')
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    test = htf.Test(temperature_measurement)
-    test.add_output_callbacks(
-        json_factory.OutputToJSON('./output_files/test_results.json', indent=2)
-    )
-    test.execute(test_start=lambda: 'DeviceUnderTest456')
-
-if __name__ == '__main__':
-    main()
-```
-
-Test log and attachments are stored next to each other in the output directory:
-
-```txt
-output_files/
-├── temperature_curve.png
-└── test_results.json
-```
-
-The generated image looks like this:
+Attach files collected during execution to the test record. {{ className: 'lead' }}
 
 <Image
-  srcLight="/temperature_curve.png"
-  srcDark="/temperature_curve.png"
-  alt="Attachement example"
+  src="/attachments-header.png"
+  alt="Header of the OpenHTF documentation showing Attachments details and integration with TofuPilot."
 />
 
-The JSON log also includes a binary version of the image:
+## Overview
 
-```javascript {{ title: 'test_results.json' }}
-"attachments": {
-    "temperature_curve_image": {
-      "mimetype": "image/png",
-      "sha1": "90ab4aa2f71b52b0492e31be3430cc53581cd5d6",
-      "data": "iVBORw0KGgoAAAANSUhEUgAAAoAAAAHgCAYAAAA10dzkAAA..."
-    }
-}
+Hardware tests often generate extra data, such as images, that can't be captured as measurements. OpenHTF allows you to attach these files to the test record.
+
+With the <TofuPilotLink utmMedium="attachments-overview"/> integration, attachments are uploaded automatically and you can access and download them directly from your TofuPilot workspace.
+
+## Files
+
+You can attach binary data or files generated during the test.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+def phase_attachment(test):
+    # Attach a binary log with the identifier "test_attachment"
+    test.attach("test_attachment", "This is test log data.".encode("utf-8"))
+    return htf.PhaseResult.CONTINUE
+
+def main():
+    test = htf.Test(phase_attachment)
+    test.execute(lambda: "PCB0001")
+
+if __name__ == "__main__":
+    main()
+```
+
+## Files by path
+
+You can attach larger or pre-existing files from disk or URL.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+def phase_file_attachment(test):
+    test.attach_from_file("/path/to/your/logfile.txt")
+    return htf.PhaseResult.CONTINUE
+
+def main():
+    test = htf.Test(phase_file_attachment)
+    test.execute(lambda: "PCB0001")
+
+if __name__ == "__main__":
+    main()
+```
+
+## TofuPilot integration
+
+The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases.
+
+To integrate TofuPilot, install the open-source client:
+
+```sh
+pip install tofupilot[openhtf]
+```
+
+Add it to your test like this:
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from tofupilot.openhtf import TofuPilot
+
+def phase_file_attachment(test):
+    test.attach_from_file("/path/to/your/logfile.txt")
+    return htf.PhaseResult.CONTINUE
+
+def main():
+    test = htf.Test(phase_file_attachment)
+    with TofuPilot(test):                   # just works™️
+      test.execute(lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
+
+You can access attachments in a dedicated section of the run page, where you can open them in the browser or download them.
+
+<Image
+  src="/attachments-page-run.png"
+  alt="Attachments section on the OpenHTF run page, showing options to open files in the browser or download them with TofuPilot integration."
+/>
+
+---
+
+## Advanced use cases
+
+You can use extended features for attachements advanced use cases.
+
+### Access attachments during execution
+
+You can load and access attached files during test execution.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+def phase_attachment(test):
+    # Attach some data
+    test.attach("test_attachment", "Attachment data".encode("utf-8"))
+
+    # Retrieve and print the attached data
+    test_attachment = test.get_attachment("test_attachment")
+    print(test_attachment.data)
+
+    return htf.PhaseResult.CONTINUE
+
+def main():
+    test = htf.Test(phase_attachment)
+    test.execute(lambda: "PCB0001")
+
+if __name__ == "__main__":
+    main()
 ```

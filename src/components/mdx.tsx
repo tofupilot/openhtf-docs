@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 export const a = Link
 export { Button } from '@/components/Button'
-export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
+export { Code as code, CodeGroup, Pre as pre } from '@/components/Code'
 
 export function wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -18,6 +18,19 @@ export function wrapper({ children }: { children: React.ReactNode }) {
         <Feedback />
       </footer>
     </article>
+  )
+}
+
+export const TofuPilotLink = ({ utmMedium }: { utmMedium: string }) => {
+  const baseUrl = 'https://tofupilot.com'
+  const utmSource = 'openhtf.com'
+
+  const fullHref = `${baseUrl}?utm_source=${utmSource}&utm_medium=${utmMedium}`
+
+  return (
+    <a href={fullHref} target="_blank" rel="noopener noreferrer">
+      TofuPilot
+    </a>
   )
 }
 
@@ -95,37 +108,54 @@ export function Properties({ children }: { children: React.ReactNode }) {
 }
 
 function CustomImage({
-  srcLight,
-  srcDark,
+  src,
   alt,
+  withDarkMode = false,
+  link, // Optional link parameter
 }: {
-  srcLight: string
-  srcDark: string
+  src: string
   alt: string
+  withDarkMode?: boolean
+  link?: string // Define as optional string
 }) {
-  const width = 1000
-  const height = 800
+  const width = 800
+  const height = 466
   const className =
     'w-full rounded-lg border-4 border-zinc-200 dark:border-zinc-600 shadow-sm ring-1 ring-zinc-300 dark:ring-zinc-700'
-  return (
+
+  // Replace "-light" with "-dark" if dark mode option is enabled
+  const srcDark = withDarkMode ? src.replace('-light', '-dark') : src
+
+  const imageElement = (
     <>
       {/* Light */}
       <Image
-        src={srcLight}
+        src={src}
         alt={alt}
         width={width}
         height={height}
-        className={clsx('block dark:hidden', className)}
+        className={clsx('block', withDarkMode && 'dark:hidden', className)}
       />
       {/* Dark */}
-      <Image
-        src={srcDark}
-        alt={alt}
-        width={width}
-        height={height}
-        className={clsx('hidden dark:block', className)}
-      />
+      {withDarkMode && (
+        <Image
+          src={srcDark}
+          alt={alt}
+          width={width}
+          height={height}
+          className={clsx('hidden dark:block', className)}
+        />
+      )}
     </>
+  )
+
+  // Wrap the image in an anchor tag if a link is provided
+  return link ? (
+    <a href={link} className="block w-full">
+      {imageElement}
+    </a>
+  ) : (
+    imageElement
   )
 }
 

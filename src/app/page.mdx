@@ -1,6 +1,7 @@
 import { Guides } from '@/components/Guides'
-import { Resources } from '@/components/Resources'
 import { HeroPattern } from '@/components/HeroPattern'
+import { LogoCloud } from '@/components/LogoCloud'
+import { Resources } from '@/components/Resources'
 
 export const metadata = {
   title: 'OpenHTF Documentation',
@@ -10,12 +11,83 @@ export const metadata = {
 
 <HeroPattern />
 
-# OpenHTF
+# Welcome to OpenHTF
 
-OpenHTF (Open Hardware Testing Framework) is the open-source Python hardware testing framework. {{ className: 'lead' }}
+OpenHTF (Open Hardware Testing Framework) is an open-source Python framework for hardware testing. {{ className: 'lead' }}
 
-Originally created at **Google**, OpenHTF is designed to streamline hardware testing. It offers out-of-the-box features for structuring tests, recording measurements, logging results and managing external resources with plugs.
+Originally created at **Google**, OpenHTF is now used by hundreds of teams worldwide, from startups to large companies, across all stages of product development: **verification** in design, **validation** in prototyping, and **manufacturing**.
 
-OpenHTF is used by hundreds of teams worldwide, from labs to manufacturing floors.
+<LogoCloud />
 
-<Resources />
+This documentation is provided by the <TofuPilotLink utmMedium="home" /> team, a database with analytics designed for OpenHTF tests.
+
+## Quick example
+
+<Row>
+  <Col>
+    OpenHTF tests are Python scripts that run a series of test steps on a Unit Under Test (UUT), usually involving data and performing measurements.
+
+    OpenHTF handles the setup, execution, and teardown of the test, keeps track of everything gathered and provides a pass/fail outcome.
+
+    Here are the key concepts in OpenHTF:
+
+      <Properties>
+        <Property name="Phases">
+          Test steps perform actions and return pass, fail, or skip result.
+        </Property>
+        <Property name="Measurements">
+          Capture specific values during phases with optional pass/fail validators.
+        </Property>
+        <Property name="Plugs">
+          Handle external hardware/software interactions with reusable components.
+        </Property>
+      </Properties>
+
+    </Col>
+
+<Col>
+  <CodeGroup title="Example">
+    ```python {{ title: 'main.py' }}
+    import openhtf as htf
+    from openhtf.plugs import plug
+    from multimeter_plug import MultimeterPlug
+
+    @plug(multimeter=MultimeterPlug)
+    @htf.measures(
+      htf.Measurement('voltage')
+      .in_range(3.0, 3.5)
+      .with_units('V'))
+    def test_voltage(test, multimeter):
+      voltage = multimeter.measure_voltage()
+      test.measurements.voltage = voltage
+
+    def main():
+      test = htf.Test(test_voltage)
+      test.execute(lambda: "PCB0001") # UUT S/N
+
+    if __name__ == '__main__':
+        main()
+    ```
+
+    ```python {{ title: 'multimeter_plug.py' }}
+    from openhtf.plugs import plug, BasePlug
+
+    class MultimeterPlug(BasePlug):
+    # Initialize the multimeter plug with a port connection
+    def **init**(self, port):
+      self.port = port
+      self.connection = f"Connected on {self.port}"
+
+    def measure_voltage(self):
+      # Logic to simulate a voltage measurement
+      return 3.3
+
+    # Automatically called at test teardown to clean up
+    def tearDown(self):
+      # Logic to close the connection or clean up resources
+      self.connection = None
+    ```
+
+  </CodeGroup>
+</Col>
+</Row>

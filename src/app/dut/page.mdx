@@ -1,106 +1,159 @@
 export const metadata = {
-  title: 'Device under test',
+  title: 'Unit Under Test (UUT)',
   description:
-    'Learn how to install OpenHTF and create your first test script. This guide includes step-by-step instructions to set up a simple test phase and execute it using the command line.',
+    'Learn how to track and record the Unit Under Test (UUT) serial number in OpenHTF tests. This guide covers operator prompts, setting programmatically, and TofuPilot integration for full traceability.',
+  keywords: [
+    'OpenHTF',
+    'UUT',
+    'Unit Under Test',
+    'Unit Under Test',
+    'test serial number',
+    'traceability',
+    'TofuPilot integration',
+    'hardware testing',
+  ],
+  author: 'TofuPilot',
+  og: {
+    title: 'Unit Under Test (UUT) in OpenHTF',
+    description:
+      'Learn how to record and manage Unit Under Test (UUT) serial numbers in OpenHTF tests with full traceability, including TofuPilot integration.',
+    image: '/UUT-header.png',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@YourTwitterHandle',
+    title: 'Unit Under Test (UUT) in OpenHTF',
+    description:
+      'This guide explains how to handle Unit Under Test (UUT) serial numbers in OpenHTF, with operator prompts and TofuPilot integration.',
+    image: '/UUT-header.png',
+  },
 }
 
-# Device Under Test
+# Unit Under Test (UUT)
 
-OpenHTF requires that a Device Under Test (DUT) ID is set each time a test is executed. If a DUT ID is not provided at the start, the test will begin immediately, assuming the DUT ID will be set later. {{ className: 'lead' }}
+Track the serial number of the unit under test with each run. {{ className: 'lead' }}
 
-<Note>
-  OpenHTF will raise an exception when the test completes if a DUT ID has not
-  been set.
-</Note>
+<Image
+  src="/UUT-header.png"
+  alt="OpenHTF Unit Under Test (UUT) section header with TofuPilot integration."
+/>
 
-## Providing DUT ID at Runtime
+## Overview
 
-The simplest way to provide a DUT ID is by prompting the user for it. OpenHTF provides a built-in `user_input` method for this purpose.
+When running tests, tracking serial numbers is important for traceability. With OpenHTF, you can either manually enter the serial number at the start of the test or set it programmatically during the test.
+
+With the <TofuPilotLink utmMedium="uut-overview"/> integration, a detailed page is automatically created for each unit, showing all tests performed and allowing performance comparisons between different component types, revisions, or batches.
+
+## Prompt at start
+
+You can prompt the operator to input the serial number manually at the start of the test.
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
 from openhtf.plugs import user_input
 
-# Define the test phase
-def power_on_test(test):
-    print('Power on.')
+def power_on(test):
     return PhaseResult.CONTINUE
 
 def main():
-    test = Test(power_on_test)
-    # prompt_for_test_start prompts the operator for a DUT ID
-    test.execute(test_start=user_input.prompt_for_test_start())
+    test = Test(power_on)
+    test.execute(test_start=user_input.prompt_for_test_start()) # Prompt at start
 
 if __name__ == '__main__':
     main()
 ```
 
-### Explanation
-
-- The main.py script defines a test phase `power_on_test` and creates a test instance `test` using the `Test` class.
-- The `prompt_for_test_start` method prompts the operator to input a DUT ID before the test starts.
-
-To run the script, use the following command in the virtual environment:
+When executed, the script prompts the user to enter a serial number.
 
 ```sh
-python main.py
-```
-
-This testbench does not use the operator UI yet, so all interactions are made through the command line. 
-In this exemple, the operator UI enters the device name "DeviceUnderTest123".
-
-```sh
-(venv) C:\tofupilot > python main.py
-Enter a DUT ID in order to start the test.
---> DeviceUnderTest123
-Power on.
+Enter a UUT ID in order to start the test.
+--> PCB001
 
 ======================= test: openhtf_test  outcome: PASS ======================
 ```
 
-## Providing DUT ID Statically
+## Set at start
 
-Alternatively, the DUT ID can be set programmatically.
+You can set the serial number at the start of the test.
 
 ```python {{ title: 'main.py' }}
 from openhtf import Test, PhaseResult
 
-# Define the test phase
-def power_on_test(test):
-    print('Power on.')
+def power_on(test):
     return PhaseResult.CONTINUE
 
 def main():
-    # Create a test instance with the defined phase
-    test = Test(power_on_test)
-    # Provide a static DUT ID for the test start
-    test.execute(test_start=lambda: 'DeviceUnderTest123')
+    test = Test(power_on)
+    test.execute(lambda: 'PCB001') # Set at start
 
 if __name__ == '__main__':
     main()
 ```
 
-### Explanation
+## Set during test
 
-- The main.py script includes a test phase `power_on_test` and a test instance `test`.
-- A static DUT ID (DeviceUnderTest123) is provided programmatically when starting the test.
+You can set the serial number during the test.
 
-To run the script, use the following command in the virtual environment:
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
 
-```sh
-python main.py
+def get_sn(test):
+    test.test_record.dut_id = 'PCB001' # Set during test
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(get_sn)
+    test.execute()
+
+if __name__ == '__main__':
+    main()
 ```
 
-This testbench does not use the operator UI yet, so all interactions are made through the command line.
+## TofuPilot integration
+
+The <TofuPilotLink utmMedium="uut-integration" /> integration automatically uploads the OpenHTF report to your TofuPilot using the UUT's serial number.
+
+To integrate TofuPilot, install the open-source client:
 
 ```sh
-(venv) C:\tofupilot > python main.py
-Power on.
-
-======================= test: openhtf_test  outcome: PASS ======================
+pip install tofupilot[openhtf]
 ```
 
-<Note>
-  For more complete examples about user interactivity in OpenHTF, see [this
-  section](https://www.openhtf.com/plugs/user-input).
-</Note>
+Add it to your test like this:
+
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+from tofupilot.openhtf import TofuPilot
+
+def get_sn(test):
+    test.test_record.dut_id = 'PCB001'
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(get_sn)
+    with TofuPilot(test):
+      test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+The first run will prompt for your API key if you're not signed up. A dedicated page is created for each test run:
+
+<Image
+  src="/UUT-page-run.png"
+  alt="Test run page for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
+/>
+
+On the unit page, you can view all runs conducted on this unit across all test procedures.
+
+<Image
+  src="/UUT-page-unit.png"
+  alt="Unit page showing all test runs for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
+/>
+
+You can extend OpenHTF to track part numbers, revisions, batch numbers, and sub-units in TofuPilot.
+
+<Button href="https//docs.tofupilot.com/uut" variant="text" arrow="right">
+  <>Learn more in the TofuPilot Docs</>
+</Button>

@@ -10,6 +10,7 @@ import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
 import { remToPx } from '@/lib/remToPx'
+import { Button } from './Button'
 
 interface NavGroup {
   title: string
@@ -36,6 +37,7 @@ function TopLevelNavItem({
     <li className="md:hidden">
       <Link
         href={href}
+        target="_blank"
         className="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
       >
         {children}
@@ -236,45 +238,52 @@ function NavigationGroup({
 
 export const navigation: Array<NavGroup> = [
   {
-    title: 'Getting started',
+    title: 'Getting Started',
     links: [
-      { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
-      { title: 'Device under test', href: '/dut' },
+      { title: 'Community', href: '/community' },
+      // { title: 'Templates', href: '/templates' },
+    ],
+  },
+  {
+    title: 'Develop',
+    links: [
+      { title: 'Unit Under Test (UUT)', href: '/dut' },
       {
         title: 'Phases',
         href: '/phases',
-      },
-      {
-        title: 'Outputs',
-        href: '/outputs',
       },
       { title: 'Measurements', href: '/measurements' },
       {
         title: 'Attachments',
         href: '/attachments',
       },
-      { title: 'Configuration', href: '/configuration' },
       {
-        title: 'Logging',
-        href: '/logging',
+        title: 'Output callbacks',
+        href: '/output-callbacks',
       },
+      { title: 'Plugs', href: '/plugs' },
+      {
+        title: 'Logger',
+        href: '/logger',
+      },
+      { title: 'Configurations', href: '/configuration' },
     ],
   },
   {
-    title: 'Traceability & Analytics',
+    title: 'Deploy',
     links: [
-      { title: 'Introduction', href: '/tofupilot/introduction' },
-      { title: 'First-pass yield', href: '/tofupilot/first-pass-yield' },
-      // { title: 'Process capability', href: '/tofupilot/process-capability' },
+      // { title: 'Operator UI', href: '/operator-ui' },
+      { title: 'Analytics', href: '/tofupilot-analytics' },
+      // { title: 'Traceability', href: '/tofupilot-traceability' },
     ],
+    new: true,
   },
   {
-    title: 'Plugs',
+    title: 'Resources',
     links: [
-      { title: 'Syntax', href: '/plugs/syntax' },
-      { title: 'User Input Plug', href: '/plugs/user-input' },
-      { title: 'Instruments Plugs', href: '/plugs/instruments' },
+      // { title: 'Coding Guidelines', href: '/coding-guidelines' },
+      { title: 'Documentation changelog', href: '/changelog' },
     ],
   },
 ]
@@ -287,6 +296,9 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
         <TopLevelNavItem href="https://github.com/google/openhtf">
           GitHub
         </TopLevelNavItem>
+        <TopLevelNavItem href="https://tofupilot.com">
+          TofuPilot
+        </TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
             key={group.title}
@@ -295,9 +307,9 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
           />
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          {/* <Button href="#" variant="filled" className="w-full">
-            Sign in
-          </Button> */}
+          <Button href="https://discord.gg/T4pak7pk" variant="discord">
+            <>Join Discord</>
+          </Button>
         </li>
       </ul>
     </nav>

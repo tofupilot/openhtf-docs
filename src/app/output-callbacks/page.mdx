@@ -1,0 +1,157 @@
+export const metadata = {
+  title: 'Outputs',
+  description:
+    'Learn how to create structured test results with OpenHTF. This guide covers generating JSON output and implementing custom output mechanisms with detailed examples and code snippets.',
+}
+
+# Output Callbacks
+
+Enable automatic test report generation in JSON or other formats. {{ className: 'lead' }}
+
+<Image
+  src="/output-callbacks-header.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+## Overview
+
+Tracking tests is crucial for traceability and analysis, especially in production environments. OpenHTF uses output callbacks to automatically generate reports, with a default JSON format that can be customized as needed.
+
+When integrating with <TofuPilotLink utmMedium="output-callbacks-overview" />, test results synch directly to TofuPilot without local storage, ensuring real-time remote access and reducing the risk of data loss. If needed, you can still configure additional callbacks to export results locally.
+
+## JSON
+
+You can enable automatic test result export in the default JSON format.
+
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+from openhtf.output.callbacks import json_factory
+
+def get_sn(test):
+    test.test_record.dut_id = 'PCB001'
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(get_sn)
+    # Exports results to JSON with pretty-printing
+    test.add_output_callbacks(json_factory.OutputToJSON("test_result.json", indent=2))
+    test.execute()
+
+if __name__ == "__main__":
+    main()
+```
+
+A `test_result.json` file is created after execution and saved in the execution directory. The file path can be changed if needed. The general structure of an OpenHTF JSON log is as follows:
+
+```txt
+  dut_id
+  start_time_millis
+  end_time_millis
+  outcome                    # PASS/FAIL
+  metadata
+    └── test_name
+    └── config
+    └── ...
+  phases                     # Array of test phases executed
+    └── name
+    └── outcome              # PASS/FAIL
+    └── result               # Phase-specific result details (e.g., CONTINUE)
+    └── measurements
+  log_records                # Array of log messages
+    └── message
+    └── timestamp_millis
+  station_id
+  code_info                  # Details about the test script (name, source code)
+```
+
+## TofuPilot integration
+
+The <TofuPilotLink utmMedium="output-callbacks-integration" /> automatically uploads OpenHTF test reports using an output callback.
+
+To integrate TofuPilot, install the open-source client:
+
+```sh
+pip install tofupilot[openhtf]
+```
+
+Add it to your test like this:
+
+```python {{ title: 'main.py' }}
+from openhtf import Test, PhaseResult
+from tofupilot.openhtf import TofuPilot
+
+def get_sn(test):
+    test.test_record.dut_id = 'PCB001'
+    return PhaseResult.CONTINUE
+
+def main():
+    test = Test(get_sn)
+    with TofuPilot(test):  # just works™️
+      test.execute()
+
+if __name__ == '__main__':
+    main()
+```
+
+Test runs are securely uploaded using your or the test station's API key. They appear right away on the "Runs" page in your workspace. Any import warnings or errors are listed on the "Import Error" page.
+
+<Image
+  src="/output-callbacks-page-run.png"
+  alt="outputs section on the OpenHTF run page, showing options to open files in the browser or download them with TofuPilot integration."
+/>
+
+The callback generates a default JSON OpenHTF log and attached it to the test run, capturing the full output, including custom fields. You don't need an output callback anymore, except if you want to keep storing local results.
+
+<Image
+  src="/output-callbacks-page-attachment.png"
+  alt="Attachments section on the OpenHTF run page, showing options to open files in the browser or download them with TofuPilot integration."
+/>
+
+You can learn more on TofuPilot in the documentation.
+
+<Button href="https//docs.tofupilot.com/" variant="text" arrow="right">
+  <>Learn more in the TofuPilot Docs</>
+</Button>
+
+---
+
+## Advanced use cases
+
+You can use output callbacks extended features for advanced use cases.
+
+### Custom output format
+
+You can implement a custom output format by creating a function to handle the test record and adding it as an output callback if the built-in format doesn’t meet your needs.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+def custom_output_callback(test_record):
+    with open("./custom_output.txt", "w") as f:
+        f.write("Custom Output\n")
+        f.write(f"DUT ID: {test_record.dut_id}\n")
+        f.write(f"Outcome: {test_record.outcome}\n")
+        for phase in test_record.phases:
+            f.write(f"Phase: {phase.name}\n")
+
+def get_sn(test):
+    test.test_record.dut_id = "PCB001"
+    return htf.PhaseResult.CONTINUE
+
+def main():
+    test = htf.Test(get_sn)
+    test.add_output_callbacks(custom_output_callback)
+    test.execute()
+
+if __name__ == "__main__":
+    main()
+```
+
+The output file will then be:
+
+```txt {{ title: 'custom_output.txt' }}
+Custom Output
+DUT ID: PCB001
+Outcome: Outcome.PASS
+Phase: get_sn
+```

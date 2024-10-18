@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 function ArrowIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -17,6 +17,8 @@ function ArrowIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 const variantStyles = {
   primary:
     'rounded-full bg-zinc-900 py-1 px-3 text-white hover:bg-zinc-700 dark:bg-teal-400/10 dark:text-teal-400 dark:ring-1 dark:ring-inset dark:ring-teal-400/20 dark:hover:bg-teal-400/10 dark:hover:text-teal-300 dark:hover:ring-teal-300',
+  discord:
+    'rounded-full bg-indigo-500 py-1 px-3 text-white hover:bg-indigo-700 dark:bg-indigo-400/10 dark:text-indigo-400 dark:ring-1 dark:ring-inset dark:ring-indigo-400/20 dark:hover:bg-indigo-400/10 dark:hover:text-indigo-300 dark:hover:ring-indigo-300',
   secondary:
     'rounded-full bg-zinc-100 py-1 px-3 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800/40 dark:text-zinc-400 dark:ring-1 dark:ring-inset dark:ring-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-300',
   filled:
@@ -24,7 +26,6 @@ const variantStyles = {
   outline:
     'rounded-full py-1 px-3 text-zinc-700 ring-1 ring-inset ring-zinc-900/10 hover:bg-zinc-900/2.5 hover:text-zinc-900 dark:text-zinc-400 dark:ring-white/10 dark:hover:bg-white/5 dark:hover:text-white',
   text: 'text-teal-500 hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-500',
-  teal: 'text-teal-500 hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-500'
 }
 
 type ButtonProps = {

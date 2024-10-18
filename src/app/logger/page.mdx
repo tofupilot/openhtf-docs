@@ -1,0 +1,171 @@
+export const metadata = {
+  title: 'Logging',
+  description:
+    'Explore how to configure logger options in OpenHTF to capture and manage log output during test execution, with examples of standard and custom log handlers.',
+}
+
+# Logger
+
+Capture structured log output during test execution. {{ className: 'lead' }}
+
+<Image
+  src="/logger-header.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+## Overview
+
+Logging is crucial for debugging and tracking test execution. OpenHTF offers a logger that captures detailed outputs, custom messages, and error traces, which are saved to test records through output callbacks.
+
+{/* When integrating with <TofuPilotLink utmMedium="logger-overview" />, logs are automatically synced to TofuPilot, providing real-time access to test execution details. This helps ensure that critical information is always available for analysis. You can also configure additional logging options if you need to store logs locally for further investigation. */}
+
+## Syntax
+
+You can log events in phases and plugs with four different levels depending on the severity: `debug` for detailed troubleshooting, `info` for general information, `warning` for potential issues, and `error` for failures.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.output.callbacks import json_factory
+
+class ExamplePlug(htf.plugs.BasePlug):
+    def __int__(self):
+        self.logger.info("Initialization")
+
+    def tearDown(self):
+        self.logger.info("Teardown phase")
+
+    def do_something(self):
+        self.logger.debug("Plug debugging details...")
+
+@htf.plugs.plug(my_plug=ExamplePlug)
+def phase_test(test, my_plug):
+    test.logger.info("Test phase started.")
+    test.logger.warning("Warning in test phase: Potential issue.")
+    try:
+        raise ValueError("Error occurred in test phase.")
+    except ValueError as e:
+        test.logger.error(f"Test phase error: {e}")
+    my_plug.do_something()
+
+def main():
+    test = htf.Test(phase_test)
+    test.add_output_callbacks(json_factory.OutputToJSON("test_result.json", indent=2))
+    test.execute(lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+
+```
+
+You can print the logs to the console, using the `-v` flag to control verbosity.
+
+```sh
+python main.py -v
+```
+
+- Default: No logs are printed.
+- `-v`: Logs at the `info` level and above are printed.
+- `-vv`: Logs at the `debug` level and above are printed.
+
+```txt {{ title: 'Terminal' }}
+I 15:11:48 test_descriptor - Executing test: 
+I 15:11:48 <phase: phase_test> - Test phase started.
+W 15:11:48 <phase: phase_test> - Warning in test phase: Potential issue.
+E 15:11:48 <phase: phase_test> - Test phase error: Error occurred in test phase.
+I 15:11:48 <plug: ExamplePlug> - Teardown phase
+```
+
+All logs are saved to the report file via output callbacks if enabled.
+
+```javascript {{ title: 'test_results.json' }}
+"log_records": [
+    {
+      "level": 30,
+      "logger_name": "openhtf.test_record.<test_uid>.phase.phase_test",
+      "source": "main.py",
+      "lineno": 11,
+      "timestamp_millis": 1729163738931,
+      "message": "Warning in test phase: Potential issue."
+    },
+  ...
+]
+```
+
+---
+
+## Advanced use cases
+
+You can use the logger extended features for advanced use cases.
+
+### Logger architecture
+
+OpenHTF organizes its loggers hierarchically, with different categories managing parts of the framework and test executions.
+
+```txt
+openhtf/
+│
+├── .core.test_descriptor
+├── .util.threads
+|
+├── .test_record.<test_uid>
+│   ├── .test_record.<test_uid>.phase.<phase_name>
+│   └── .test_record.<test_uid>.plug.<plug_name>
+```
+
+- **Framework logs**: Manage internal logs for core OpenHTF operations (e.g. `openhtf.core.test_descriptor`, `openhtf.util.threads`).
+- **Test record logs**: Specific to each test, prefixed by `openhtf.test_record.<test_uid>`, capturing test details.
+- **Test subsystem logs**: Handle logs for individual test phases and plugs, identified by `openhtf.test_record.<test_uid>.phase.<phase_name>` or `openhtf.test_record.<test_uid>.plug.<plug_name>`.
+
+### Custom logger
+
+You can customize the logger format.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+
+# Define a test phase that logs information
+@htf.measures(htf.Measurement('temperature').with_units('C'))
+def temperature_measurement(test):
+    test.logger.info('Temperature measurement started.')
+    test.measurements.temperature = 25
+    test.logger.info('Temperature measurement completed.')
+
+def main():
+    # Get the OpenHTF logger
+    logger = logging.getLogger('openhtf')
+
+    # Create a custom log format with additional details:
+    # - %(asctime)s: Adds a timestamp to each log message.
+    # - %(name)s: Includes the name of the logger (in this case, 'openhtf').
+    # - %(levelname)s: Logs the level of the message (INFO, DEBUG, WARNING, ERROR, etc.).
+    # - %(lineno)d: Adds the line number where the log was created.
+    # - %(message)s: The actual log message.
+    formatter = logging.Formatter(
+        '%(asctime)s | %(name)s | [%(levelname)s] | Line: %(lineno)d | %(message)s'
+    )
+
+    # Create a stream handler that will output logs to the console (stdout)
+    handler = logging.StreamHandler()
+
+    # Apply the custom format to the handler
+    handler.setFormatter(formatter)
+
+    # Attach the handler to the logger
+    logger.addHandler(handler)
+
+    # Set the logging level to INFO (it will log INFO, WARNING, and ERROR messages)
+    logger.setLevel(logging.INFO)
+
+    test = htf.Test(temperature_measurement)
+    test.execute(test_start=lambda: 'PCB001')
+
+if __name__ == '__main__':
+    main()
+```
+
+Sample output:
+
+```txt {{ title: 'Terminal' }}
+2024-10-17 16:30:01,689 | openhtf.test_record.37182:0bdc84d5174c4d8f:2f76fe3a078146f2:1729175401689.phase_executor | [DEBUG] | Line: 307 | Executing phase trigger_phase
+```

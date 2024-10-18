@@ -1,0 +1,121 @@
+export const metadata = {
+  title: 'Manufacturing Test Traceability & Analytics',
+}
+
+# Manufacturing Test Analytics
+
+With TofuPilot, monitor your tests first-pass yield (FPY), and capability index (Cpk) at the test phase level. {{ className: 'lead' }}
+
+<Image
+  src="/tofupilot-analytics-header.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+## Overview
+
+When you deploy your test script, it runs many times, and **issues arise**. Instruments may not connect, **limits might reject good parts**, or some steps take longer than expected.
+
+The **best way to troubleshoot** your test scripts is with a **database of test logs and analytics**, but building that adds more work when you're already managing tests, hardware, and production timelines.
+
+We **faced these issues ourselves**, building scrappy analytics while scaling drone manufacturing. We saw many other teams doing the same. So, we built <TofuPilotLink utmMedium="" /> a **plug-and-play analytics platform for hardware test engineers**, on solid web infrastructure, available on cloud or on-premise, and with step-level test analytics.
+
+<Button variant="text" arrow="right">
+  <>Try it for free!</>
+</Button>
+
+It’s OpenHTF-compatible and integrates in 5 minutes. And let us know what you think on [Discord](https://discord.gg/T4pak7pk)!
+
+## TofuPilot integration
+
+To integrate TofuPilot, install the open-source client:
+
+```sh
+pip install tofupilot[openhtf]
+```
+
+Add it to your test like this:
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.util import units
+from tofupilot.openhtf import TofuPilot
+
+def phase_one(test):
+    return htf.PhaseResult.CONTINUE
+
+@htf.measures(
+    htf.Measurement("temperature")
+    .in_range(0, 100)
+    .with_units(units.DEGREE_CELSIUS)
+)
+def phase_temperature(test):
+    test.measurements.temperature = 25
+
+def main():
+    test = htf.Test(phase_one, phase_temperature)
+    with TofuPilot(test):                          # just works™️
+        test.execute(lambda: "PCB001")
+
+if __name__ == "__main__":
+    main()
+```
+
+Each time you run a test, it's automatically uploaded to your workspace.
+
+## First-pass yield (FPY)
+
+On the test procedure page, you'll find **detailed statistics on execution** performance. The most commonly used metric in industrial test monitoring is **First-pass yield** (FPY). It measures the percentage of parts that pass without rework and helps assess the efficiency of the process.
+
+In TofuPilot, the first-pass yield is calculated in real time for the complete test and for each test phase, so you can quickly see which step impacts the overall yield the most.
+
+<Image
+  src="/tofupilot-analytics-first-pass-yield.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+A low First-pass yield (FPY) means many parts fail on the first try, often due to poorly calibrated limits, procedural errors, equipment defects, or process variations.
+
+## Process capability index (Cpk)
+
+The Process Capability Index (Cpk) measures **how well a test stays within its limits**. It applies to test steps with numerical measurements and at least one lower or upper limit.
+
+In TofuPilot, Cpk is calculated in real-time for each test step, showing you how capable your test is.
+
+<Image
+  src="/tofupilot-analytics-cpk.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+### Understanding Cpk
+
+A low Cpk means your test is too variable or not centered, leading to inconsistent results.
+
+- **Cpk > 1.33**: test process is highly capable.
+- **Cpk = 1**: test process is marginally capable.
+- **Cpk < 1**: test process is not capable; improvements are needed.
+
+A low Cpk often means your process has too much variation: limits are too strict or not centered, or test values are too close to the limits, causing inconsistent or out-of-spec results.
+
+### How-to fix low Cpk
+
+1. **Identify Test Steps**: Use TofuPilot's step selection to find test steps with low Cpk that are dragging down the average.
+2. **Check Control Charts**: Review historical values to see if it's a sudden drop (indicating a quality issue) or if limits were always too strict or poorly centered.
+3. **Use Filters**: Apply filters like revision, batch number, and date in TofuPilot to pinpoint the root cause of low Cpk.
+
+<Image
+  src="/tofupilot-analytics-control-chart.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
+
+### Cpk Calculation
+
+You can compute Cpk by dividing the smaller of the differences between the test mean and the specification limits (low and high) by three times the test standard deviation.
+
+```jsx
+Cpk = min[(USL - μ) / (3σ), (μ - LSL) / (3σ)]
+```
+
+- **USL** = Upper Specification Limit
+- **LSL** = Lower Specification Limit
+- **μ** = Process Mean
+- **σ** = Standard Deviation

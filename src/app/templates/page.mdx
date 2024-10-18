@@ -1,0 +1,337 @@
+## Example 1: CSV File
+
+In this example, we generate a CSV file containing measurement data and attach it to the test output.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+import os
+from openhtf.output.callbacks import json_factory
+
+@htf.measures(htf.Measurement("voltage"), htf.Measurement("current"))
+def electrical_measurements(test):
+    # Simulated electrical measurements
+    voltage = 12.0  # Volts
+    current = 1.5  # Amperes
+    test.measurements.voltage = voltage
+    test.measurements.current = current
+
+    # Create the output directory if it doesn't exist
+    os.makedirs("output_files", exist_ok=True)
+
+    # Save the data to a CSV file
+    csv_file_path = "output_files/measurement_data.csv"
+    with open(csv_file_path, "w") as csv_file:
+        csv_file.write("Voltage,Current\n")
+        csv_file.write(f"{voltage},{current}\n")
+
+    # Attach the CSV file to the test
+    with open(csv_file_path, "rb") as f:
+        test.attach("measurement_data_csv", f.read(), mimetype="text/csv")
+
+def load_attachment_phase(test):
+    # Load and print the attached CSV content
+    attachment = test.get_attachment("measurement_data_csv")
+    if attachment:
+        attachment_content = attachment.data.decode("utf-8")
+        print(attachment_content)
+        test.logger.info(
+            "Loaded and printed the attachment content:\n%s", attachment_content
+        )
+    else:
+        test.logger.error("Attachment not found.")
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    test = htf.Test(electrical_measurements, load_attachment_phase)
+    test.add_output_callbacks(
+        json_factory.OutputToJSON("output_files/test_results.json", indent=2)
+    )
+    test.execute(test_start=lambda: "DeviceUnderTest123")
+
+if __name__ == "__main__":
+    main()
+```
+
+Test log and attachments are stored next to each other in the output_files directory:
+
+```txt
+output_files/
+├── measurement_data.csv
+└── test_results.json
+```
+
+And the CSV file is added directly to the test output file:
+
+```javascript {{ title: 'test_results.json' }}
+{
+  "dut_id": "DeviceUnderTest123",
+    ...
+  "phases": [
+    ...
+    {
+     ...
+      "attachments": {
+        "measurement_data_csv": {
+          "mimetype": "text/csv",
+          "sha1": "c85da4ff90e4feb5f7b4ca02a61cc193170dbfaa",
+          "data": "Vm9sdGFnZSxDdXJyZW50CjEyLjAsMS41"
+        }
+      },
+    }
+  ]
+}
+```
+
+## Example 2: Image
+
+In this example, we generate a PNG image of a curve using a library like Matplotlib and attach it to the test record as a pre-existing file.
+
+```sh
+pip install matplotlib
+```
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+from openhtf.output.callbacks import json_factory
+
+# Use a non-interactive backend for Matplotlib
+plt.switch_backend('Agg')
+
+@htf.measures(
+    htf.Measurement('temperature').with_units('C').in_range(20, 30)
+)
+def temperature_measurement(test):
+    test.logger.info('Starting temperature measurement phase.')
+    temperature = 25  # Initial temperature in Celsius
+    test.measurements.temperature = temperature
+
+    # Create a folder for output files
+    os.makedirs('output_files', exist_ok=True)
+
+    # Generate a realistic temperature curve within limits
+    time = np.linspace(0, 10, 100)
+    temperature_curve = temperature + 3 * np.sin(time) + np.random.normal(0, 0.5, size=time.shape)
+    temperature_curve = np.clip(temperature_curve, 20, 30)  # Ensure values stay within limits
+
+    # Plot the temperature curve
+    plt.figure()
+    plt.plot(time, temperature_curve, label='Temperature')
+    plt.axhline(y=30, color='r', linestyle='--', label='Upper Limit')
+    plt.axhline(y=20, color='r', linestyle='--', label='Lower Limit')
+    plt.title('Temperature Measurement Over Time')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Temperature (C)')
+    plt.legend()
+    plt.ylim(15, 35)  # Add some margin around the limits
+    image_file_path = 'output_files/temperature_curve.png'
+    plt.savefig(image_file_path)
+    plt.close()
+
+    # Attach the image file
+    with open(image_file_path, 'rb') as f:
+        test.attach('temperature_curve_image', f.read(), mimetype='image/png')
+
+    test.logger.info('Completed temperature measurement phase.')
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    test = htf.Test(temperature_measurement)
+    test.add_output_callbacks(
+        json_factory.OutputToJSON('./output_files/test_results.json', indent=2)
+    )
+    test.execute(test_start=lambda: 'DeviceUnderTest456')
+
+if __name__ == '__main__':
+    main()
+```
+
+Test log and attachments are stored next to each other in the output directory:
+
+```txt
+output_files/
+├── temperature_curve.png
+└── test_results.json
+```
+
+The generated image looks like this:
+
+<Image
+  srcLight="/temperature_curve.png"
+  srcDark="/temperature_curve.png"
+  alt="Attachement example"
+/>
+
+The JSON log also includes a binary version of the image:
+
+```javascript {{ title: 'test_results.json' }}
+"attachments": {
+    "temperature_curve_image": {
+      "mimetype": "image/png",
+      "sha1": "90ab4aa2f71b52b0492e31be3430cc53581cd5d6",
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAoAAAAHgCAYAAAA10dzkAAA..."
+    }
+}
+```
+
+## Instrument Plugs
+
+OpenHTF provides a powerful plugin system, known as "plugs" which allows to abstract hardware interactions. They can be used to encapsulate reusable test logic, hardware interfaces, or any other functionality you need. {{ className: 'lead' }}
+
+## Pre-made instrument plugs
+
+OpenHTF includes a collection of pre-made, useful plugs and also allows you to create custom plugs tailored to your needs.
+
+<Note>
+  You can find a comprehensive list of the built-in hardware plugs
+  [here](https://github.com/google/openhtf/tree/master/openhtf/plugs).
+</Note>
+
+## Custom instrument plugs
+
+Below are implementation examples of user-defined plugs
+
+### YKUSH USB Hub
+
+[YKUSH USB](https://www.yepkit.com/products/ykush) hubs are programmable USB hubs that allow users to control the power state of individual USB ports programmatically. These hubs are typically used in test benches for automated testing and development environments, where devices need to be power-cycled or reset remotely without manual intervention.
+
+<Image src="/ykush.png" alt="YKUSH USB hub" />
+
+This plug design for the YKUSH USB hub allows programmatic control of USB port power states. Configuration settings specify the port number, initialization sets up the plug, and the teardown method is empty since no cleanup is needed. The plug uses the `ykushcmd` utility to switch the USB ports on and off.
+
+<Note>
+  You need to have the hardware connected for this code example to work.
+</Note>
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+from openhtf.core import base_plugs
+from openhtf.util import conf
+from openhtf.output.callbacks import json_factory
+import subprocess
+
+# Define configuration options
+conf.declare('ykush_port', default_value=0, description='Port number on the YKUSH hub to control.')
+
+class YKUSHPlug(base_plugs.BasePlug):
+    def __init__(self):
+        # Initialize the port from configuration
+        self.port = conf.ykush_port
+
+    def power_on(self):
+        # Power on the specified port
+        subprocess.run(['ykushcmd', '-u', str(self.port)], check=True)
+        self.logger.info('Powered on port %d', self.port)
+
+    def power_off(self):
+        # Power off the specified port
+        subprocess.run(['ykushcmd', '-d', str(self.port)], check=True)
+        self.logger.info('Powered off port %d', self.port)
+
+    def tearDown(self):
+        # Log teardown process
+        self.logger.info('Tearing down YKUSH plug for port %d', self.port)
+
+@htf.plug(ykush_plug=YKUSHPlug)
+def control_usb_port(test, ykush_plug):
+    # Power on the USB port and log the action
+    ykush_plug.power_on()
+    test.logger.info('USB port powered on.')
+    # Simulate some test operations
+    ykush_plug.power_off()
+    test.logger.info('USB port powered off.')
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    # Create an OpenHTF test with the control_usb_port phase
+    test = htf.Test(control_usb_port)
+    # Add JSON output callback to log test results in test_results.json
+    test.add_output_callbacks(json_factory.OutputToJSON('./test_results.json', indent=2))
+    # Execute the test, providing a lambda function to return the device ID
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
+
+if __name__ == '__main__':
+    main()
+```
+
+### Firmata
+
+This plug design for a Firmata-based device allows for programmatic control and monitoring of pin states on a microcontroller like Arduino or Teensy. Using Firmata, you can abstract away the serial communication protocol, simplifying the interaction between the microcontroller and OpenHTF.
+
+The plug uses the PyMata library to interface with the Firmata firmware on the device. Configuration settings specify the serial port, and the plug methods handle setting pin modes and reading digital values.
+
+```sh
+pip install PyMata
+```
+
+### How to install Firmata on a board
+
+1. **Install the Arduino IDE**: Download from the [official Arduino website](https://www.arduino.cc/en/software).
+
+2. **Open the Firmata Example**: Launch Arduino IDE and navigate to `File` > `Examples` > `Firmata` > `StandardFirmata`.
+
+3. **Connect Your Board**: Connect your Arduino or Teensy board via USB.
+
+4. **Select Your Board and Port**: Go to `Tools` > `Board` and select your model. Then, go to `Tools` > `Port` and select the correct port.
+
+5. **Upload the Firmata Firmware**: Click the upload button to upload the StandardFirmata sketch to your board.
+
+### OpenHTF plug example
+
+<Note>
+  You need to have the hardware connected for this code example to work.
+</Note>
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+import logging
+from openhtf.core import base_plugs
+from openhtf.util import conf
+from openhtf.output.callbacks import json_factory
+from PyMata.pymata import PyMata
+import time
+
+# Define configuration options
+conf.declare('firmata_com_port', default_value='/dev/ttyACM0', description='COM Port of Firmata Board')
+
+class FirmataPlug(base_plugs.BasePlug):
+
+    @conf.inject_positional_args
+    def __init__(self, firmata_com_port):
+        self._board = PyMata(firmata_com_port, verbose=False)
+
+    def set_digital_input(self, pin):
+        self._board.set_pin_mode(pin, self._board.INPUT, self._board.DIGITAL)
+        time.sleep(1)
+
+    def digital_read(self, pin):
+        return self._board.digital_read(pin)
+
+    def tearDown(self):
+        self._board.close()
+        self.logger.info('Closed connection to Firmata board.')
+
+@htf.plug(board=FirmataPlug)
+def digital_read_phase(test, board):
+    board.set_digital_input(4)
+    board.set_digital_input(5)
+    board.set_digital_input(6)
+    test.measurements.P4_digital = board.digital_read(4)
+    test.measurements.P5_digital = board.digital_read(5)
+    test.measurements.P6_digital = board.digital_read(6)
+    test.logger.info('Completed digital read phase.')
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    test = htf.Test(digital_read_phase)
+    test.add_output_callbacks(json_factory.OutputToJSON('./test_results.json', indent=2))
+    test.execute(test_start=lambda: 'DeviceUnderTest123')
+
+if __name__ == '__main__':
+    main()
+```

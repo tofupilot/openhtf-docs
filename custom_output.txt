@@ -1,5 +1,0 @@
-Custom Output
-DUT ID: DeviceUnderTest456
-Outcome: Outcome.PASS
-Phase: trigger_phase
-Phase: power_on_test

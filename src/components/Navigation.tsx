@@ -259,7 +259,7 @@ export const navigation: Array<NavGroup> = [
         href: '/attachments',
       },
       {
-        title: 'Output Callbacks',
+        title: 'Output callbacks',
         href: '/output-callbacks',
       },
       { title: 'Plugs', href: '/plugs' },
@@ -283,7 +283,7 @@ export const navigation: Array<NavGroup> = [
     title: 'Resources',
     links: [
       // { title: 'Coding Guidelines', href: '/coding-guidelines' },
-      { title: 'Documentation Changelog', href: '/changelog' },
+      { title: 'Documentation changelog', href: '/changelog' },
     ],
   },
 ]

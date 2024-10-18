@@ -3,6 +3,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://openhtf.com/sitemap.xml
-
-# Block specific erroneous page
-Disallow: /https/docs.tofupilot.com

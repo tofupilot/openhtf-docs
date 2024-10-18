@@ -17,9 +17,9 @@ When you deploy your test script, it runs many times, and **issues arise**. Inst
 
 The **best way to troubleshoot** your test scripts is with a **database of test logs and analytics**, but building that adds more work when you're already managing tests, hardware, and production timelines.
 
-We **faced these issues ourselves**, building scrappy analytics while scaling drone manufacturing. We saw other teams doing the same. So, we built a **plug-and-play analytics platform for test engineers**, on solid web infrastructure, available on cloud or on-premise, and with step-level test analytics.
+We **faced these issues ourselves**, building scrappy analytics while scaling drone manufacturing. We saw many other teams doing the same. So, we built <TofuPilotLink utmMedium="" /> a **plug-and-play analytics platform for test engineers**, on solid web infrastructure, available on cloud or on-premise, and with step-level test analytics.
 
-Meet <TofuPilotLink utmMedium="" />! 😃 Try it for free, it's natively compatible with OpenHTF and takes 5 minutes to integrate. And please let us know what you think on our Discord!
+Try it for free! It’s OpenHTF-compatible and integrates in 5 minutes. And let us know what you think on [Discord](https://discord.gg/T4pak7pk)!
 
 ## TofuPilot integration
 
@@ -65,12 +65,12 @@ Each time you run a test, it's automatically uploaded to your workspace, and ser
 
 ## First-pass yield (FPY)
 
-On the test procedure page, you'll find detailed statistics on execution performance. The most commonly used metric in industrial test monitoring is First Pass Yield (FPY). It measures the percentage of parts that pass without rework and helps assess the efficiency of the process.
+On the test procedure page, you'll find **detailed statistics on execution** performance. The most commonly used metric in industrial test monitoring is **First-pass yield** (FPY). It measures the percentage of parts that pass without rework and helps assess the efficiency of the process.
 
-In TofuPilot, FPY is calculated in real time for the complete test and for each test phase, so you can quickly see which step impacts the overall yield the most.
+In TofuPilot, the first-pass yield is calculated in real time for the complete test and for each test phase, so you can quickly see which step impacts the overall yield the most.
 
 <Image
-  src="/tofupilot-analytics-header.png"
+  src="/tofupilot-analytics-first-pass-yield.png"
   alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
 />
 
@@ -83,7 +83,7 @@ The Process Capability Index (Cpk) measures **how well a test stays within its l
 In TofuPilot, Cpk is calculated in real-time for each test step, showing you how capable your test is.
 
 <Image
-  src="/tofupilot-analytics-header.png"
+  src="/tofupilot-analytics-cpk.png"
   alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
 />
 
@@ -103,9 +103,14 @@ A low Cpk often means your process has too much variation: limits are too strict
 2. **Check Control Charts**: Review historical values to see if it's a sudden drop (indicating a quality issue) or if limits were always too strict or poorly centered.
 3. **Use Filters**: Apply filters like revision, batch number, and date in TofuPilot to pinpoint the root cause of low Cpk.
 
-These steps will help you quickly diagnose and resolve Cpk issues.
+<Image
+  src="/tofupilot-analytics-control-chart.png"
+  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+/>
 
 ### Cpk Calculation
+
+You can compute Cpk by dividing the smaller of the differences between the test mean and the specification limits (low and high) by three times the test standard deviation.
 
 ```jsx
 Cpk = min[(USL - μ) / (3σ), (μ - LSL) / (3σ)]

@@ -249,7 +249,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Develop',
     links: [
-      { title: 'Unit Under Test (UUT)', href: '/dut' },
+      { title: 'Unit under test (UUT)', href: '/dut' },
       {
         title: 'Phases',
         href: '/phases',

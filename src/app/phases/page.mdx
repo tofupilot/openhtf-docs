@@ -159,7 +159,7 @@ def phase_two(test):
 
 def main():
     test = htf.Test(phase_one, phase_two)
-    with TofuPilot(test):
+    with TofuPilot(test):                  # just works™️
       test.execute(lambda: "PCB001")
 
 if __name__ == '__main__':

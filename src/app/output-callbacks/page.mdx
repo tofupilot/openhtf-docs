@@ -86,7 +86,7 @@ def get_sn(test):
 
 def main():
     test = Test(get_sn)
-    with TofuPilot(test):
+    with TofuPilot(test):  # just works™️
       test.execute()
 
 if __name__ == '__main__':

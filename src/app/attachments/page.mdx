@@ -106,7 +106,7 @@ def phase_file_attachment(test):
 
 def main():
     test = htf.Test(phase_file_attachment)
-    with TofuPilot(test):
+    with TofuPilot(test):                   # just works™️
       test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":

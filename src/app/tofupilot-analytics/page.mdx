@@ -49,7 +49,7 @@ def phase_temperature(test):
 
 def main():
     test = htf.Test(phase_one, phase_temperature)
-    with TofuPilot(test):                          # one line!
+    with TofuPilot(test):                          # just works™️
         test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":

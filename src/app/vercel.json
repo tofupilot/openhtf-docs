@@ -1,0 +1,29 @@
+{
+  "routes": [
+    {
+      "source": "/logging",
+      "destination": "/logger",
+      "permanent": true
+    },
+    {
+      "source": "/outputs",
+      "destination": "/output-callbacks",
+      "permanent": true
+    },
+    {
+      "source": "/plugs/syntax",
+      "destination": "/plugs",
+      "permanent": true
+    },
+    {
+      "source": "/tofupilot/first-pass-yield",
+      "destination": "/tofupilot-analytics",
+      "permanent": true
+    },
+    {
+      "source": "/tofupilot/introduction",
+      "destination": "/tofupilot-analytics",
+      "permanent": true
+    }
+  ]
+}

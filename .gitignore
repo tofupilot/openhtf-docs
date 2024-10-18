@@ -6,12 +6,6 @@ myenv/*
 
 *.pyc
 
-*.py
-*.json
-
-# Do not ignore package.json and package-lock.json
-!package.json
-!package-lock.json
 public/.DS_Store
 
 .DS_Store

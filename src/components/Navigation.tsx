@@ -307,7 +307,11 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
           />
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <Button href="https://discord.gg/T4pak7pk" variant="discord">
+          <Button
+            href="https://discord.gg/T4pak7pk"
+            variant="discord"
+            className="w-full"
+          >
             <>Join Discord</>
           </Button>
         </li>

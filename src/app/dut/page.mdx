@@ -1,31 +1,36 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
   title: 'Unit Under Test (UUT)',
   description:
-    'Learn how to track and record the Unit Under Test (UUT) serial number in OpenHTF tests. This guide covers operator prompts, setting programmatically, and TofuPilot integration for full traceability.',
+    'Learn how to track the serial number of the Unit Under Test (UUT) with OpenHTF. Discover how to manage UUT IDs during test execution and integrate with TofuPilot for detailed test reporting.',
   keywords: [
-    'OpenHTF',
+    ...defaultKeywords,
+    'unit under test',
     'UUT',
-    'Unit Under Test',
-    'Unit Under Test',
-    'test serial number',
+    'device under test',
+    'DUT',
+    'serial number',
+    'part number',
+    'batch number',
+    'revision',
     'traceability',
-    'TofuPilot integration',
-    'hardware testing',
   ],
-  author: 'TofuPilot',
-  og: {
-    title: 'Unit Under Test (UUT) in OpenHTF',
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Unit Under Test (UUT) - Track Serial Numbers and Test Data | OpenHTF Documentation',
     description:
-      'Learn how to record and manage Unit Under Test (UUT) serial numbers in OpenHTF tests with full traceability, including TofuPilot integration.',
-    image: '/UUT-header.png',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@YourTwitterHandle',
-    title: 'Unit Under Test (UUT) in OpenHTF',
-    description:
-      'This guide explains how to handle Unit Under Test (UUT) serial numbers in OpenHTF, with operator prompts and TofuPilot integration.',
-    image: '/UUT-header.png',
+      'Track serial numbers of the Unit Under Test (UUT) with OpenHTF for better traceability, including manual input and automatic setting during test execution,',
+    url: 'https://openhtf.com/uut',
+    images: [
+      {
+        url: 'https://openhtf.com/uut-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF Unit Under Test (UUT) section header with TofuPilot integration.',
+      },
+    ],
   },
 }
 

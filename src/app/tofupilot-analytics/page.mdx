@@ -1,5 +1,39 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
-  title: 'TofuPilot',
+  title: 'Manufacturing Test Analytics with TofuPilot',
+  description:
+    'Monitor your test’s first-pass yield (FPY) and capability index (Cpk) at the test phase level using TofuPilot. Learn how to integrate TofuPilot into OpenHTF for step-level analytics and insights.',
+  keywords: [
+    ...defaultKeywords,
+    'test analytics',
+    'first-pass yield',
+    'second-pass yield',
+    'third-pass yield',
+    'last-pass yield',
+    'Cpk',
+    'capability index',
+    'process capability index',
+    'test phase monitoring',
+    'test data analysis',
+    'FPY calculation',
+    'Cpk calculation',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title: "TofuPilot - Monitor Test Analytics with First-pass Yield (FPY) and Cpk | Manufacturing Test Analytics",
+    description: "Monitor your test’s first-pass yield (FPY) and capability index (Cpk) at the test phase level using TofuPilot. Learn how to integrate TofuPilot into OpenHTF for step-level analytics and insights,",
+    url: 'https://openhtf.com/tofupilot',
+    images: [
+      {
+        url: 'https://openhtf.com/tofupilot-analytics-header.png',
+        width: 800,
+        height: 600,
+        alt: 'TofuPilot manufacturing test analytics showing test phase performance with OpenHTF.',
+      },
+    ],
+
+},
 }
 
 # Manufacturing Test Analytics
@@ -8,7 +42,7 @@ With TofuPilot, monitor your tests first-pass yield (FPY), and capability index 
 
 <Image
   src="/tofupilot-analytics-header.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  alt="TofuPilot manufacturing test analytics showing test phase performance with OpenHTF."
 />
 
 ## Overview
@@ -70,7 +104,7 @@ In TofuPilot, the first-pass yield is calculated in real time for the complete t
 
 <Image
   src="/tofupilot-analytics-first-pass-yield.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  alt="TofuPilot analytics showing first-pass yield (FPY) for test phases in OpenHTF."
 />
 
 A low First-pass yield (FPY) means many parts fail on the first try, often due to poorly calibrated limits, procedural errors, equipment defects, or process variations.
@@ -83,7 +117,7 @@ In TofuPilot, Cpk is calculated in real-time for each test step, showing you how
 
 <Image
   src="/tofupilot-analytics-cpk.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  alt="TofuPilot analytics showing process capability index (Cpk) for test phases in OpenHTF."
 />
 
 ### Understanding Cpk
@@ -104,7 +138,7 @@ A low Cpk often means your process has too much variation: limits are too strict
 
 <Image
   src="/tofupilot-analytics-control-chart.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  alt="TofuPilot control chart showing historical data for test phases in OpenHTF."
 />
 
 ### Cpk Calculation

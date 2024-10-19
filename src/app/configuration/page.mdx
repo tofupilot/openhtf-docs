@@ -1,7 +1,35 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
   title: 'Configuration',
   description:
-    'Explore how to manage test settings with OpenHTF’s configuration module, allowing for adaptable, maintainable, and scalable test scripts using both in-code definitions and external configuration files.',
+    'Explore how to manage test settings with OpenHTF’s configuration module using in-code definitions or external configuration files.',
+  keywords: [
+    ...defaultKeywords,
+    'yaml',
+    'json',
+    'test configuration',
+    'test settings',
+    'test parameters',
+    'configuration files',
+    'test script management',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Configuration - Manage Test Settings with Flexible Configurations | OpenHTF Documentation',
+    description:
+      'Explore how to manage test settings with OpenHTF’s configuration module, allowing for adaptable, maintainable, and scalable test scripts,',
+    url: 'https://openhtf.com/configuration',
+    images: [
+      {
+        url: 'https://openhtf.com/configuration-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF documentation showcasing configuration options for managing test parameters and TofuPilot integration.',
+      },
+    ],
+  },
 }
 
 # Configurations
@@ -10,7 +38,7 @@ Control test execution parameters with configuration variables or files. {{ clas
 
 <Image
   src="/configuration-header.png"
-  alt="Header of the OpenHTF documentation showing Configuration details and integration with TofuPilot."
+  alt="OpenHTF documentation showcasing configuration options for managing test parameters and TofuPilot integration."
 />
 
 ## Overview

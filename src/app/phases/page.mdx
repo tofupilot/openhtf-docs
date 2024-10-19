@@ -1,7 +1,34 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
   title: 'Phases',
   description:
     'Discover how to define and execute test phases using OpenHTF. This guide covers phase creation, phase results, and phase options with detailed examples and code snippets.',
+  keywords: [
+    ...defaultKeywords,
+    'test steps',
+    'steps',
+    'test phases',
+    'phases',
+    'phase results',
+    'phase options',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Phases - Learn How to Define and Execute Test Phases | OpenHTF Documentation',
+    description:
+      'Discover how to define and execute test phases using OpenHTF. This guide covers phase creation, phase results, and phase options with detailed examples and code snippets,',
+    url: 'https://openhtf.com/phases',
+    images: [
+      {
+        url: 'https://openhtf.com/phases-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF phases section header showing test phase management with TofuPilot integration.',
+      },
+    ],
+  },
 }
 
 # Phases
@@ -10,7 +37,7 @@ Organize your test flow by breaking it down into multiple phases. {{ className: 
 
 <Image
   src="/phases-header.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  alt="OpenHTF phases section header showing test phase management with TofuPilot integration."
 />
 
 ## Overview

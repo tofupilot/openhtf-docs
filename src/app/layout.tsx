@@ -1,51 +1,13 @@
-import glob from 'fast-glob'
-
 import { Providers } from '@/app/providers'
 import { Layout } from '@/components/Layout'
 import { type Section } from '@/components/SectionProvider'
-
 import '@/styles/tailwind.css'
+import glob from 'fast-glob'
+
 import { Analytics } from '@vercel/analytics/react'
+import { defaultMetadata } from './metadata'
 
-export const defaultKeywords = [
-  'openhtf',
-  'google',
-  'open source',
-  'python',
-  'tofupilot',
-  'test framework',
-  'test automation',
-  'hardware testing',
-  'test execution engine',
-  'open source teststand',
-]
-
-export const metadata = {
-  title: {
-    template: 'OpenHTF › %s',
-    default: 'OpenHTF Documentation',
-  },
-  description:
-    'Documentation for OpenHTF, a hardware test automation framework including guides and integration with TofuPilot.',
-  keywords: defaultKeywords,
-  authors: [{ name: 'TofuPilot Team', url: 'https://tofupilot.com' }],
-  openGraph: {
-    siteName: 'OpenHTF',
-    url: 'https://openhtf.com',
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    creator: '@tofupilot',
-  },
-  themeColor: '#ffffff',
-  alternates: {
-    languages: {
-      'en-US': 'https://openhtf.com/',
-    },
-  },
-}
+export const metadata = defaultMetadata
 
 export default async function RootLayout({
   children,

@@ -1,7 +1,33 @@
-import { HeroPattern } from '@/components/HeroPattern'
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
 
 export const metadata = {
   title: 'Community',
+  description:
+    'Join the OpenHTF community to collaborate with fellow hardware and manufacturing test engineers. Get support, share knowledge, and improve your testing with the help of the community.',
+  keywords: [
+    ...defaultKeywords,
+    'community',
+    'manufacturing test engineers',
+    'OpenHTF community',
+    'TofuPilot community',
+    'Discord OpenHTF',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Community - Join and Collaborate with the OpenHTF Community | OpenHTF Documentation',
+    description:
+      'Join and collaborate with the OpenHTF community to get help, share knowledge, and discuss hardware testing solutions with fellow engineers,',
+    url: 'https://openhtf.com/community',
+    images: [
+      {
+        url: 'https://openhtf.com/community-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF Community page header showcasing collaboration between hardware test engineers.',
+      },
+    ],
+  },
 }
 
 # Community
@@ -11,7 +37,7 @@ Join our Discord server to get help and collaborate with fellow hardware and man
 <Image
   src="/community-header.png"
   link="https://discord.gg/T4pak7pk"
-  alt="Header of the OpenHTF documentation showing Attachments details and integration with TofuPilot."
+  alt="OpenHTF Community page header showcasing collaboration between hardware test engineers."
 />
 
 Whether you're new to OpenHTF or a pro, our team and community is here to support you.

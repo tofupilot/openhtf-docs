@@ -1,7 +1,34 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
   title: 'Outputs',
   description:
     'Learn how to create structured test results with OpenHTF. This guide covers generating JSON output and implementing custom output mechanisms with detailed examples and code snippets.',
+  keywords: [
+    ...defaultKeywords,
+    'test outputs',
+    'test reports',
+    'test records',
+    'test results',
+    'output callbacks',
+    'json logs',
+    'custom output formats',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title: "Outputs - Generate and Customize Test Reports | OpenHTF Documentation",
+    description: "Learn how to create structured test results with OpenHTF. This guide covers generating JSON output and implementing custom output mechanisms with detailed examples,",
+    url: 'https://openhtf.com/outputs',
+    images: [
+      {
+        url: 'https://openhtf.com/output-callbacks-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF output callbacks section header showing how to generate test results with TofuPilot integration.',
+      },
+    ],
+
+},
 }
 
 # Output Callbacks
@@ -97,7 +124,7 @@ Test runs are securely uploaded using your or the test station's API key. They a
 
 <Image
   src="/output-callbacks-page-run.png"
-  alt="outputs section on the OpenHTF run page, showing options to open files in the browser or download them with TofuPilot integration."
+  alt="Outputs section on the OpenHTF run page, showing options to open files in the browser or download them with TofuPilot integration."
 />
 
 The callback generates a default JSON OpenHTF log and attached it to the test run, capturing the full output, including custom fields. You don't need an output callback anymore, except if you want to keep storing local results.

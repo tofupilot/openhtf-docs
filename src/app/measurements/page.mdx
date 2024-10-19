@@ -1,7 +1,36 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
   title: 'Measurements',
   description:
-    'Learn how to capture and validate data within OpenHTF phases, including simple, multiple, validated, inline, multidimensional, and marginal measurements, with detailed examples and code snippets.',
+    'Learn how to capture and validate data within OpenHTF phases, including boolean, string, numeric, multidimensional, and marginal measurements, with detailed examples and code snippets.',
+  keywords: [
+    ...defaultKeywords,
+    'measurements',
+    'data validation',
+    'test automation',
+    'numeric measurements',
+    'string measurements',
+    'boolean measurements',
+    'multidimensional measurements',
+    'multiple measurements',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Measurements - Capture and Validate Data in Test Phases | OpenHTF Documentation',
+    description:
+      'Learn how to capture and validate data within OpenHTF phases, including simple, multiple, validated, inline, multidimensional, and marginal measurements,',
+    url: 'https://openhtf.com/measurements',
+    images: [
+      {
+        url: 'https://openhtf.com/measurements-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF measurements section header showing validation and data capture for tests with TofuPilot integration.',
+      },
+    ],
+  },
 }
 
 # Measurements
@@ -10,7 +39,7 @@ Create measurements to capture and validate data within phases. {{ className: 'l
 
 <Image
   src="/measurements-header.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  alt="OpenHTF measurements section header showing validation and data capture for tests with TofuPilot integration."
 />
 
 ## Overview
@@ -245,7 +274,7 @@ You can display control charts and histograms for a measurement to track its evo
 
 <Image
   src="/measurements-page-procedure.png"
-  alt="Procedure page showing the control chart for a specific numeric measure for several Unit Under Test (UUT) in OpenHTF with TofuPilot"
+  alt="Procedure page showing the control chart for a specific numeric measure for several Unit Under Test (UUT) in OpenHTF with TofuPilot."
 />
 
 You can access more phase performance indicators on TofuPilot and filter test runs by date, revision, and other criteria.

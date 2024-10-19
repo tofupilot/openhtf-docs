@@ -1,7 +1,34 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
-  title: 'Create your first test',
+  title: 'Create Your First Test',
   description:
     'Learn how to install OpenHTF and create your first test script. This guide includes step-by-step instructions to set up a simple test phase and execute it using the command line.',
+  keywords: [
+    ...defaultKeywords,
+    'example',
+    'quickstart',
+    'snippet',
+    'getting started',
+    'first test script',
+    'create test script',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Create Your First Test - Step-by-Step Guide for OpenHTF | OpenHTF Documentation',
+    description:
+      'Learn how to install OpenHTF and create your first test script. This guide includes step-by-step instructions to set up a simple test phase and execute it using the command line,',
+    url: 'https://openhtf.com/first-test',
+    images: [
+      {
+        url: 'https://openhtf.com/first-test-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF documentation header showing how to create and run your first test script.',
+      },
+    ],
+  },
 }
 
 # Create your first test
@@ -10,7 +37,7 @@ Let's create a first test script in under five minutes. {{ className: 'lead' }}
 
 <Image
   src="/first-test-header.png"
-  alt="Header of the OpenHTF documentation showing Attachments details and integration with TofuPilot."
+  alt="OpenHTF documentation header showing how to create and run your first test script."
 />
 
 ## Installation

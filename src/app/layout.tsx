@@ -5,13 +5,9 @@ import '@/styles/tailwind.css'
 import glob from 'fast-glob'
 
 import { Analytics } from '@vercel/analytics/react'
+import { defaultMetadata } from './metadata'
 
-export const metadata = {
-  title: {
-    template: 'OpenHTF › %s',
-    default: 'OpenHTF Documentation',
-  },
-}
+export const metadata = defaultMetadata
 
 export default async function RootLayout({
   children,

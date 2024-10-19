@@ -3,10 +3,26 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { LogoCloud } from '@/components/LogoCloud'
 import { Resources } from '@/components/Resources'
 
+import { defaultKeywords, defaultOpenGraph } from './metadata'
+
 export const metadata = {
-  title: 'OpenHTF Documentation',
+  title: 'OpenHTF',
   description:
-    'OpenHTF (Open Hardware Testing Framework) is the open-source Python hardware testing framework. Used by hundreds of teams worldwide, from labs to manufacturing floors',
+    'OpenHTF (Open Hardware Testing Framework) is the open-source Python hardware testing framework. Used by hundreds of teams worldwide, from labs to manufacturing floors for test automation, verification, and validation.',
+  keywords: [
+    ...defaultKeywords,
+    'validation and verification',
+    'manufacturing tests',
+    'Google hardware testing',
+    'TofuPilot integration',
+  ],
+  openGraph: {
+    title:
+      'OpenHTF Documentation - Open Source Hardware Testing Framework for Automated Hardware Testing',
+    description:
+      'OpenHTF is an open-source Python hardware testing framework used worldwide for hardware verification, validation, and manufacturing test automation,',
+    url: 'https://openhtf.com/',
+  },
 }
 
 <HeroPattern />
@@ -19,7 +35,7 @@ Originally created at **Google**, OpenHTF is now used by hundreds of teams world
 
 <LogoCloud />
 
-This documentation is provided by the <TofuPilotLink utmMedium="home" /> team, offering a plug-and-play database and analytics for OpenHTF tests.
+This documentation is provided by the <TofuPilotLink utmMedium="landing" /> team, offering a plug-and-play database and analytics for OpenHTF tests.
 
 ## Quick example
 

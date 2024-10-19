@@ -4,6 +4,7 @@ export const defaultKeywords = [
   'open source',
   'python',
   'tofupilot',
+  'tofupilot integration',
   'test framework',
   'test automation',
   'hardware testing',
@@ -12,13 +13,13 @@ export const defaultKeywords = [
 ]
 
 export const defaultOpenGraph = {
+  siteName: 'OpenHTF',
   title: 'OpenHTF Documentation',
   description: 'The open-source hardware test automation framework.',
   url: 'https://openhtf.com',
-  siteName: 'OpenHTF Documentation',
   images: [
     {
-      url: 'https://openhtf.com/og.png',
+      url: 'https://openhtf.com/tofupilot-analytics-header.png',
       width: 800,
       height: 600,
     },
@@ -29,11 +30,11 @@ export const defaultOpenGraph = {
 
 export const defaultMetadata = {
   title: {
-    template: 'OpenHTF › %s',
+    template: '%s - OpenHTF Documentation',
     default: 'OpenHTF Documentation',
   },
   description:
-    'Documentation for OpenHTF, a hardware test automation framework including guides and integration with TofuPilot.',
+    'Documentation for OpenHTF, the open-source hardware test automation framework.',
   authors: [{ name: 'TofuPilot Team', url: 'https://tofupilot.com' }],
   keywords: defaultKeywords,
   openGraph: defaultOpenGraph,

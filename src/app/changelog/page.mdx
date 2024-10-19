@@ -1,10 +1,24 @@
-import { defaultKeywords } from '../layout'
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
 
 export const metadata = {
   title: 'Documentation Changelog',
   description:
-    'Learn how to attach files collected during execution to the test record in OpenHTF.',
-  keywords: [...defaultKeywords, 'attachments', 'file uploads', 'tofupilot'],
+    'Track the latest updates, new features, and fixes in the OpenHTF documentation.',
+  keywords: [
+    ...defaultKeywords,
+    'changelog',
+    'changes',
+    'release notes',
+    'documentation updates',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Documentation Changelog - Track the Latest Changes in OpenHTF Documentation | OpenHTF',
+    description:
+      'Track the latest updates, fixes, and new features in the OpenHTF documentation to stay informed about improvements and changes,',
+    url: 'https://openhtf.com/changelog',
+  },
 }
 
 # Documentation Changelog

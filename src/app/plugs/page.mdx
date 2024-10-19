@@ -1,7 +1,32 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
   title: 'Plugs',
   description:
-    'Discover how to use OpenHTF’s powerful plugin system, known as "plugs" to abstract hardware interactions and encapsulate reusable test logic. Includes examples of simple plug implementation and configuration.',
+    'Discover how to use OpenHTF’s powerful plugin system, known as plugs, to abstract hardware interactions and encapsulate reusable test logic. Includes examples of simple plug implementation and configuration.',
+  keywords: [
+    'plugs',
+    'instruments library',
+    'instrument python drivers',
+    'hardware abstraction layer',
+    'HAL',
+    'resource management',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title: "Plugs - Manage Hardware Interactions with Reusable Logic | OpenHTF Documentation",
+    description: "Discover how to use OpenHTF’s powerful plugin system, known as 'plugs,' to abstract hardware interactions and encapsulate reusable test logic,",
+    url: 'https://openhtf.com/plugs',
+    images: [
+      {
+        url: 'https://openhtf.com/plugs-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF plugs section header showing hardware interaction management with TofuPilot integration.',
+      },
+    ],
+
+},
 }
 
 # Plugs
@@ -10,7 +35,7 @@ Manage external hardware and resources with reusable logic. {{ className: 'lead'
 
 <Image
   src="/plugs-header.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  alt="OpenHTF plugs section header showing hardware interaction management with TofuPilot integration."
 />
 
 ## Overview

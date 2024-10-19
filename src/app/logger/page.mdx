@@ -1,7 +1,35 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
 export const metadata = {
   title: 'Logging',
   description:
     'Explore how to configure logger options in OpenHTF to capture and manage log output during test execution, with examples of standard and custom log handlers.',
+  keywords: [
+    ...defaultKeywords,
+    'logging',
+    'logger',
+    'terminal output',
+    'console output',
+    'log handlers',
+    'test execution logging',
+    'custom logger',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Logging - Configure Logging and Manage Log Outputs | OpenHTF Documentation',
+    description:
+      'Explore how to configure logger options in OpenHTF to capture and manage log output during test execution, with examples of standard and custom log handlers,',
+    url: 'https://openhtf.com/logging',
+    images: [
+      {
+        url: 'https://openhtf.com/logger-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF Logging section header showing test execution logging with TofuPilot integration.',
+      },
+    ],
+  },
 }
 
 # Logger
@@ -10,7 +38,7 @@ Capture structured log output during test execution. {{ className: 'lead' }}
 
 <Image
   src="/logger-header.png"
-  alt="OpenHTF Device Under Test (DUT) documentation section header with TofuPilot."
+  alt="OpenHTF Logging section header showing test execution logging with TofuPilot integration."
 />
 
 ## Overview
@@ -68,7 +96,7 @@ python main.py -v
 - `-vv`: Logs at the `debug` level and above are printed.
 
 ```txt {{ title: 'Terminal' }}
-I 15:11:48 test_descriptor - Executing test: 
+I 15:11:48 test_descriptor - Executing test:
 I 15:11:48 <phase: phase_test> - Test phase started.
 W 15:11:48 <phase: phase_test> - Warning in test phase: Potential issue.
 E 15:11:48 <phase: phase_test> - Test phase error: Error occurred in test phase.

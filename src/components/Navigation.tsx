@@ -17,8 +17,8 @@ interface NavGroup {
   links: Array<{
     title: string
     href: string
+    new?: boolean
   }>
-  new?: boolean
 }
 
 function useInitialValue<T>(value: T, condition = true) {
@@ -195,7 +195,7 @@ function NavigationGroup({
               <NavLink
                 href={link.href}
                 active={link.href === pathname}
-                tag={group.new ? 'New' : undefined}
+                tag={link.new ? 'New' : undefined}
               >
                 {link.title}
               </NavLink>
@@ -275,10 +275,9 @@ export const navigation: Array<NavGroup> = [
     title: 'Deploy',
     links: [
       // { title: 'Operator UI', href: '/operator-ui' },
-      { title: 'Analytics', href: '/tofupilot-analytics' },
+      { title: 'Analytics', href: '/tofupilot-analytics', new: true },
       // { title: 'Traceability', href: '/tofupilot-traceability' },
     ],
-    new: true,
   },
   {
     title: 'Resources',

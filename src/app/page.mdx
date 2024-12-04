@@ -68,7 +68,7 @@ This documentation is provided by the <TofuPilotLink utmMedium="landing" /> team
 
     class MultimeterPlug(BasePlug):
     # Initialize the multimeter plug with a port connection
-    def **init**(self, port):
+    def __init__(self, port):
       self.port = port
       self.connection = f"Connected on {self.port}"
 

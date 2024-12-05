@@ -96,7 +96,7 @@ export const Header = forwardRef<
         </div>
         <div className="hidden min-[416px]:contents">
           <Button
-            href="https://discord.gg/T4pak7pk"
+            href="https://discord.gg/HzkYUWg9PK"
             variant="discord"
           >
             <>Join Discord</>

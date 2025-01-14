@@ -67,17 +67,18 @@ if __name__ == "__main__":
 from openhtf.plugs import BasePlug
 
 class MultimeterPlug(BasePlug):
-    # Initialize the multimeter plug with a port connection
+    # Simulate connecting to the multimeter
     def __init__(self):
-        self.connection = f"Connected!"
+        self.connected = True
 
-    # Logic to simulate a voltage measurement
+    # Simulate measuring the voltage
     def measure_voltage(self):
         return 3.3
 
-    # Automatically called at test teardown to clean up
+    # Simulate disconnecting from the multimeter
+    # This method is called automatically by OpenHTF at the end of the test
     def tearDown(self):
-        self.connection = None
+        self.connected = False
     ```
 
   </CodeGroup>

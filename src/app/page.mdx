@@ -42,43 +42,42 @@ This documentation is provided by the <TofuPilotLink utmMedium="landing" /> team
 <Col>
   <CodeGroup title="Example">
     ```python {{ title: 'main.py' }}
-    import openhtf as htf
-    from openhtf.plugs import plug
-    from multimeter_plug import MultimeterPlug
+import openhtf as htf
+from openhtf.plugs import plug
+from multimeter_plug import MultimeterPlug
 
-    @plug(multimeter=MultimeterPlug)
-    @htf.measures(
-      htf.Measurement('voltage')
-      .in_range(3.0, 3.5)
-      .with_units('V'))
-    def test_voltage(test, multimeter):
-      voltage = multimeter.measure_voltage()
-      test.measurements.voltage = voltage
+@plug(multimeter=MultimeterPlug)
+@htf.measures(
+    htf.Measurement("voltage")
+    .in_range(3.0, 3.5)
+    .with_units("V"))
+def test_voltage(test, multimeter):
+    voltage = multimeter.measure_voltage()
+    test.measurements.voltage = voltage
 
-    def main():
-      test = htf.Test(test_voltage)
-      test.execute(lambda: "PCB0001") # UUT S/N
+def main():
+    test = htf.Test(test_voltage)
+    test.execute(lambda: "PCB0001") # UUT S/N
 
-    if __name__ == '__main__':
-        main()
+if __name__ == "__main__":
+    main()
     ```
 
     ```python {{ title: 'multimeter_plug.py' }}
-    from openhtf.plugs import plug, BasePlug
+from openhtf.plugs import BasePlug
 
-    class MultimeterPlug(BasePlug):
-    # Initialize the multimeter plug with a connection
+class MultimeterPlug(BasePlug):
+    # Initialize the multimeter plug with a port connection
     def __init__(self):
-      self.connection = f"Connected!"
+        self.connection = f"Connected!"
 
+    # Logic to simulate a voltage measurement
     def measure_voltage(self):
-      # Logic to simulate a voltage measurement
-      return 3.3
+        return 3.3
 
     # Automatically called at test teardown to clean up
     def tearDown(self):
-      # Logic to close the connection or clean up resources
-      self.connection = None
+        self.connection = None
     ```
 
   </CodeGroup>

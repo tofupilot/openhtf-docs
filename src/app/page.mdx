@@ -67,10 +67,9 @@ This documentation is provided by the <TofuPilotLink utmMedium="landing" /> team
     from openhtf.plugs import plug, BasePlug
 
     class MultimeterPlug(BasePlug):
-    # Initialize the multimeter plug with a port connection
-    def __init__(self, port):
-      self.port = port
-      self.connection = f"Connected on {self.port}"
+    # Initialize the multimeter plug with a connection
+    def __init__(self):
+      self.connection = f"Connected!"
 
     def measure_voltage(self):
       # Logic to simulate a voltage measurement

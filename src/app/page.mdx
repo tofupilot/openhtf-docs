@@ -13,7 +13,7 @@ Originally created at **Google**, OpenHTF is now used by hundreds of teams world
 
 <LogoCloud />
 
-This documentation is provided by the <TofuPilotLink utmMedium="landing" /> team, offering a plug-and-play database and analytics for OpenHTF tests.
+This documentation is provided by the team at <TofuPilotLink utmMedium="landing" />, a plug-and-play database and analytics app for OpenHTF tests.
 
 ## Quick example
 
@@ -42,43 +42,43 @@ This documentation is provided by the <TofuPilotLink utmMedium="landing" /> team
 <Col>
   <CodeGroup title="Example">
     ```python {{ title: 'main.py' }}
-import openhtf as htf
-from openhtf.plugs import plug
-from multimeter_plug import MultimeterPlug
+    import openhtf as htf
+    from openhtf.plugs import plug
+    from multimeter_plug import MultimeterPlug
 
-@plug(multimeter=MultimeterPlug)
-@htf.measures(
-    htf.Measurement("voltage")
-    .in_range(3.0, 3.5)
-    .with_units("V"))
-def test_voltage(test, multimeter):
-    voltage = multimeter.measure_voltage()
-    test.measurements.voltage = voltage
+    @plug(multimeter=MultimeterPlug)
+    @htf.measures(
+        htf.Measurement("voltage")
+        .in_range(3.0, 3.5)
+        .with_units("V"))
+    def test_voltage(test, multimeter):
+        voltage = multimeter.measure_voltage()
+        test.measurements.voltage = voltage
 
-def main():
-    test = htf.Test(test_voltage)
-    test.execute(lambda: "PCB0001") # UUT S/N
+    def main():
+        test = htf.Test(test_voltage)
+        test.execute(lambda: "PCB0001") # UUT S/N
 
-if __name__ == "__main__":
-    main()
+    if __name__ == "__main__":
+        main()
     ```
 
     ```python {{ title: 'multimeter_plug.py' }}
-from openhtf.plugs import BasePlug
+    from openhtf.plugs import BasePlug
 
-class MultimeterPlug(BasePlug):
-    # Simulate connecting to the multimeter
-    def __init__(self):
-        self.connected = True
+    class MultimeterPlug(BasePlug):
+        # Simulate connecting to the multimeter
+        def __init__(self):
+            self.connected = True
 
-    # Simulate measuring the voltage
-    def measure_voltage(self):
-        return 3.3
+        # Simulate measuring the voltage
+        def measure_voltage(self):
+            return 3.3
 
-    # Simulate disconnecting from the multimeter
-    # This method is called automatically by OpenHTF at the end of the test
-    def tearDown(self):
-        self.connected = False
+        # Simulate disconnecting from the multimeter
+        # Called automatically by OpenHTF at test end
+        def tearDown(self):
+            self.connected = False
     ```
 
   </CodeGroup>

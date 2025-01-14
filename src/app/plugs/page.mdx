@@ -138,37 +138,84 @@ What is the LED color? (Red/Green/Blue):
 
 You can use output callbacks extended features for advanced use cases.
 
-### Plug configuration
+### Single plug configuration
 
-You can define and load configurations specific to each plug, similar to test configurations.
+You can define and load configurations specific to a plug, similar to test configurations.
 
 ```python {{ title: 'multimeter_plug.py' }}
-from openhtf import plugs
-from openhtf.util import configuration
-import random
+from openhtf import BasePlug
+from openhtf.util.configuration import CONF
 
-# Define firmware_path configuration
-configuration.CONF.declare(
-    "com_port",
-    default_value="COM1",
-    description="COM port to connect to the multimeter",
-)
+# Define `com_port` configuration
+CONF.declare("com_port", default_value="COM1")
 
-class MultimeterPlug(plugs.BasePlug):
+class MultimeterPlug(BasePlug):
+    # Simulate connecting to the multimeter
     def __init__(self):
-        # Simulate connecting to the multimeter
-        self.com_port = configuration.CONF.load("com_port")
+        self.com_port = CONF.com_port
         self.connected = True
 
-    def tearDown(self):
-        # Automatically called by OpenHTF after the test to clean up
-        self.connected = False
-
+    # Simulate measuring the voltage
     def measure_voltage(self):
-        # Simulate voltage measurement
-        return random.uniform(0, 10)
+        return 3.3
 
-    def measure_current(self):
-        # Simulate current measurement
-        return random.uniform(0, 2)
+    # Simulate disconnecting from the multimeter
+    # This method is called automatically by OpenHTF at the end of the test
+    def tearDown(self):
+        self.connected = False
 ```
+
+### Multiple plug configuration
+
+You can use `bind_init_args` to create multiple plug instances with variable configurations. This ensures flexible plug setup while maintaining compatibility with OpenHTF's automatic plug lifecycle management.
+
+<CodeGroup title="Example">
+
+```python {{ title: 'multimeter_plug.py' }}
+from openhtf import BasePlug
+
+class MultimeterPlug(BasePlug):
+    # Simulate connecting to the multimeter with port argument
+    def __init__(self, com_port: str):
+        self.com_port = com_port
+        self.connected = True
+
+    # Simulate measuring the voltage
+    def measure_voltage(self):
+        return 3.3
+
+    # Simulate disconnecting from the multimeter
+    # This method is called automatically by OpenHTF at the end of the test
+    def tearDown(self):
+        self.connected = False
+```
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.plugs import plug
+from openhtf.util.configuration import CONF, bind_init_args
+from multimeter_plug import MultimeterPlug
+
+COM_PORT_1 = CONF.declare("com_port_1", default_value="COM1")
+COM_PORT_2 = CONF.declare("com_port_2", default_value="COM2")
+
+MultimeterPlug1 = bind_init_args(MultimeterPlug, COM_PORT_1)
+MultimeterPlug2 = bind_init_args(MultimeterPlug, COM_PORT_2)
+
+@plug(multimeter=MultimeterPlug1)
+def test_voltage_1(test, multimeter):
+    multimeter.measure_voltage()
+
+@plug(multimeter=MultimeterPlug2)
+def test_voltage_2(test, multimeter):
+    multimeter.measure_voltage()
+
+def main():
+    test = htf.Test(test_voltage_1, test_voltage_2)
+    test.execute(lambda: "PCB0001")  # UUT S/N
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>

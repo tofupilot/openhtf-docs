@@ -10,6 +10,7 @@ import { Logo } from '@/components/Logo'
 import { Navigation } from '@/components/Navigation'
 import { type Section, SectionProvider } from '@/components/SectionProvider'
 import { TofuPilotBanner } from './TofuPilotBanner'
+import Head from 'next/head'
 
 export function Layout({
   children,
@@ -38,6 +39,9 @@ export function Layout({
           </div>
         </motion.header>
         <div className="relative flex h-full flex-col px-4 pt-14 sm:px-6 lg:px-8">
+          <Head>
+            <title>OpenHTF</title>
+          </Head>
           <main className="flex-auto">{children}</main>
           <Footer />
         </div>

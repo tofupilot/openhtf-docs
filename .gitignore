@@ -10,3 +10,5 @@ myenv/*
 public/.DS_Store
 
 .DS_Store
+.vercel
+.env*.local

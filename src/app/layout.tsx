@@ -6,6 +6,7 @@ import glob from 'fast-glob'
 
 import { Analytics } from '@vercel/analytics/react'
 import { defaultMetadata } from './metadata'
+import { CSPostHogProvider } from '@/components/monitoring/posthog'
 
 export const metadata = defaultMetadata
 
@@ -25,14 +26,16 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-      <body className="flex min-h-full bg-white antialiased dark:bg-zinc-900">
-        <Providers>
-          <div className="w-full">
-            <Layout allSections={allSections}>{children}</Layout>
-          </div>
-          <Analytics />
-        </Providers>
-      </body>
+      <CSPostHogProvider>
+        <body className="flex min-h-full bg-white antialiased dark:bg-zinc-900">
+          <Providers>
+            <div className="w-full">
+              <Layout allSections={allSections}>{children}</Layout>
+            </div>
+            <Analytics />
+          </Providers>
+        </body>
+      </CSPostHogProvider>
     </html>
   )
 }

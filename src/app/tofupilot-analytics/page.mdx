@@ -72,7 +72,7 @@ Add it to your test like this:
 ```python {{ title: 'main.py' }}
 import openhtf as htf
 from openhtf.util import units
-from tofupilot.openhtf import TofuPilot
+from tofupilot.openhtf import TofuPilot             # import tofupilot
 
 def phase_one(test):
     return htf.PhaseResult.CONTINUE
@@ -87,7 +87,7 @@ def phase_temperature(test):
 
 def main():
     test = htf.Test(phase_one, phase_temperature)
-    with TofuPilot(test):                          # just works™️
+    with TofuPilot(test):                           # add 1-line
         test.execute(lambda: "PCB001")
 
 if __name__ == "__main__":
@@ -95,6 +95,15 @@ if __name__ == "__main__":
 ```
 
 Each time you run a test, it's automatically uploaded to your workspace.
+
+## Phases and Measurements
+
+After importing your runs, you can visualize the phases and measurements for each run, along with their respective limits and units. This view helps you save time during development by ensuring you have logged the correct parameters.
+
+<Image
+  src="/tofupilot-measurements-page-run.png"
+  alt="OpenHTF measurements section header showing validation and data capture for tests with TofuPilot integration."
+/>
 
 ## First-pass yield (FPY)
 

@@ -271,10 +271,16 @@ export const navigation: Array<NavGroup> = [
       { title: 'Configurations', href: '/configuration' },
     ],
   },
-
+  //{
+  //  title: 'Deploy',
+  //  links: [
+  // { title: 'Operator UI', href: '/operator-ui' },
+  //  ],
+  //},
   {
     title: 'Resources',
     links: [
+      { title: 'Manufacturing Test Analytics', href: '/tofupilot-analytics' },
       // { title: 'Coding Guidelines', href: '/coding-guidelines' },
       { title: 'Documentation changelog', href: '/changelog' },
     ],

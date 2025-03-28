@@ -44,8 +44,6 @@ Organize your test flow by breaking it down into multiple phases. {{ className: 
 
 A hardware test typically consists of several steps that perform measurements and validation. OpenHTF refers to these steps as phases and allows for precise management of their execution based on the results obtained.
 
-With the <TofuPilotLink utmMedium="phases-overview"/> integration, you get precise analytics on phase failure rates and durations across test runs.
-
 ## Syntax
 
 Phases are Python functions that take the `test` object as an argument and must be added to the `Test` object to be executed.
@@ -161,57 +159,6 @@ if __name__ == '__main__':
 ```
 
 For more options, check the [advanced use cases](#advanced-use-cases).
-
-## TofuPilot integration
-
-The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases.
-
-To integrate TofuPilot, install the open-source client:
-
-```sh
-pip install tofupilot
-```
-
-Add it to your test like this:
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-from tofupilot.openhtf import TofuPilot
-
-def phase_one(test):
-    return htf.PhaseResult.CONTINUE
-
-def phase_two(test):
-    return htf.PhaseResult.CONTINUE
-
-def main():
-    test = htf.Test(phase_one, phase_two)
-    with TofuPilot(test):                  # just works™️
-      test.execute(lambda: "PCB001")
-
-if __name__ == '__main__':
-    main()
-```
-
-You can visualize the test phases on each run page.
-
-<Image
-  src="/phases-page-run.png"
-  alt="Run page showing the different steps performed for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
-/>
-
-You can click on a phase to monitor its recent performance across the latest runs, like its average duration.
-
-<Image
-  src="/phases-page-procedure-duration.png"
-  alt="Procedure page showing the durations for several Unit Under Test (UUT) in OpenHTF with TofuPilot."
-/>
-
-You can access more phase performance indicators on TofuPilot and filter test runs by date, revision, and other criteria.
-
-<Button href="https://tofupilot.com/docs/steps" variant="text" arrow="right">
-  <>Learn more in the TofuPilot Docs</>
-</Button>
 
 ---
 

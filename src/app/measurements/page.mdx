@@ -46,8 +46,6 @@ Create measurements to capture and validate data within phases. {{ className: 'l
 
 Hardware tests are more complex than simple pass/fail checks like in software testing. They often require measuring physical values and comparing them to limits. OpenHTF simplifies logging and validating numeric, string, and boolean values, either individually or in arrays, using built-in decorators.
 
-With the <TofuPilotLink utmMedium="phases-overview"/> integration, you get control charts and histograms to compare measurements across test runs.
-
 ## Numeric
 
 You can define and validate numeric measurements.
@@ -226,70 +224,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## TofuPilot integration
-
-The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases and measurements.
-
-To integrate TofuPilot, install the open-source client:
-
-```sh
-pip install tofupilot
-```
-
-Add it to your test like this:
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-from openhtf.util import units
-from tofupilot.openhtf import TofuPilot
-
-def phase_one(test):
-    return htf.PhaseResult.CONTINUE
-
-@htf.measures(
-    htf.Measurement("temperature")
-    .in_range(0, 100)
-    .with_units(units.DEGREE_CELSIUS)
-)
-def phase_temperature(test):
-    test.measurements.temperature = 25
-
-def main():
-    test = htf.Test(phase_one, phase_temperature)
-    with TofuPilot(test):                          # just works™️
-        test.execute(lambda: "PCB001")
-
-if __name__ == "__main__":
-    main()
-```
-
-You can visualize the test measurements (referred to as steps) on each run page.
-
-<Image
-  src="/measurements-page-run.png"
-  alt="Run page showing the different steps performed for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
-/>
-
-You can display control charts and histograms for a measurement to track its evolution across test runs.
-
-<Image
-  src="/measurements-page-procedure.png"
-  alt="Procedure page showing the control chart for a specific numeric measure for several Unit Under Test (UUT) in OpenHTF with TofuPilot."
-/>
-
-You can access more phase performance indicators on TofuPilot and filter test runs by date, revision, and other criteria.
-
-<Button href="https://tofupilot.com/docs/steps" variant="text" arrow="right">
-  <>Learn more in the TofuPilot Docs</>
-</Button>
-
----
-
-## Advanced use cases
-
-You can leverage advanced OpenHTF options to handle complex measurement use cases.
-
-### Multidimensional
+## Multidimensional
 
 You can capture data in arrays, like time-series or across categories, with multidimensional measurements.
 
@@ -326,7 +261,13 @@ if __name__ == "__main__":
   </Property>
 </Properties>
 
-### Marginal
+---
+
+## Advanced use cases
+
+You can leverage advanced OpenHTF options to handle more complex phase execution cases.
+
+###  Marginal
 
 You can mark a measure as marginal to show it’s close to failing, even if it passes.
 

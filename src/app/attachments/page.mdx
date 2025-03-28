@@ -41,8 +41,6 @@ Attach files collected during execution to the test record. {{ className: 'lead'
 
 Hardware tests often generate extra data, such as images, that can't be captured as measurements. OpenHTF allows you to attach these files to the test record.
 
-With the <TofuPilotLink utmMedium="attachments-overview"/> integration, attachments are uploaded automatically and you can access and download them directly from your TofuPilot workspace.
-
 ## Files
 
 You can attach binary data or files generated during the test.
@@ -81,43 +79,6 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-
-## TofuPilot integration
-
-The <TofuPilotLink utmMedium="phases-integration" /> integration is natively compatible with OpenHTF phases.
-
-To integrate TofuPilot, install the open-source client:
-
-```sh
-pip install tofupilot
-```
-
-Add it to your test like this:
-
-```python {{ title: 'main.py' }}
-import openhtf as htf
-from tofupilot.openhtf import TofuPilot
-
-def phase_file_attachment(test):
-    test.attach_from_file("/path/to/your/logfile.txt")
-    return htf.PhaseResult.CONTINUE
-
-def main():
-    test = htf.Test(phase_file_attachment)
-    with TofuPilot(test):                   # just works™️
-      test.execute(lambda: "PCB001")
-
-if __name__ == "__main__":
-    main()
-```
-
-You can access attachments in a dedicated section of the run page, where you can open them in the browser or download them.
-
-<Image
-  src="/attachments-page-run.png"
-  alt="Screenshot of OpenHTF attachments page showing file management options and TofuPilot integration."
-/>
-
 ---
 
 ## Advanced use cases

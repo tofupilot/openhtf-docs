@@ -249,7 +249,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Develop',
     links: [
-      { title: 'Unit under test (UUT)', href: '/dut' },
+      { title: 'Device under test (DUT)', href: '/dut' },
       {
         title: 'Phases',
         href: '/phases',
@@ -271,17 +271,16 @@ export const navigation: Array<NavGroup> = [
       { title: 'Configurations', href: '/configuration' },
     ],
   },
-  {
-    title: 'Deploy',
-    links: [
-      // { title: 'Operator UI', href: '/operator-ui' },
-      { title: 'Analytics', href: '/tofupilot-analytics', new: true },
-      // { title: 'Traceability', href: '/tofupilot-traceability' },
-    ],
-  },
+  //{
+  //  title: 'Deploy',
+  //  links: [
+  // { title: 'Operator UI', href: '/operator-ui' },
+  //  ],
+  //},
   {
     title: 'Resources',
     links: [
+      { title: 'Manufacturing Test Analytics', href: '/tofupilot-analytics' },
       // { title: 'Coding Guidelines', href: '/coding-guidelines' },
       { title: 'Documentation changelog', href: '/changelog' },
     ],

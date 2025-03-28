@@ -34,7 +34,7 @@ export const metadata = {
   },
 }
 
-# Unit under test (UUT)
+# Device under test (DUT)
 
 Track the serial number of the unit under test with each run. {{ className: 'lead' }}
 
@@ -47,7 +47,6 @@ Track the serial number of the unit under test with each run. {{ className: 'lea
 
 When running tests, tracking serial numbers is important for traceability. With OpenHTF, you can either manually enter the serial number at the start of the test or set it programmatically during the test.
 
-With the <TofuPilotLink utmMedium="uut-overview"/> integration, a detailed page is automatically created for each unit, showing all tests performed and allowing performance comparisons between different component types, revisions, or batches.
 
 ## Prompt at start
 
@@ -113,52 +112,3 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-
-## TofuPilot integration
-
-The <TofuPilotLink utmMedium="uut-integration" /> integration automatically uploads the OpenHTF report to your TofuPilot using the UUT's serial number.
-
-To integrate TofuPilot, install the open-source client:
-
-```sh
-pip install tofupilot
-```
-
-Add it to your test like this:
-
-```python {{ title: 'main.py' }}
-from openhtf import Test, PhaseResult
-from tofupilot.openhtf import TofuPilot
-
-def get_sn(test):
-    test.test_record.dut_id = 'PCB001'
-    return PhaseResult.CONTINUE
-
-def main():
-    test = Test(get_sn)
-    with TofuPilot(test):
-      test.execute()
-
-if __name__ == '__main__':
-    main()
-```
-
-The first run will prompt for your API key if you're not signed up. A dedicated page is created for each test run:
-
-<Image
-  src="/uut-page-run.png"
-  alt="Test run page for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
-/>
-
-On the unit page, you can view all runs conducted on this unit across all test procedures.
-
-<Image
-  src="/uut-page-unit.png"
-  alt="Unit page showing all test runs for a Unit Under Test (UUT) in OpenHTF with TofuPilot."
-/>
-
-You can extend OpenHTF to track part numbers, revisions, batch numbers, and sub-units in TofuPilot.
-
-<Button href="https://tofupilot.com/docs/unit-under-test-uut" variant="text" arrow="right">
-  <>Learn more in the TofuPilot Docs</>
-</Button>

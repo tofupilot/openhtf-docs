@@ -1,0 +1,163 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
+export const metadata = {
+  title: 'Operator UI',
+  description:
+    'Discover how to interact with the Operator UI in TofuPilot, featuring real-time test streaming from OpenHTF scripts, test progress, and control options.',
+  keywords: [
+    ...defaultKeywords,
+    'web gui',
+    'operator ui',
+    'real-time test streaming',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Operator UI - Real-Time Test Streaming and Control | OpenHTF Documentation',
+    description:
+      'Discover how to interact with the Operator UI in TofuPilot, featuring real-time test streaming from OpenHTF scripts, test progress, and control options.',
+    url: 'https://openhtf.com/operator-ui',
+    images: [
+      {
+        url: 'https://openhtf.com/operator-ui-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF Operator UI section header showing real-time test execution UI within TofuPilot.',
+      },
+    ],
+  },
+}
+
+# Operator UI
+
+Start and monitor your Runs in real time from the production floor. {{ className: 'lead' }}
+
+<Image
+  src="/operator-ui-header.png"
+  alt=""
+/>
+
+## Overview
+
+The Operator UI provides a streamlined web interface for running and tracking test procedures deployed to production stations. It’s designed for operators on the shop floor to easily start tests, respond to prompts, and monitor test execution in real time.
+
+## Syntax
+
+The Operator UI is powered by the `station_server`, which serves the web interface, and `web_launcher`, which opens it in the browser. Operator interactions—like entering serial numbers or confirming visual results—are handled through the `user_input` plug.
+
+###
+
+<Properties>
+  <Property name="station_server.StationServer(port=4444)" type="context manager">
+    Starts the HTTP server that hosts the Operator UI on the specified port.
+  </Property>
+  <Property name="web_launcher.launch(url)" type="str → void">
+    Opens the Operator UI in the default web browser at the given URL.
+  </Property>
+  <Property name="test.execute(test_start=user_input.prompt_for_test_start())" type="callable">
+    Starts the test only after an operator initiates it via the UI prompt.
+  </Property>
+</Properties>
+
+## Example usage
+
+This example demonstrates a basic OpenHTF test that launches the Operator UI and prompts the user to enter a serial number before test start. It includes two phases: one automatic and one requiring operator input.
+
+Once the script is running, you can access the Operator UI at `http://localhost:4444`.
+
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+from openhtf.output.servers import station_server
+from openhtf.output.web_gui import web_launcher
+from openhtf.plugs import user_input
+from openhtf.util import configuration
+from openhtf.plugs.user_input import UserInput
+
+CONF = configuration.CONF
+
+
+@htf.measures(htf.Measurement("hello_world_measurement"))
+def hello_world(test):
+    test.logger.info("Hello World!")
+    test.measurements.hello_world_measurement = "Hello Again!"
+
+
+@htf.measures(
+    htf.Measurement("led_color").with_validator(
+        lambda color: color in ["Red", "Green", "Blue"]
+    )
+)
+@htf.plug(user_input=UserInput)
+def prompt_operator_led_color(test, user_input):
+    led_color = user_input.prompt(
+        message="What is the LED color? (Red/Green/Blue)", text_input=True
+    ) # text_input must be True for correct rendering in the Web GUI
+    test.measurements.led_color = led_color
+
+
+def main():
+    CONF.load(station_server_port="4444")
+    with station_server.StationServer() as server:
+        web_launcher.launch("http://localhost:4444")
+        test = htf.Test(hello_world, prompt_operator_led_color)
+        test.add_output_callbacks(server.publish_final_state)
+        test.execute(test_start=user_input.prompt_for_test_start())
+
+
+if __name__ == "__main__":
+    main()
+```
+
+
+## Interface walkthrough
+
+### Test Start
+
+Begin your test with an operator input, such as entering a serial number.
+
+<Image
+  src="/operator-ui-start-sn.png"
+  alt="Operator UI prompting user to enter a serial number before test start"
+/>
+
+### Operator prompt
+
+Use `user_input.prompt()` to ask the operator for manual input, such as confirming an LED color.
+
+
+
+<Image
+  src="/operator-ui-prompt.png"
+  alt="Operator UI showing a text input prompt asking for LED color"
+/>
+
+### Test phases and results
+
+At the bottom of the UI, you'll see:
+* A timeline of executed test phases
+* Recorded measurements
+* Attachments
+* Logs
+
+Click **Expand** to view detailed phase data.
+
+<Image
+  src="/operator-ui-phases.png"
+  alt="Operator UI section showing test phases, attachments, and log output"
+/>
+
+### Station panel
+
+On the right-hand side, you’ll find:
+* A **Refresh Station** button
+* Live online status
+* Test history (e.g., previous serial numbers)
+
+
+<Image
+  src="/operator-ui-history.png"
+  alt="Operator UI showing station status and history of tested serial numbers"
+/>
+
+<Note>  If the Operator UI doesn’t appear after starting your script, click **Refresh Station** in the top-right corner.  </Note>

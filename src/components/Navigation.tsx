@@ -271,12 +271,10 @@ export const navigation: Array<NavGroup> = [
       { title: 'Configurations', href: '/configuration' },
     ],
   },
-  //{
-  //  title: 'Deploy',
-  //  links: [
-  // { title: 'Operator UI', href: '/operator-ui' },
-  //  ],
-  //},
+  {
+    title: 'Deploy',
+    links: [{ title: 'Operator UI', href: '/operator-ui', new: true }],
+  },
   {
     title: 'Resources',
     links: [

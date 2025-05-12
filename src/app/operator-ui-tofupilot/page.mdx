@@ -1,0 +1,63 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
+export const metadata = {
+  title: 'Operator UI',
+  description:
+    'Discover how to interact with the Operator UI in TofuPilot, featuring real-time test streaming from OpenHTF scripts, test progress, and control options.',
+  keywords: [
+    ...defaultKeywords,
+    'web gui',
+    'operator ui',
+    'real-time test streaming',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Operator UI - Real-Time Test Streaming and Control | OpenHTF Documentation',
+    description:
+      'Discover how to interact with the Operator UI in TofuPilot, featuring real-time test streaming from OpenHTF scripts, test progress, and control options.',
+    url: 'https://openhtf.com/operator-ui',
+    images: [
+      {
+        url: 'https://openhtf.com/operator-ui-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF Operator UI section header showing real-time test execution UI within TofuPilot.',
+      },
+    ],
+  },
+}
+
+# Operator UI
+
+Start and monitor your Runs in real time from the production floor. {{ className: 'lead' }}
+
+<Image
+  src="/operator-ui-header.png"
+  alt=""
+/>
+
+## Overview
+
+The Operator UI provides a streamlined web interface for running and tracking test procedures deployed to production stations. It’s designed for operators on the shop floor to easily start tests, respond to prompts, and monitor test execution in real time.
+
+## OpenHTF vs. TofuPilot
+
+The OpenHTF Operator UI provides basic tools to start and monitor tests, but developers may encounter limitations when scaling up, accessing test history, or sharing the UI over a network.
+
+The table below highlights the main differences between the default OpenHTF UI and TofuPilot's Operator UI:
+
+| Feature / Limitation                  | OpenHTF Operator UI                            | TofuPilot Operator UI                        |
+|--------------------------------------|------------------------------------------------|----------------------------------------------|
+| **Test support**                     | Single test only                               | Multiple tests, switchable from UI/API       |
+| **Test history**                     | None (in-session only)                         | Built-in searchable history                  |
+| **Hosting**                          | Localhost   | Centralized, secure (HTTPS + auth)           |
+| **Access from other machines**       | Manual network config required                 | Accessible via URL, no extra config          |
+| **Security**                         | No HTTPS, no user management                   | HTTPS + user authentication                  |
+| **Setup complexity**                 | Manual setup + script changes                  | Minimal setup, plug-and-play with OpenHTF    |
+
+To try TofuPilot, simply wrap your test execution with the TofuPilot client, without modifying your test logic. You can even run it in parallel with the OpenHTF UI to compare both outputs live.
+
+<Button href="https://tofupilot.com/docs/operator-ui" variant="text" arrow="right">
+  <>Learn more in the TofuPilot Docs</>
+</Button>

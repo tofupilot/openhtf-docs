@@ -45,7 +45,6 @@ The Operator UI provides a streamlined web interface for running and tracking te
 
 The Operator UI is powered by the `station_server`, which serves the web interface, and `web_launcher`, which opens it in the browser. Operator interactions—like entering serial numbers or confirming visual results—are handled through the `user_input` plug.
 
-###
 
 <Properties>
   <Property name="station_server.StationServer(port=4444)" type="context manager">
@@ -59,9 +58,10 @@ The Operator UI is powered by the `station_server`, which serves the web interfa
   </Property>
 </Properties>
 
-## Example usage
 
-This example demonstrates a basic OpenHTF test that launches the Operator UI and prompts the user to enter a serial number before test start. It includes two phases: one automatic and one requiring operator input.
+## Usage
+
+This example demonstrates a basic OpenHTF test that launches the Operator UI and prompts the user to enter a serial number before starting the test. It includes three phases: one automatic and two requiring operator input. Of the two operator input phases, one prompts the operator to enter information, while the other simply waits for the operator to click the "Okay" button.
 
 Once the script is running, you can access the Operator UI at `http://localhost:4444`.
 
@@ -83,6 +83,14 @@ def hello_world(test):
     test.measurements.hello_world_measurement = "Hello Again!"
 
 
+@htf.plug(user_input=UserInput)
+def prompt_operator_next(test, user_input):
+  is_connected = user_input.prompt(
+      message="Click Okay when the LED turn on",
+      text_input=False, # Button prompt from operator
+  )
+
+
 @htf.measures(
     htf.Measurement("led_color").with_validator(
         lambda color: color in ["Red", "Green", "Blue"]
@@ -91,8 +99,9 @@ def hello_world(test):
 @htf.plug(user_input=UserInput)
 def prompt_operator_led_color(test, user_input):
     led_color = user_input.prompt(
-        message="What is the LED color? (Red/Green/Blue)", text_input=True
-    ) # text_input must be True for correct rendering in the Web GUI
+        message="What is the LED color? (Red/Green/Blue)",
+        text_input=True,  # Text prompt from operator
+    )
     test.measurements.led_color = led_color
 
 
@@ -100,7 +109,10 @@ def main():
     CONF.load(station_server_port="4444")
     with station_server.StationServer() as server:
         web_launcher.launch("http://localhost:4444")
-        test = htf.Test(hello_world, prompt_operator_led_color)
+        test = htf.Test(
+            hello_world,
+            prompt_operator_next,
+            prompt_operator_led_color)
         test.add_output_callbacks(server.publish_final_state)
         test.execute(test_start=user_input.prompt_for_test_start())
 
@@ -123,7 +135,7 @@ Begin your test with an operator input, such as entering a serial number.
 
 ### Operator prompt
 
-Use `user_input.prompt()` to ask the operator for manual input, such as confirming an LED color.
+Use `user_input.prompt()` to ask the operator for manual input, such as confirming an LED color, or clicking on Okay button. These two options depend on the boolean `text_input` value.
 
 
 
@@ -131,6 +143,13 @@ Use `user_input.prompt()` to ask the operator for manual input, such as confirmi
   src="/operator-ui-prompt.png"
   alt="Operator UI showing a text input prompt asking for LED color"
 />
+
+
+<Image
+  src="/operator-ui-prompt-okay.png"
+  alt="Operator UI showing a text input prompt asking for clicking on Okay button"
+/>
+
 
 ### Test phases and results
 

@@ -242,44 +242,37 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
-      { title: 'Community', href: '/community' },
-      // { title: 'Templates', href: '/templates' },
     ],
   },
   {
-    title: 'Develop',
+    title: 'OpenHTF Features',
     links: [
-      { title: 'Device under test (DUT)', href: '/dut' },
-      {
-        title: 'Phases',
-        href: '/phases',
-      },
+      { title: 'Phases', href: '/phases' },
       { title: 'Measurements', href: '/measurements' },
-      {
-        title: 'Attachments',
-        href: '/attachments',
-      },
-      {
-        title: 'Output callbacks',
-        href: '/output-callbacks',
-      },
+      { title: 'Device under test (DUT)', href: '/dut' },
+      { title: 'Operator UI', href: '/operator-ui', new: true },
       { title: 'Plugs', href: '/plugs' },
-      {
-        title: 'Logger',
-        href: '/logger',
-      },
+      { title: 'Logger', href: '/logger' },
+      { title: 'Output callbacks', href: '/output-callbacks' },
+      { title: 'Attachments', href: '/attachments' },
       { title: 'Configurations', href: '/configuration' },
     ],
   },
   {
-    title: 'Deploy',
-    links: [{ title: 'Operator UI', href: '/operator-ui', new: true }],
+    title: 'TofuPilot Extensions',
+    links: [
+      {
+        title: "TofuPilot's Operator UI",
+        href: '/operator-ui-tofupilot',
+        new: true,
+      },
+      { title: 'Manufacturing test Analytics', href: '/tofupilot-analytics' },
+    ],
   },
   {
-    title: 'Resources',
+    title: 'More',
     links: [
-      { title: 'Manufacturing Test Analytics', href: '/tofupilot-analytics' },
-      // { title: 'Coding Guidelines', href: '/coding-guidelines' },
+      { title: 'Community', href: '/community' },
       { title: 'Documentation changelog', href: '/changelog' },
     ],
   },

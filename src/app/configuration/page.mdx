@@ -72,7 +72,7 @@ def flash_firmware(test):
 
 def main():
     test = htf.Test(flash_firmware)
-    test.execute(test_start=lambda: "PCB001")
+    test.execute(test_start=lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -103,7 +103,7 @@ def flash_firmware(test):
 
 def main():
     test = htf.Test(flash_firmware)
-    test.execute(test_start=lambda: "PCB001")
+    test.execute(test_start=lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -148,7 +148,7 @@ def phase_two(test):
 
 def main():
     test = htf.Test(phase_one, phase_two)
-    test.execute(test_start=lambda: "PCB001")
+    test.execute(test_start=lambda: "SN1234")
 
 if __name__ == "__main__":
     main()

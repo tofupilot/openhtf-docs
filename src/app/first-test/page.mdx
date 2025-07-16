@@ -63,7 +63,7 @@ def hello_world(test):              # Define "hello_world" phase
 
 def main():
     test = htf.Test(hello_world)    # Define test with hello_world
-    test.execute(lambda: "PCB001")  # Execute with DUT serial
+    test.execute(lambda: "SN1234")  # Execute with DUT serial
 
 if __name__ == '__main__':
     main()                          # Run main function
@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
 Run it with:
 
-```sh
+```sh {{ title: 'Terminal' }}
 python main.py
 ```
 
@@ -82,6 +82,5 @@ Hello world!
 ======================= test: openhtf_test  outcome: PASS ======================
 ```
 
-🎉 **Congratulations**! You just ran your first OpenHTF test and it’s a pass! Easy, right?
 
 This is a very simple OpenHTF test, running through the command line without the Operator UI yet. You'll learn to connect instruments, add measurements, and more in the next sections.

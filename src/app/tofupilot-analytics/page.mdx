@@ -38,7 +38,7 @@ export const metadata = {
 
 # Manufacturing Test Analytics
 
-With TofuPilot, monitor your tests first-pass yield (FPY), and capability index (Cpk) at the test phase level. {{ className: 'lead' }}
+With TofuPilot, monitor your tests first-pass yield (FPY), and capability index (Cpk) at the measurement level. {{ className: 'lead' }}
 
 <Image
   src="/tofupilot-analytics-header.png"
@@ -86,7 +86,7 @@ def phase_temperature(test):
 def main():
     test = htf.Test(phase_one, phase_temperature)
     with TofuPilot(test):                           # add 1-line
-        test.execute(lambda: "PCB001")
+        test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -94,11 +94,11 @@ if __name__ == "__main__":
 
 Each time you run a test, it's automatically uploaded to your workspace.
 
-## Phases and Measurements
+## Test Reports
 
-After importing your runs, you can visualize the phases and measurements for each run, along with their respective limits and units. This view helps you save time during development by ensuring you have logged the correct parameters.
+After uploading your runs, you can visualize the phases and measurements for each test run instead of having raw JSON data. This view helps you understand what happened during each test execution, including measurement values, limits, units, but also logger output, attachments, and Device Under Test information.
 
-<Button href="https://tofupilot.com/docs/phases" variant="text" arrow="right">
+<Button href="https://tofupilot.com/docs/runs" variant="text" arrow="right">
   <>Learn more in the TofuPilot Docs</>
 </Button>
 
@@ -107,25 +107,27 @@ After importing your runs, you can visualize the phases and measurements for eac
   alt="OpenHTF measurements section header showing validation and data capture for tests with TofuPilot integration."
 />
 
-## First-pass yield (FPY)
+## Analytics
 
-On the test procedure page, you'll find **detailed statistics on execution** performance. The most commonly used metric in industrial test monitoring is **First-pass yield** (FPY). It measures the percentage of parts that pass without rework and helps assess the efficiency of the process.
+Beyond individual test visualization, TofuPilot provides analytics across multiple runs to identify patterns and trends. The most commonly used metric in industrial test monitoring is **First-pass yield** (FPY). It measures the percentage of parts that pass without rework and helps assess the efficiency of your test procedures.
 
-<Button href="https://www.tofupilot.com/docs/analytics" variant="text" arrow="right">
-  <>Learn more in the TofuPilot Docs</>
+<Button href="https://www.tofupilot.com/docs/procedures" variant="text" arrow="right">
+  <>Discover more in the TofuPilot Docs</>
 </Button>
+
 <Image
   src="/tofupilot-analytics-yield.png"
   alt="TofuPilot analytics showing first-pass yield (FPY) for test phases in OpenHTF."
 />
 
-## Process capability index (Cpk)
+## Phases and Measurements Analytics
 
-The Process Capability Index (Cpk) measures **how well a test stays within its limits**. It applies to test phases with numerical measurements and at least one lower or upper limit.
+TofuPilot provides analytics at the individual phase and measurement level for deeper insights into test performance. The Process Capability Index (Cpk) measures **how well measurements stay within their limits**. It's calculated for each individual measurement with numerical values and at least one lower or upper limit. This helps you identify which specific measurements are driving test failures.
 
-<Button href="https://www.tofupilot.com/docs/analytics" variant="text" arrow="right">
-  <>Learn more in the TofuPilot Docs</>
+<Button href="https://www.tofupilot.com/docs/procedures" variant="text" arrow="right">
+  <>Discover more in the TofuPilot Docs</>
 </Button>
+
 <Image
   src="/tofupilot-analytics-cpk.png"
   alt="TofuPilot analytics showing process capability index (Cpk) for test phases in OpenHTF."

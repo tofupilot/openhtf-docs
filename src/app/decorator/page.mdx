@@ -1,0 +1,173 @@
+import { defaultKeywords, defaultOpenGraph } from '../metadata'
+
+export const metadata = {
+  title: 'Decorators Guide',
+  description:
+    'Learn how to install OpenHTF and create your first test script. This guide includes step-by-step instructions to set up a simple test phase and execute it using the command line.',
+  keywords: [
+    ...defaultKeywords,
+    'example',
+    'quickstart',
+    'snippet',
+    'getting started',
+    'first test script',
+    'create test script',
+  ],
+  openGraph: {
+    ...defaultOpenGraph,
+    title:
+      'Create Your First Test - Step-by-Step Guide for OpenHTF | OpenHTF Documentation',
+    description:
+      'Learn how to install OpenHTF and create your first test script. This guide includes step-by-step instructions to set up a simple test phase and execute it using the command line,',
+    url: 'https://openhtf.com/first-test',
+    images: [
+      {
+        url: 'https://openhtf.com/first-test-header.png',
+        width: 800,
+        height: 600,
+        alt: 'OpenHTF documentation header showing how to create and run your first test script.',
+      },
+    ],
+  },
+}
+
+# Python decorators in OpenHTF
+
+Learn how to use OpenHTF decorators to enhance your test phases. {{ className: 'lead' }}
+
+<Image
+  src="/decorators-header.png"
+  alt="OpenHTF documentation header showing how to create and run your first test script."
+/>
+
+## Overview
+
+Python decorators modify function behavior without changing their code. In OpenHTF, decorators add functionality to test phases like declaring measurements, injecting hardware plugins, and configuring execution. They're applied using the `@` symbol before function definitions:
+
+```python
+@decorator_function
+def my_function():
+    pass
+```
+
+## Key decorators
+
+OpenHTF provides several essential decorators that make test writing more powerful and organized:
+
+### 1. Declaring measurements
+
+The `@htf.measures` decorator is used to declare what measurements a phase will capture and validate:
+
+```python
+@htf.measures(
+    htf.Measurement("temperature")
+    .in_range(0, 100)
+    .with_units(units.DEGREE_CELSIUS)
+    .with_precision(1)
+)
+def measure_temperature(test):
+    test.measurements.temperature = 25.5
+```
+
+### 2. Hardware plugin injection
+
+The `@htf.plug` decorator injects hardware or software plugins into your test phases:
+
+```python
+@htf.plug(multimeter=MultimeterPlug)
+def test_voltage(test, multimeter):
+    voltage = multimeter.measure_voltage()
+    test.measurements.voltage = voltage
+```
+
+### 3. Phase configuration
+
+The `@htf.PhaseOptions` decorator configures how a phase should execute:
+
+```python
+@htf.PhaseOptions(timeout_s=10, repeat_limit=3)
+def retry_phase(test):
+    # Phase will timeout after 10 seconds and can retry up to 3 times
+    return htf.PhaseResult.CONTINUE
+```
+
+## Combining
+
+OpenHTF decorators can be combined to create powerful test phases:
+
+```python
+@htf.measures(
+    htf.Measurement("firmware_version").equals("1.2.4"),
+    htf.Measurement("connection_status").equals(True)
+)
+@htf.plug(device=DeviceConnection)
+@htf.PhaseOptions(timeout_s=30)
+def verify_device_connection(test, device):
+    test.measurements.connection_status = device.is_connected()
+    test.measurements.firmware_version = device.get_firmware_version()
+```
+
+## Enhanced example
+
+Let's enhance our first test to demonstrate decorator usage:
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+@htf.measures(
+    htf.Measurement("greeting_message").with_validator(
+        lambda msg: "Hello" in msg
+    )
+)
+@htf.PhaseOptions(timeout_s=5)
+def hello_world_with_measurement(test):
+    message = "Hello world!"
+    print(message)
+    test.measurements.greeting_message = message
+
+def main():
+    test = htf.Test(hello_world_with_measurement)
+    test.execute(lambda: "SN1234")
+
+if __name__ == '__main__':
+    main()
+```
+
+This enhanced version demonstrates:
+- **Measurement validation** using `@htf.measures`
+- **Phase timeout** using `@htf.PhaseOptions`
+- **Custom validation** with lambda functions
+
+Understanding these decorators is crucial for building robust OpenHTF tests that can validate measurements, interact with hardware, and handle various execution scenarios.
+
+## Dynamic configuration
+
+Python decorators are callables, which means you can apply them dynamically at runtime instead of using static decorator syntax. This is useful when you need to configure decorators based on runtime conditions.
+
+```python {{ title: 'main.py' }}
+import openhtf as htf
+
+def phase_resistance_test(test):
+    test.measurements.resistance = 10.5
+
+def main():
+    min_resistance = 5    # Dynamic parameters
+    max_resistance = 17
+
+    measurement = htf.Measurement('resistance').in_range(min_resistance, max_resistance)
+    configured_phase = htf.measures(measurement)(phase_resistance_test)
+
+    test = htf.Test([configured_phase])
+    test.execute(lambda: "SN1234")
+
+if __name__ == "__main__":
+    main()
+```
+
+This pattern allows you to:
+- Load decorator parameters from configuration files
+- Calculate validation limits based on runtime conditions
+- Create phases with parameters determined by user input
+- Build test sequences dynamically based on device specifications
+
+You can apply the same pattern to other OpenHTF decorators like `@htf.plug` and `@htf.PhaseOptions` that need runtime configuration. For more comprehensive examples and advanced measurement patterns, see the [advanced Measurements use cases](/measurements#advanced-use-cases) in the documentation.

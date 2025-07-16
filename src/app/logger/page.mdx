@@ -78,7 +78,7 @@ def phase_test(test, my_plug):
 def main():
     test = htf.Test(phase_test)
     test.add_output_callbacks(json_factory.OutputToJSON("test_result.json", indent=2))
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -186,7 +186,7 @@ def main():
     logger.setLevel(logging.INFO)
 
     test = htf.Test(temperature_measurement)
-    test.execute(test_start=lambda: 'PCB001')
+    test.execute(test_start=lambda: 'SN1234')
 
 if __name__ == '__main__':
     main()

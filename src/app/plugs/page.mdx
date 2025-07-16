@@ -84,7 +84,7 @@ def phase_test(test, multimeter):
 
 def main():
     test = htf.Test(phase_test)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -100,7 +100,7 @@ OpenHTF manages the plug's lifecycle automatically:
 
 ## User Input Plug
 
-You can use the `UserInput` plug to prompt the operator during the test.
+You can use the `UserInput` plug to prompt the operator during the test. The `text_input` parameter controls the type of interaction - when missing, it defaults to `False` (button prompt).
 
 ```python {{ title: 'main.py' }}
 import openhtf as htf
@@ -112,17 +112,41 @@ from openhtf.plugs.user_input import UserInput
 )
 @htf.plug(user_input=UserInput)
 def prompt_operator_led_color(test, user_input):
+    # text_input defaults to False when not specified
     led_color = user_input.prompt(
-        message="What is the LED color? (Red/Green/Blue)"
+        message="What is the LED color? (Red/Green/Blue)",
+        text_input=True  # Explicitly set to True for text input
     )
     test.measurements.led_color = led_color
 
 def main():
     test = htf.Test(prompt_operator_led_color)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
+```
+
+### Text Input vs Button Prompts
+
+The `text_input` parameter determines the prompt behavior:
+
+- `text_input=True`: Displays a text input field where the operator types a response
+- `text_input=False` (default): Displays a button prompt where the operator clicks "Okay"
+
+```python {{ title: 'Text Input Example' }}
+# Text input prompt - operator types response
+response = user_input.prompt(
+    message="What is the LED color? (Red/Green/Blue)",
+    text_input=True
+)
+```
+
+```python {{ title: 'Button Prompt Example' }}
+# Button prompt - operator clicks "Okay" (text_input defaults to False)
+user_input.prompt(
+    message="Click Okay when the LED turns on"
+)
 ```
 
 ```txt {{ title: 'Terminal' }}

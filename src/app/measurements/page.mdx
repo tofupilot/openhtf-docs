@@ -65,7 +65,7 @@ def phase_temperature(test):
 
 def main():
     test = htf.Test(phase_temperature)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -122,7 +122,7 @@ def phase_memory(test):
 
 def main():
     test = htf.Test(phase_voltage, phase_memory)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -145,7 +145,7 @@ def phase_firmware(test):
 
 def main():
     test = htf.Test(phase_firmware)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -181,7 +181,7 @@ def phase_led(test):
 
 def main():
     test = htf.Test(phase_led)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -224,7 +224,7 @@ def phase_voltage_measurement(test):
 
 def main():
     test = htf.Test(phase_voltage_measurement)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -258,7 +258,7 @@ def phase_multi_measurements(test):
 
 def main():
     test = htf.Test(phase_multi_measurements)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -287,7 +287,7 @@ def phase_marginal(test):
 
 def main():
     test = htf.Test(phase_marginal)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -314,7 +314,7 @@ def phase_temperature(test):
 
 def main():
     test = htf.Test(phase_temperature)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -337,7 +337,7 @@ def phase_test(test):
 
 def main():
     test = htf.Test(phase_test)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -361,7 +361,7 @@ def phase_voltage(test):
 
 def main():
     test = htf.Test(phase_voltage)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -383,15 +383,15 @@ def main():
     # Get measurement limits dynamically at runtime
     min_ohms = 5
     max_ohms = 17  # These could come from configuration, user input, etc.
-    
+
     # Create the measurement with dynamic parameters
     my_measurement = (htf.Measurement('resistance')
                       .with_units('ohm')
                       .in_range(minimum=min_ohms, maximum=max_ohms))
-    
+
     # Apply the decorator as a callable to create the phase
     my_phase = htf.measures(my_measurement)(MyPhaseFunction)
-    
+
     # Use the dynamically created phase in your test
     test = htf.Test([my_phase])
     test.execute(lambda: "SN1234")

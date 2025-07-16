@@ -84,7 +84,7 @@ def phase_test(test, multimeter):
 
 def main():
     test = htf.Test(phase_test)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -121,7 +121,7 @@ def prompt_operator_led_color(test, user_input):
 
 def main():
     test = htf.Test(prompt_operator_led_color)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()

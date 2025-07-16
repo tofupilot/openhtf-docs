@@ -71,7 +71,7 @@ When executed, the script prompts the user to enter a serial number.
 
 ```sh
 Enter a UUT ID in order to start the test.
---> PCB001
+--> SN1234
 
 ======================= test: openhtf_test  outcome: PASS ======================
 ```
@@ -88,7 +88,7 @@ def power_on(test):
 
 def main():
     test = Test(power_on)
-    test.execute(lambda: 'PCB001') # Set at start
+    test.execute(lambda: 'SN1234') # Set at start
 
 if __name__ == '__main__':
     main()
@@ -102,7 +102,7 @@ You can set the serial number during the test.
 from openhtf import Test, PhaseResult
 
 def get_sn(test):
-    test.test_record.dut_id = 'PCB001' # Set during test
+    test.test_record.dut_id = 'SN1234' # Set during test
     return PhaseResult.CONTINUE
 
 def main():

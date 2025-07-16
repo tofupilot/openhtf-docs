@@ -60,7 +60,7 @@ def phase_two(test):
 
 def main():
     test = htf.Test(phase_one, phase_two)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == '__main__':
     main()
@@ -111,7 +111,7 @@ def phase_fail(test):
 
 def main():
     test = htf.Test(phase_pass, phase_retry, phase_fail)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == '__main__':
     main()
@@ -152,7 +152,7 @@ def phase_retry(test):
 
 def main():
     test = htf.Test(phase_pass, phase_retry)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == '__main__':
     main()
@@ -189,7 +189,7 @@ def example_phase(test):
 
 def main():
   test = htf.Test(example_phase)
-  test.execute(lambda: "PCB001")
+  test.execute(lambda: "SN1234")
 
 if __name__ == '__main__':
   main()
@@ -240,7 +240,7 @@ def always_true_phase(test):
 
 def main():
     test = htf.Test(repeat_phase, timeout_phase, random_fail_phase, always_true_phase)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -259,7 +259,7 @@ def first_phase(test):
 
 def main():
     test = htf.Test(first_phase)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -288,7 +288,7 @@ def last_phase(test):
 
 def main():
     test = htf.Test(first_phase, conditional_fail_phase, last_phase)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -312,7 +312,7 @@ def conditional_phase(test_state):
 
 def main():
     test = htf.Test(conditional_phase)
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()
@@ -346,7 +346,7 @@ def main():
             teardown=[teardown_phase],
         )
     )
-    test.execute(lambda: "PCB001")
+    test.execute(lambda: "SN1234")
 
 if __name__ == "__main__":
     main()

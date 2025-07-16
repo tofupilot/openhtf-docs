@@ -242,6 +242,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
+      { title: 'Python decorators in OpenHTF', href: '/decorator' },
     ],
   },
   {

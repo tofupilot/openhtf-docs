@@ -242,16 +242,16 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Create your first test', href: '/first-test' },
-      { title: 'Python decorators in OpenHTF', href: '/decorator' },
+      { title: 'Python decorators in OpenHTF', href: '/decorator', new: true },
     ],
   },
   {
     title: 'OpenHTF Features',
     links: [
       { title: 'Phases', href: '/phases' },
-      { title: 'Measurements', href: '/measurements' },
+      { title: 'Measurements', href: '/measurements', new: true },
       { title: 'Device under test (DUT)', href: '/dut' },
-      { title: 'Operator UI', href: '/operator-ui', new: true },
+      { title: 'Operator UI', href: '/operator-ui' },
       { title: 'Plugs', href: '/plugs' },
       { title: 'Logger', href: '/logger' },
       { title: 'Output callbacks', href: '/output-callbacks' },
@@ -262,11 +262,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'TofuPilot Extensions',
     links: [
-      {
-        title: "TofuPilot's Operator UI",
-        href: '/operator-ui-tofupilot',
-        new: true,
-      },
+      { title: "TofuPilot's Operator UI", href: '/operator-ui-tofupilot' },
       { title: 'Manufacturing test Analytics', href: '/tofupilot-analytics' },
     ],
   },
